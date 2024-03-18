@@ -1,0 +1,8 @@
+
+
+geolocation:
+- Needed for us to be able to search for it data
+
+- if the user doesnt provide geolocation, we use their ip adress to find realive location
+    - unfortinley ip adress geolocation widely vary in rural areas
+        - solution: if the user doesnt Doesn't decide to provide your Geo location. We prompt them with a message on screen Encouraging them to do so

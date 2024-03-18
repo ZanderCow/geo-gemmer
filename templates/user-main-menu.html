@@ -1,0 +1,162 @@
+{% from "components/signed-in-navbar.html" import signed_in_navbar %}
+{% from "components/footer.html" import footer %}
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alexandria&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="../static/css/styles.min.css">
+</head>
+
+<body id="page-top">
+
+    {{ signed_in_navbar("zander")}}
+
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4" style="padding-top: 20px;">
+                        <h3 class="text-dark mb-0">Hello {{user_data.username}}!</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xl-3 mb-4">
+                            <div class="card shadow border-start-primary py-2">
+                                <div class="card-body">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Gems Explored</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{user_data.gems_explored}}</span></div>
+                                        </div>
+                                        <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pin-map-fill fa-2x text-gray-300">
+                                                <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"></path>
+                                                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"></path>
+                                            </svg></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4">
+                            <div class="card shadow border-start-success py-2">
+                                <div class="card-body">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Reviews Left</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{user_data.reviews_made}}</span></div>
+                                        </div>
+                                        <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fa-2x text-gray-300">
+                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                            </svg></div>
+                                    </div>
+                                </div>
+                                <div class="card shadow border-start-success py-2"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4">
+                            <div class="card shadow border-start-success py-2">
+                                <div class="card-body">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Gems Created</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{user_data.gems_created}}</span></div>
+                                        </div>
+                                        <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tools fa-2x text-gray-300">
+                                                <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
+                                            </svg></div>
+                                    </div>
+                                </div>
+                                <div class="card shadow border-start-success py-2"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3 mb-4">
+                            <div class="card shadow border-start-warning py-2">
+                                <div class="card-body">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col me-2">
+                                            <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span>Gems Saved</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{user_data.gems_saved}}</span></div>
+                                        </div>
+                                        <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xl-8 col-xxl-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0">Gems Overview</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);">
+                                        <canvas data-bss-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;],&quot;fill&quot;:true}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;top&quot;},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;italic&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}],&quot;yAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}]}}}"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-xxl-7">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Gem Details</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas data-bss-chart="{&quot;type&quot;:&quot;pie&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;],&quot;borderColor&quot;:[&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;,&quot;#4e73df&quot;],&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;bold&quot;}}}"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card shadow mb-4">
+                                <div class="card-header text-center py-3">
+                                    <h6 class="text-start text-primary fw-bold m-0" style="padding-bottom: 15px;">Gems Pinned</h6>
+                                    <div class="table-responsive d-xl-flex justify-content-xl-center">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center justify-content-xxl-start">Name</th>
+                                                    <th class="text-center align-content-sm-center align-content-md-center align-content-lg-center align-content-xl-center align-content-xxl-center">Type</th>
+                                                    <th class="text-center">Location</th>
+                                                    <th class="text-center align-content-sm-center align-content-md-center align-content-lg-center align-content-xl-center align-content-xxl-center"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                {% for saved_gem in user_data.gems_saved_details %}
+                                                <tr>
+                                                    <td>{{saved_gem.gem_name}}</td>
+                                                    <td class="text-truncate text-break text-center">{{saved_gem.gem_type}}</td>
+                                                    <td class="text-center"><button class="btn btn-success btn-sm" type="submit" onclick="window.location.href='{{saved_gem.website_link}}';"><span style="color: rgb(255, 255, 255);">Search</span></button></td>
+                                                    <td class="text-center"><button class="btn btn-danger btn-sm" style="margin-left: 5px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i></button></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ footer() }}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script src="../static/js/script.min.js"></script>
+</body>
+
+</html>

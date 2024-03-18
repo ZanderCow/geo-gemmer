@@ -1,0 +1,151 @@
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alexandria&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans&amp;display=swap">
+    <link rel="stylesheet" href="../static/css/styles.min.css">
+</head>
+
+<body>
+
+    {{ navbar('home') }}
+
+    <header class="bg-primary-gradient">
+        <div class="container pt-4 pt-xl-5">
+            <section class="text-white py-4 py-xl-5">
+                <div class="container">
+                    <div class="border rounded border-0 d-flex flex-column justify-content-center align-items-center p-4 py-5" style="background-image: url(../static/img/nature-image.png);height: 700px;">
+                        <div class="row">
+                            <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center">
+                                <div>
+                                    <h1 class="fw-bold mb-3">Discover the World Around You Like Never Before</h1>
+                                    <p class="mb-4">Uncover hidden gems in your neighborhood, city, or anywhere you go. Geo Gemmer makes every outing an adventure.</p><button class="btn btn-primary fs-5 me-2 py-2 px-4" type="button"><span style="color: rgb(250, 250, 254);">Sign Up</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </header>
+    <section>
+        <div class="container bg-primary-gradient py-5">
+            <div class="row">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h3 class="fw-bold">Features</h3>
+                </div>
+            </div>
+            <div class="py-5 p-lg-5">
+                <div class="row row-cols-1 row-cols-md-2 mx-auto" style="max-width: 900px;">
+                    <div class="col mb-5">
+                        <div class="card shadow-sm">
+                            <div class="card-body px-4 py-5 px-md-5">
+                                <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-geo-fill text-success">
+                                        <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411"></path>
+                                    </svg></div>
+                                <h5 class="fw-bold card-title">Diverse Selection</h5>
+                                <p class="text-muted card-text mb-4">We don't just cover hiking trails and rock climbing places. Our platform covers restaurants, art museums, rock quarries, landscapes, and historical sites!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card shadow-sm">
+                            <div class="card-body px-4 py-5 px-md-5">
+                                <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill text-success">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg></div>
+                                <h5 class="fw-bold card-title">Community-Powered<br>Rating System</h5>
+                                <p class="text-muted card-text mb-4">Our user-powered rating system enables for in-depth and quality feedback on every hidden gem.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body px-4 py-5 px-md-5">
+                                <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-search text-success">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                    </svg></div>
+                                <h5 class="fw-bold card-title">Tuned-Search Engine</h5>
+                                <p class="text-muted card-text mb-4">Need to narrow hidden gems because you have a disability? Our app can do that!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body px-4 py-5 px-md-5">
+                                <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-save text-success">
+                                        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z"></path>
+                                    </svg></div>
+                                <h5 class="fw-bold card-title">Save your gems</h5>
+                                <p class="text-muted card-text mb-4">Have a gem that you always like to visit? Be able to save it to your profile!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section></section>
+    <section class="py-5 mt-5">
+        <div class="container py-5">
+            <div class="row mb-5">
+                <div class="col-md-8 col-xl-6 text-center mx-auto">
+                    <h2 class="fw-bold"><strong>What People Say About Us</strong></h2>
+                    <p class="text-muted">See why Geo Gemmer is the best app for finding hidden gems!&nbsp;</p>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 d-sm-flex justify-content-sm-center">
+                <div class="col mb-4">
+                    <div class="d-flex flex-column align-items-center align-items-sm-start">
+                        <p class="bg-body-tertiary border rounded border-0 border-light p-4">Geo Gemmer is a fantastic platform! It motivates me to leave my room, engage with the outdoors, and discover exciting activities and places</p>
+                        <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="../static/img/team/avatar2.jpg">
+                            <div>
+                                <p class="fw-bold text-primary mb-0">Eugene Smith</p>
+                                <p class="text-muted mb-0">Software Engineer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="d-flex flex-column align-items-center align-items-sm-start">
+                        <p class="bg-body-tertiary border rounded border-0 border-light p-4">As an 80-year-old grandmother of two, I've found Geo Gemmer to be a fantastic resource! It helps me discover activities that both my grandchildren and I can enjoy together. What's more, it's easily accessible and user-friendly, making it a perfect tool for people of all ages!</p>
+                        <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="../static/img/team/avatar4.jpg">
+                            <div>
+                                <p class="fw-bold text-primary mb-0">Gertrude Smith</p>
+                                <p class="text-muted mb-0">Grandma</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col mb-4">
+                    <div class="d-flex flex-column align-items-center align-items-sm-start">
+                        <p class="bg-body-tertiary border rounded border-0 border-light p-4">My friends and I are constantly on the lookout for entertaining activities in our town. Geo Gemmer has been a fantastic resource, uncovering hidden gems and fun spots we were previously unaware of!</p>
+                        <div class="d-flex"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50" src="../static/img/team/avatar5.jpg">
+                            <div>
+                                <p class="fw-bold text-primary mb-0">John Smith</p>
+                                <p class="text-muted mb-0">Erat netus</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{ footer() }}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/script.min.js"></script>
+</body>
+
+</html>
