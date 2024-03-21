@@ -22,7 +22,7 @@ def get_gem_repository():
             Returns:
                 A dictionary containing all hidden gems, where the keys are the gem IDs and the values are the HiddenGem objects.
             """
-            return {**self._db}  # Use the splat operator to make a clone of the dict
+            return {**self._db}
 
      
         def get_hidden_gem_by_id(self, hidden_gem_id: int) -> HiddenGem | None:
@@ -37,7 +37,7 @@ def get_gem_repository():
             """
             return self._db.get(hidden_gem_id)
 
-        def create_hidden_gem(self, name: str, latitude: float, longitude: float, gem_type: str, times_visited: int, user_created: str, website_link: str, accessibility: list[bool], gem_images: list[str], reviews: list[Reviews]) -> HiddenGem:
+        def create_hidden_gem(self, name, latitude, longitude, gem_type, times_visited, user_created, website_link) -> HiddenGem:
             """
             Creates a new hidden gem instance and saves it in the in-memory database.
 
@@ -49,20 +49,30 @@ def get_gem_repository():
                 times_visited (int): The number of times the hidden gem has been visited.
                 user_created (str): The username of the user who created the hidden gem.
                 website_link (str): The website link associated with the hidden gem.
-                accessibility (list[bool]): A list of boolean values indicating the accessibility of the hidden gem.
-                gem_images (list[str]): A list of image URLs associated with the hidden gem.
-                reviews (list[Reviews]): A list of reviews for the hidden gem.
-
+  
             Returns:
                 HiddenGem: The newly created hidden gem instance.
 
             """
-            new_id = randint(0, 100_000)  # Sufficiently unique ID for our purposes
-            hidden_gem = HiddenGem(name, new_id, latitude, longitude, gem_type, times_visited, user_created, website_link, accessibility, gem_images, reviews)
-            # Save the instance in our in-memory database
+            new_id = randint(0, 100_000)  
+            hidden_gem = HiddenGem(name, new_id, latitude, longitude, gem_type, times_visited, user_created, website_link)
             self._db[new_id] = hidden_gem
-            # Return the hidden gem instance
             return hidden_gem
+        
+
+        def delete_hidden_gem(self, hidden_gem_id: int) -> None:
+            """
+            Deletes a hidden gem from the in-memory database.
+
+            Args:
+                hidden_gem_id (int): The ID of the hidden gem to delete.
+
+            Raises:
+                ValueError: If the hidden gem with the given ID is not found.
+            """
+            if hidden_gem_id not in self._db:
+                raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
+            del self._db[hidden_gem_id]
     
 
 
@@ -129,12 +139,9 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the specified ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
             hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
             if not hidden_gem:
                 raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
             hidden_gem.latitude = latitude
             hidden_gem.longitude = longitude
             return hidden_gem
@@ -165,12 +172,9 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
             hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
             if not hidden_gem:
                 raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
             hidden_gem.gem_type = gem_type
             return hidden_gem
         
@@ -200,12 +204,9 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
             hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
             if not hidden_gem:
                 raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
             hidden_gem.times_visited = times_visited
             return hidden_gem
         
@@ -235,12 +236,9 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
             hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
             if not hidden_gem:
                 raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
             hidden_gem.user_created = user_created
             return hidden_gem
         
@@ -271,12 +269,9 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
             hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
             if not hidden_gem:
                 raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
             hidden_gem.website_link = website_link
             return hidden_gem
         
@@ -290,7 +285,8 @@ def get_gem_repository():
             Returns:
                 list[bool]: A list of boolean values representing the accessibility of the hidden gem.
             """
-            return self._db.get(hidden_gem_id).accessibility
+            #dont test this one.
+            pass
         
         def update_accessibility(self, hidden_gem_id: int, accessibility: list[bool]) -> HiddenGem:
             """
@@ -306,14 +302,8 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the specified ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
-            hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
-            if not hidden_gem:
-                raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
-            hidden_gem.accessibility = accessibility
-            return hidden_gem
+            #dont test this one.
+            pass
         
         def get_gem_images(self, hidden_gem_id: int) -> list[str]:
             """
@@ -326,7 +316,8 @@ def get_gem_repository():
                 list[str]: A list of gem images.
 
             """
-            return self._db.get(hidden_gem_id).gem_images
+            #dont test this one.
+            pass
         
         def update_gem_images(self, hidden_gem_id: int, gem_images: list[str]) -> HiddenGem:
             """
@@ -342,14 +333,8 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
-            hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
-            if not hidden_gem:
-                raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
-            hidden_gem.gem_images = gem_images
-            return hidden_gem
+            #dont test this one.
+            pass
         
       
         def get_reviews(self, hidden_gem_id: int) -> list[Reviews]:
@@ -362,7 +347,8 @@ def get_gem_repository():
             Returns:
                 list[Reviews]: A list of reviews for the hidden gem.
             """
-            return self._db.get(hidden_gem_id).reviews
+            #dont test this one
+            pass
         
         def update_reviews(self, hidden_gem_id: int, reviews: list[Reviews]) -> HiddenGem:
             """
@@ -378,14 +364,8 @@ def get_gem_repository():
             Raises:
                 ValueError: If the hidden gem with the given ID is not found.
             """
-            # Get a reference to the hidden gem in the dict
-            hidden_gem = self._db.get(hidden_gem_id)
-            # Complain if we did not find the hidden gem
-            if not hidden_gem:
-                raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
-            # Update the hidden gem, which is the same object that is in the dict, so the changes stick
-            hidden_gem.reviews = reviews
-            return hidden_gem
+            #dont test this one.
+            pass
     
 
 

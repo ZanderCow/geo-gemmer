@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello():
+def home():
     return render_template('index.html')
 
 @app.route('/about-us')
@@ -27,7 +27,6 @@ def get_signup():
 @app.post('/sign-up')
 def signup_user():
     # signs up user and redirects to dashboard
-
 
     return redirect('/dashboard')
 
@@ -54,8 +53,6 @@ def dashboard():
     The rendered user main menu page.
    '''
     
-
-
     user_data_example = {
         "username": "TheCowanPlayz",
         "first_name": "Zander",
@@ -165,12 +162,17 @@ def search():
     }
     return render_template('gem-search.html')
 
+'''
+this is for later. to when we need to setup the search query correctly 
+@app.get('/search/<search_query>')
+def search():
+    return render_template('gem-search.html')
+'''
 
 
 @app.route('/gem-details', methods=['GET', 'POST'])
 def gemdetails():
 
-    
     gem_data_example = {
         "name": "Rocky Mountain",
         "gem_type": "mountain",
@@ -200,6 +202,15 @@ def gemdetails():
     }
 
     return render_template('gem-details.html', gem_data=gem_data_example)
+
+'''
+this is for later, when we setup the search query correctly
+
+@app.get('/search/<gem_id>')
+def gemdetails():
+  
+    return render_template('gem-details.html', gem_data=gem_data_example)
+'''
 
 if __name__ == '__main__':
     app.run(debug=True)
