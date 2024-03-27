@@ -12,8 +12,9 @@ class HiddenGem:
         user_created (boolean): Whether the hidden gem was created by a user.
         website_link (str): The URL of the hidden gem's website.
     '''
-    def __init__(self, name, latitude, longitude, gem_type, times_visited, user_created, website_link, accessibility, gem_images, reviews):
+    def __init__(self, name, id, latitude, longitude, gem_type, times_visited, user_created, website_link, accessibility):
         self.name = name
+        self.id = id
         self.latitude = latitude
         self.longitude = longitude
         self.gem_type = gem_type
@@ -24,4 +25,7 @@ class HiddenGem:
 
 
 
-    
+class Reviews:
+    def __init__(self):
+        pass
+

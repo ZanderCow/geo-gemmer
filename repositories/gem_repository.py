@@ -1,6 +1,6 @@
 from random import randint
 
-from ..models.hidden_gem import HiddenGem, GemAcessibilty, GemImages, Reviews
+from models.hidden_gem import HiddenGem, Reviews#, GemAcessibilty, GemImages
 
 _gemr_repo = None
 
@@ -36,6 +36,21 @@ def get_gem_repository():
                 HiddenGem | None: The hidden gem object if found, None otherwise.
             """
             return self._db.get(hidden_gem_id)
+        
+        def get_gem_id_by_name(self, name: str) -> int | None:
+                """
+                Retrieves the ID of a gem based on its name.
+
+                Args:
+                    name (str): The name of the gem.
+
+                Returns:
+                    int | None: The ID of the gem if found, None otherwise.
+                """
+                for gem_id, gem in self._db.items():
+                    if gem.name == name:
+                        return gem_id
+                return None
 
         def create_hidden_gem(self, name, latitude, longitude, gem_type, times_visited, user_created, website_link) -> HiddenGem:
             """
@@ -55,7 +70,7 @@ def get_gem_repository():
 
             """
             new_id = randint(0, 100_000)  
-            hidden_gem = HiddenGem(name, new_id, latitude, longitude, gem_type, times_visited, user_created, website_link)
+            hidden_gem = HiddenGem(name, new_id, latitude, longitude, gem_type, times_visited, user_created, website_link, False)
             self._db[new_id] = hidden_gem
             return hidden_gem
         
@@ -210,7 +225,26 @@ def get_gem_repository():
             hidden_gem.times_visited = times_visited
             return hidden_gem
         
-        def get_user_created(self, hidden_gem_id: int) -> str:
+        def increment_times_visited(self, hidden_gem_id: int) -> HiddenGem:
+            """
+            Increment the number of times a hidden gem has been visited.
+
+            Args:
+                hidden_gem_id (int): The ID of the hidden gem to update.
+
+            Returns:
+                HiddenGem: The updated HiddenGem object.
+
+            Raises:
+                ValueError: If the hidden gem with the given ID is not found.
+            """
+            hidden_gem = self._db.get(hidden_gem_id)
+            if not hidden_gem:
+                raise ValueError(f'hidden gem with id {hidden_gem_id} not found')
+            hidden_gem.times_visited += 1
+            return hidden_gem
+
+        def get_user_created(self, hidden_gem_id: int) -> bool:
             """
             Retrieves the username of the user who created the hidden gem with the given ID.
 
@@ -222,7 +256,7 @@ def get_gem_repository():
             """
             return self._db.get(hidden_gem_id).user_created
         
-        def update_user_created(self, hidden_gem_id: int, user_created: str) -> HiddenGem:
+        def update_user_created(self, hidden_gem_id: int, user_created: bool) -> HiddenGem:
             """
             Updates the 'user_created' attribute of a hidden gem with the given ID.
 
@@ -374,7 +408,8 @@ def get_gem_repository():
             self._db = {}
 
     # Singleton to be used in other modules
-    if _user_repo is None:
-        _user_repo = GemRepository()
+    global _gemr_repo
+    if _gemr_repo is None:
+        _gemr_repo = GemRepository()
 
-    return _user_repo
+    return _gemr_repo
