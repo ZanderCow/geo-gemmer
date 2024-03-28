@@ -1,6 +1,3 @@
-{% from "components/signed-in-navbar.html" import signed_in_navbar %}
-{% from "components/footer.html" import footer %}
-
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -16,35 +13,98 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans&amp;display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="../static/css/styles.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
 
 <body id="page-top">
-
-    {{ signed_in_navbar("Zander Cowan") }}
-
-   
+    <nav class="navbar navbar-expand-md shadow d-flex justify-content-start navbar-shrink py-3 navbar-light" id="mainNav">
+        <div class="container"><img src="../static/img/geo-gemmer-logo.png" width="108" height="50"><a class="navbar-brand d-flex align-items-center" href="/"><span></span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-2">
+                <div class="row d-xxl-flex justify-content-xxl-start align-items-xxl-center">
+                    <div class="col-md-10 offset-md-1">
+                        <div class="card m-auto" style="max-width:850px">
+                            <div class="card-body">
+                                <form class="d-flex align-items-center" action="/search" method="get"><input class="form-control form-control-sm flex-shrink-1 form-control-borderless" type="search" data-bss-hover-animate="pulse" placeholder="Search topics or keywords" name="searchbar"><button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Search</span></button></form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                    <div class="w-100"></div>
+                </div>
+                <ul class="navbar-nav d-flex d-sm-flex justify-content-center align-items-center flex-nowrap ms-auto align-items-sm-center">
+                    <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                            <form class="me-auto navbar-search w-100" action="/search" method="get">
+                                <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                    <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown no-arrow mx-1"></li>
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
+                    </li>
+                    <div class="d-none d-sm-block topbar-divider"></div>
+                    <li class="nav-item dropdown no-arrow">
+                        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Zander Cowan</span><img class="border rounded-circle img-profile" src="avatars/avatar1.jpeg" width="18" height="18"></a>
+                            <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="/dashboard"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="/user-settings"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
+                                <div class="dropdown-divider"></div><a class="dropdown-item" href="/"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div id="wrapper">
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <div class="container">
-                    <h3 class="text-dark mb-4 flex-fill" style="padding-top: 30px;">{{gem_data.name}}</h3>
+                    <h3 class="text-dark mb-4 flex-fill" style="padding-top: 30px;">Old Father Mountain</h3>
                     <div class="row">
                         <div class="col flex-fill">
                             <div class="card shadow mb-3">
                                 <div class="card-body">
                                     <div class="row nav-fill">
                                         <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
-                                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" style="min-height: 300px;" src="{{gem_data['gem_images']['image_3']}}" width="727" height="646"></div>
+                                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="../static/img/nature-image.png" width="727" height="646"></div>
                                         </div>
                                         <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" style="min-height:auto" src="{{gem_data['gem_images']['image_1']}}" width="513" height="272"></div>
+                                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="../static/img/review.jpg" width="513" height="272"></div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
-                                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" src="{{gem_data['gem_images']['image_3']}}" width="300" height="450"></div>
+                                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="../static/img/review.jpg" width="300" height="450"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -59,7 +119,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col d-flex d-sm-flex d-xxl-flex flex-shrink-1 justify-content-center align-content-center justify-content-sm-center align-items-sm-center justify-content-xxl-center" style="padding: 20px;">
-                                            <div class="d-flex d-xxl-flex justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" type="button" style="width: auto;max-width: initial;min-width: auto;" onclick="window.location.href='{{gem_data.website_link}}';"><span style="color: rgb(255, 255, 255);">Get Directions</span></button></div>
+                                            <div class="d-flex d-xxl-flex justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center pulse animated" type="button" style="width: auto;max-width: initial;min-width: auto;"><span style="color: rgb(255, 255, 255);">Get Directions</span></button></div>
                                         </div>
                                     </div>
                                 </div>
@@ -73,17 +133,17 @@
                                     <div class="row">
                                         <div class="col d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="margin: 10px;padding: 10px;">
                                             <div class="mb-3" style="text-align: center;"><label class="form-label" for="email"><strong>Name</strong></label>
-                                                <p><span style="color: rgba(45, 45, 45, 0.75);">{{gem_data.name}}</span></p>
+                                                <p><span style="color: rgba(45, 45, 45, 0.75);">Old Father Mountian</span></p>
                                             </div>
                                         </div>
-                                        <div class="col d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="margin: 10px;padding: 10px;">
+                                        <div class="col" style="margin: 10px;padding: 10px;">
                                             <div class="mb-3" style="text-align: center;"><label class="form-label" for="email"><strong>Distance</strong></label>
-                                                <p><span style="color: rgba(45, 45, 45, 0.75);">Will be computed in a script</span></p>
+                                                <p><span style="color: rgba(45, 45, 45, 0.75);">30mi Away</span></p>
                                             </div>
                                         </div>
                                         <div class="col d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="margin: 10px;padding: 10px;">
                                             <div class="mb-3" style="text-align: center;"><label class="form-label" for="email"><strong>Type</strong></label>
-                                                <p><span style="color: rgba(45, 45, 45, 0.75);">{{gem_data.gem_type}}</span></p>
+                                                <p><span style="color: rgba(45, 45, 45, 0.75);">Hiking Trail</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -95,12 +155,12 @@
                                         </div>
                                         <div class="col d-xxl-flex justify-content-xxl-center align-items-xxl-center">
                                             <div class="mb-3" style="text-align: center;padding: 10px;margin: 10px;"><label class="form-label" for="email"><strong>Times Visited</strong></label>
-                                                <p><span style="color: rgba(45, 45, 45, 0.75);">{{gem_data.times_visited}}</span></p>
+                                                <p><span style="color: rgba(45, 45, 45, 0.75);">2202</span></p>
                                             </div>
                                         </div>
                                         <div class="col d-xxl-flex justify-content-xxl-center align-items-xxl-center">
-                                            <div class="mb-3" style="text-align: center;padding: 10px;margin: 10px;"><label class="form-label" for="email"><strong>Acessibilty</strong></label>
-                                                <p><span style="color: rgba(45, 45, 45, 0.75);">{{gem_data.acessibilty}}</span></p>
+                                            <div class="mb-3" style="text-align: center;padding: 10px;margin: 10px;"><label class="form-label" for="email"><strong>Accessibility</strong></label>
+                                                <p><span style="color: rgba(45, 45, 45, 0.75);">Elderly Friendly, Autistic Friendly</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -209,11 +269,10 @@
                                 <div class="card-body" style="overflow: auto;">
                                     <section class="text-truncate" style="color: rgb(113,113,113);background-color: #ffffff;padding: 30px;height: 700px;overflow: scroll;">
                                         <div class="container scstyle-1 sc-overflow" style="max-height: 675px;">
-                                            {% for review in gem_data.reviews %}
                                             <div class="card shadow mb-3">
                                                 <div class="card-body">
                                                     <div class="row">
-                                                        <div class="col"><img class="border rounded-circle img-profile" src="assets/img/nature-image.png" width="65" height="61"></div>
+                                                        <div class="col"><img class="border rounded-circle img-profile" src="../static/img/nature-image.png" width="65" height="61"></div>
                                                         <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xl-end justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;">
                                                                 <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"></path>
                                                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
@@ -228,24 +287,90 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">
-                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.username}}</h5>
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
                                                         </div>
                                                         <div class="col d-xxl-flex justify-content-xxl-end">
-                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.rating}}/5</h5>
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
                                                             <div>
-                                                                <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
+                                                                <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3"></div>
                                                 </div>
                                             </div>
-                                            
-                                            {% endfor %}
+                                            <div class="card shadow mb-3">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col"><img class="border rounded-circle img-profile" src="../static/img/nature-image.png" width="65" height="61"></div>
+                                                        <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
+                                                        </div>
+                                                        <div class="col d-xxl-flex justify-content-xxl-end">
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
+                                                            <div>
+                                                                <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3"></div>
+                                                </div>
+                                            </div>
+                                            <div class="card shadow mb-3">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col"><img class="border rounded-circle img-profile" src="../static/img/nature-image.png" width="65" height="61"></div>
+                                                        <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                            </svg></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
+                                                        </div>
+                                                        <div class="col d-xxl-flex justify-content-xxl-end">
+                                                            <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
+                                                            <div>
+                                                                <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </section>
                                 </div>
@@ -259,7 +384,7 @@
                             <div class="card-body" style="padding: 0;">
                                 <div class="row">
                                     <div class="col d-xxl-flex justify-content-center align-items-center align-content-center justify-content-xxl-center" style="padding: 15px;padding-right: 15px;margin-top: 15px;">
-                                        <div class="d-xxl-flex mb-3" style="text-align: center;"><button class="btn btn-primary d-xxl-flex justify-content-xxl-center align-items-xxl-center" type="button"><span style="color: rgb(255, 255, 255);">Add Your Own Review</span></button></div>
+                                        <div class="d-xxl-flex mb-3" style="text-align: center;"><button class="btn btn-primary d-xxl-flex justify-content-xxl-center align-items-xxl-center" data-bss-hover-animate="pulse" type="button"><span style="color: rgb(255, 255, 255);">Add Your Own Review</span></button></div>
                                     </div>
                                 </div>
                             </div>
@@ -270,13 +395,54 @@
             <footer class="bg-white sticky-footer"></footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-
-    {{footer()}}
-
+    <footer class="bg-primary-gradient">
+        <div class="container py-4 py-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column align-items-xxl-center">
+                    <h3 class="fs-6 fw-bold d-lg-flex justify-content-lg-center">Services</h3>
+                    <ul class="list-unstyled text-center">
+                        <li class="text-center d-xxl-flex justify-content-xxl-center"><a class="d-xxl-flex" href="#">Web design</a></li>
+                        <li><a class="d-xxl-flex justify-content-xxl-center" href="#">Development</a></li>
+                        <li><a href="#">Hosting</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column align-items-lg-center align-items-xl-center align-items-xxl-center">
+                    <h3 class="fs-6 fw-bold d-lg-flex justify-content-lg-center">About</h3>
+                    <ul class="list-unstyled">
+                        <li><a class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center" href="#">Company</a></li>
+                        <li class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center"><a class="d-lg-flex justify-content-lg-center" href="#">Team</a></li>
+                        <li class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center"><a class="d-lg-flex justify-content-lg-center" href="#">Legacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column align-items-lg-center justify-content-xxl-center align-items-xxl-center">
+                    <h3 class="fs-6 fw-bold">Careers</h3>
+                    <ul class="list-unstyled">
+                        <li class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center"><a href="#">Job openings</a></li>
+                        <li><a class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center" href="#">Employee success</a></li>
+                        <li class="d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center"><a href="#">Benefits</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-muted d-flex justify-content-between align-items-center pt-3">
+                <p class="mb-0">Copyright © 2024 Geo Gemmer</p>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-facebook">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"></path>
+                        </svg></li>
+                    <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-twitter">
+                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15"></path>
+                        </svg></li>
+                    <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-instagram">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"></path>
+                        </svg></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="../static/js/script.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </body>
 
 </html>
