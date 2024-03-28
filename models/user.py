@@ -1,15 +1,5 @@
 class User:
     """A user holds personal information and interactions with gems"""
-    username = "None"
-    id = 1
-    first_name = "None"
-    last_name = "None"
-    password = "None"
-    profile_picture = "None"
-    gems_explored = 0
-    reviews_made = 0
-    gems_created = 0
-    gems_saved_count = 0 
     def __init__(self, username, new_id, first_name, last_name, password, profile_picture, gems_explored, reviews_made, gems_created, gems_saved_count):
         """
         Initialize a User object with the provided information 
