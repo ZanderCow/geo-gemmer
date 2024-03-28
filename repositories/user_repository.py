@@ -65,12 +65,11 @@ def get_user_repository():
             """
 
             new_id = randint(0, 100_000)  # Sufficiently unique ID for our purposes
-            user = User(user_name, "John", "Doe", password, "https://www.google.com", 0, 0, 0, 0)
-
+            user = User(user_name, new_id, "John", "Doe", password, "https://www.google.com", 0, 0, 0, 0)
             # assumes that the user is new so they wont have any gems visited, saved, or reviews left
             self._db[new_id] = user
             
-            return User
+            return user
         
 
         def delete_user(self, user_id: int) -> None:
@@ -433,11 +432,6 @@ def get_user_repository():
             #dont test this one
             pass
         
-    
-        
-
-    
-
         def clear_db(self) -> None:
             """Clears all movies out of the database, only to be used in tests"""
             self._db = {}
