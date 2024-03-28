@@ -1,6 +1,6 @@
 from random import randint
 
-from ..models.user import User
+from models.user import User
 
 _user_repo = None
 
@@ -10,6 +10,21 @@ def get_user_repository():
 
     class UserRepository:
         """In memory database which is a simple dict of users"""
+
+        def get_user_id_by_username(self, username: str) -> int | None:
+            """
+            Retrieve the ID of a user by their username.
+
+            Args:
+                username (str): The username of the user.
+
+            Returns:
+                int | None: The ID of the user if found, None otherwise.
+            """
+            for user_id, user in self._db.items():
+                if user.username == username:
+                    return user_id
+            return None
 
         def __init__(self) -> None:
             self._db: dict[int, User] = {}
@@ -50,10 +65,10 @@ def get_user_repository():
             """
 
             new_id = randint(0, 100_000)  # Sufficiently unique ID for our purposes
-            user = User(new_id)
+            user = User(user_name, "John", "Doe", password, "https://www.google.com", 0, 0, 0, 0)
 
             # assumes that the user is new so they wont have any gems visited, saved, or reviews left
-            self._db[new_id] = User(user_name, "John", "Doe", password, "https://www.google.com", 0, 0, 0, 0, [], [], [])
+            self._db[new_id] = user
             
             return User
         
@@ -391,12 +406,12 @@ def get_user_repository():
             pass
         
 
-        def get_reviews_left(self, user_id: int) -> list[ReviewsLeft]:
-            """
-            Retrieves the list of reviews left by a user.
-            """
-            #dont test this one
-            pass
+        #def get_reviews_left(self, user_id: int) -> list[ReviewsLeft]:
+        #    """
+        #    Retrieves the list of reviews left by a user.
+        #    """
+        #    #dont test this one
+        #    pass
 
         
         def add_gem_visited(self, user_id: int, gem_name: str, gem_type: str, date_visited: str) -> User:
