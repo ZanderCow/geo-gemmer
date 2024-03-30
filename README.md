@@ -14,6 +14,8 @@ Before you begin, ensure you have met the following requirements:
 
 - You have installed the latest version of Python (at the time of writing, Python 3.8 or newer is recommended).
 - You have a Windows/Linux/Mac machine capable of running Python.
+- Make sure PostgreSQL is installed on your system, as psycopg2 requires PostgreSQL client libraries to run. 
+  
 
 ### Setting Up a Development Environment
 
@@ -66,6 +68,19 @@ Before you begin, ensure you have met the following requirements:
    ```
 
    This command reads the `requirements.txt` file in your project directory and installs all the required Python packages.
+
+5. **Make `.env` file**
+
+   At the same directory level as the `app.py` file, make a file called `.env` and put the following in the file:
+
+   ```bash
+   DATABASE_URL=postgresql://Username:Password@localhost:5432
+   ```
+   Change the following to however your postgres is setup:
+    - `Username`: whatever your username is 
+    - `Password`: whatever your password is
+    - `@localhost` : hostname or IP address where the database server is running
+    - `5432` whatever port the database is running on
 
 ### Running the Application
 
