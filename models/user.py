@@ -29,3 +29,18 @@ class User:
         self.reviews_made = reviews_made
         self.gems_created = gems_created
         self.gems_saved_count = gems_saved_count        
+
+'''
+CREATE TABLE IF NOT EXISTS user (
+    user_id UUID PRIMARY KEY,
+    username VARCHAR(255),
+    password VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    profile_picture VARCHAR(255),
+    gems_explored_count INT,
+    reviews_made_count INT,
+    gems_created_count INT,
+    gems_saved_count INT
+);
+'''
