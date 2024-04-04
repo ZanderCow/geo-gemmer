@@ -22,7 +22,19 @@ class HiddenGem:
         self.user_created = user_created
         self.website_link = website_link
 
-
+'''
+CREATE TABLE IF NOT EXISTS hidden_gem (
+    gem_id UUID PRIMARY KEY,
+    name VARCHAR(60) NOT NULL,
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL,
+    gem_type VARCHAR(50),
+    times_visited INT,
+    user_created BOOLEAN,
+    website_link VARCHAR(100),
+    accessibility VARCHAR(100)
+);
+'''
 
 
 class Reviews:
