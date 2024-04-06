@@ -108,6 +108,9 @@ def gemdetails():
     return render_template('gem-details.html', gem_data=gem_data_example)
 '''
 
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
