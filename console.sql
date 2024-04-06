@@ -1,5 +1,6 @@
 create DATABASE geogemmer;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 
 CREATE TABLE IF NOT EXISTS user (
@@ -38,9 +39,8 @@ CREATE TABLE IF NOT EXISTS accessibility (
 CREATE TABLE IF NOT EXISTS hidden_gem (
     gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,
-    latitude FLOAT NOT NULL,
-    longitude FLOAT NOT NULL,
     gem_type VARCHAR(50),
+    location GEOGRAPHY(Point, 4326),
     times_visited INT,
     user_created BOOLEAN,
     website_link VARCHAR(255)
