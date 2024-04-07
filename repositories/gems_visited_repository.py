@@ -16,8 +16,8 @@ def get_all_gems_visited_by_user(user_id) -> list[dict[str, Any]]:
         >>> get_all_gems_visited_by_user(67e55044-10b1-426f-9247-bb680e5fe0c8)
         [
             {
-                'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
                 'gem_name': 'Rocky Mountian',
+                'gem_type': 'Park',
                 'date_visted': "2022-07-15"
             }, 
             {

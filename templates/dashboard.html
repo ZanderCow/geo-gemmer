@@ -25,7 +25,7 @@
     <header data-aos="fade" id="greeting" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Main Menu</p>
-            <h1 class="fw-bold">Welcome Back Zander!</h1>
+            <h1 class="fw-bold">Welcome Back {{user_info.user_name}}!</h1>
         </div>
     </header>
     <div class="container py-4 py-xl-5" data-aos="fade" id="gemdetais">
@@ -38,7 +38,7 @@
                                 <div class="text-uppercase text-primary fw-bold text-xs mb-1">
                                     <h5 class="text-capitalize fw-bold">Gems Explored</h5>
                                 </div>
-                                <div class="text-dark fw-bold h5 mb-0"><span>43</span></div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>{{user_info.gems_explored}}</span></div>
                             </div>
                             <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pin-map-fill fa-2x text-gray-300" style="border-color: var(--bs-primary-text-emphasis);">
                                     <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"></path>
@@ -54,9 +54,9 @@
                         <div class="row align-items-center no-gutters">
                             <div class="col me-2">
                                 <div class="text-uppercase text-primary fw-bold text-xs mb-1">
-                                    <h5 class="text-capitalize fw-bold">Reviews Left</h5>
+                                    <h5 class="text-capitalize fw-bold">Reviews Made</h5>
                                 </div>
-                                <div class="text-dark fw-bold h5 mb-0"><span>43</span></div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>{{user_info.reviews_made}}</span></div>
                             </div>
                             <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fa-2x text-gray-300">
                                     <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -73,7 +73,7 @@
                                 <div class="text-uppercase text-primary fw-bold text-xs mb-1">
                                     <h5 class="text-capitalize fw-bold">Gems Created</h5>
                                 </div>
-                                <div class="text-dark fw-bold h5 mb-0"><span>43</span></div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>{{user_info.gems_created}}</span></div>
                             </div>
                             <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tools fa-2x text-gray-300">
                                     <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
@@ -90,7 +90,7 @@
                                 <div class="text-uppercase text-primary fw-bold text-xs mb-1">
                                     <h5 class="text-capitalize fw-bold">Gems Saved</h5>
                                 </div>
-                                <div class="text-dark fw-bold h5 mb-0"><span>43</span></div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>{{user_info.gems_saved}}</span></div>
                             </div>
                             <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-down-circle-fill fa-2x text-gray-300">
                                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"></path>
@@ -112,7 +112,7 @@
                                     <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gems Overview</h5>
                                 </div>
                                 <div class="text-dark fw-bold h5 mb-0">
-                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas data-bss-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;,&quot;August&quot;,&quot;September&quot;,&quot;October&quot;,&quot;November&quot;,&quot;December&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Revenue&quot;,&quot;backgroundColor&quot;:&quot;#83b271&quot;,&quot;borderColor&quot;:&quot;#83b271&quot;,&quot;data&quot;:[&quot;4500&quot;,&quot;5300&quot;,&quot;6250&quot;,&quot;7800&quot;,&quot;9800&quot;,&quot;15000&quot;],&quot;fill&quot;:true}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;top&quot;},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;italic&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}],&quot;yAxes&quot;:[{&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}]}}}"></canvas></div>
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas id="gem-chart"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                                     <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gem Details</h5>
                                 </div>
                                 <div class="text-dark fw-bold h5 mb-0">
-                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas data-bss-chart="{&quot;type&quot;:&quot;pie&quot;,&quot;data&quot;:{&quot;labels&quot;:[],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Gem Variety&quot;,&quot;backgroundColor&quot;:[&quot;rgb(105,145,89)&quot;,&quot;rgb(108,150,92)&quot;,&quot;rgb(111,154,94)&quot;,&quot;rgb(114,159,96)&quot;,&quot;rgb(120,166,100)&quot;,&quot;rgb(122,170,101)&quot;,&quot;rgb(127,179,105)&quot;,&quot;rgb(163,230,134)&quot;],&quot;borderColor&quot;:[&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;],&quot;data&quot;:[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;bold&quot;}}}"></canvas></div>
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas id="gem-pie-chart"></canvas></div>
                                 </div>
                             </div>
                         </div>
@@ -500,6 +500,154 @@
         </div>
     </div>
     {{ footer()}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('gem-chart').getContext('2d');
+    
+            // Replace the static data with a Jinja2 variable
+            // Assuming gem_variety_distribution is a dictionary like {'Restaurant': 2, 'Park': 1, ...}            
+            const data = {{ gem_visted_frequency | tojson }};
+
+            // Predefine the month order3333333
+            const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            // Sort the keys based on the monthOrder array
+            const sortedKeys = monthOrder.filter(month => Object.keys(data).includes(month));
+
+            // Now, when you extract the chart labels and data, use the sortedKeys array
+            const chartLabels2 = sortedKeys;
+            const chartData2 = sortedKeys.map(key => data[key]);
+    
+            // Interpolate RGB colors from dark green to light green
+            function interpolateColors(startColor, endColor, n) {
+                const lerp = (start, end, t) => start + (end - start) * t;
+                let colors = [];
+                for (let i = 0; i < n; i++) {
+                    const t = i / (n - 1);
+                    const interpolatedColor = `rgb(${
+                        Math.round(lerp(startColor[0], endColor[0], t))
+                    },${
+                        Math.round(lerp(startColor[1], endColor[1], t))
+                    },${
+                        Math.round(lerp(startColor[2], endColor[2], t))
+                    })`;
+                    colors.push(interpolatedColor);
+                }
+                return colors;
+            }
+    
+            console.log(chartLabels2)
+            const startColor2 = [77, 111, 63]; // Dark green
+            const endColor2 = [163, 230, 134]; // Light green
+            const backgroundColors2 = interpolateColors(startColor2, endColor2, chartLabels2.length); // Generate dynamic green colors
+    
+            
+        
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels2,
+                    datasets: [{
+                        label: 'Gem Visit Frequency',
+                        data: chartData2,
+                        backgroundColor: 'rgb(127,179,105)',
+                        borderColor: 'rgba(0,0,0,0.1)', // A consistent border color
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: false,
+                        labels: {
+                            fontStyle: 'normal'
+                        },
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gems',
+                        fontStyle: 'italic'
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontStyle: 'normal'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true, // This ensures that the y-axis starts at 0
+                                fontStyle: 'normal'
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('gem-pie-chart').getContext('2d');
+    
+            // Replace the static data with a Jinja2 variable
+            // Assuming gem_variety_distribution is a dictionary like {'Restaurant': 2, 'Park': 1, ...}
+            const data = {{ gem_distribution | tojson }};
+    
+            // Interpolate RGB colors from dark green to light green
+            function interpolateColors(startColor, endColor, n) {
+                const lerp = (start, end, t) => start + (end - start) * t;
+                let colors = [];
+                for (let i = 0; i < n; i++) {
+                    const t = i / (n - 1);
+                    const interpolatedColor = `rgb(${
+                        Math.round(lerp(startColor[0], endColor[0], t))
+                    },${
+                        Math.round(lerp(startColor[1], endColor[1], t))
+                    },${
+                        Math.round(lerp(startColor[2], endColor[2], t))
+                    })`;
+                    colors.push(interpolatedColor);
+                }
+                return colors;
+            }
+    
+            const chartLabels = Object.keys(data);
+            const chartData = Object.values(data);
+            const startColor = [77, 111, 63]; // Dark green
+            const endColor = [163, 230, 134]; // Light green
+            const backgroundColors = interpolateColors(startColor, endColor, chartLabels.length); // Generate dynamic green colors
+    
+            const myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Gem Variety',
+                        data: chartData,
+                        backgroundColor: backgroundColors,
+                        borderColor: 'rgba(0,0,0,0.1)', // A consistent border color
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: false,
+                        labels: {
+                            fontStyle: 'normal'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gem Details',
+                        fontStyle: 'bold'
+                    }
+                }
+            });
+        });
+    </script>
+  
+        
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>

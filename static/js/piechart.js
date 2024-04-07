@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Replace the static data with a Jinja2 variable
     // Assuming gem_variety_distribution is a dictionary like {'Restaurant': 2, 'Park': 1, ...}
-    const data = {{ gem_variety_distribution | tojson }};
+    const data = {{ {{gem_distribution}} | tojson }};
 
     // Interpolate RGB colors from dark green to light green
     function interpolateColors(startColor, endColor, n) {
