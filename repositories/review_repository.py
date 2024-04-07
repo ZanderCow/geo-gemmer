@@ -143,3 +143,31 @@ def get_average_rating_for_a_hidden_gem(gem_id) -> float:
         4.5
     '''
     pass
+
+def get_all_reviews_user_has_made(user_id) -> list[dict[str, Any]]:
+    '''
+    Retrieve all the reviews a user has made.
+    
+    Parameters:
+        user_id (int): The ID of the user.
+    
+    Returns:
+        list[dict[str, Any]]: A list of dictionaries representing the reviews.
+
+    Example:
+        >>> get_all_reviews_user_has_made(67e55044-10b1-426f-9247-bb680e5fe0c8)
+        [
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 4,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }, 
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 5,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }
+        
+        ]
+    '''
+    pass

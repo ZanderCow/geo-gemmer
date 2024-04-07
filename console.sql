@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS user (
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     profile_picture VARCHAR(255),
-    gems_explored_count INT,
-    reviews_made_count INT,
-    gems_created_count INT,
-    gems_saved_count INT
+    gems_explored INT,
+    reviews_made INT,
+    gems_created INT,
+    gems_saved INT
 );
 
 CREATE TABLE IF NOT EXISTS review (
@@ -51,6 +51,13 @@ CREATE TABLE IF NOT EXISTS gems_visited (
     user_id UUID REFERENCES user(user_id) ON DELETE CASCADE,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     date_visited date NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS gems_pinned (
+    gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES user(user_id) ON DELETE CASCADE,
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
+    date_pinned date NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS image_group (
