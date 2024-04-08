@@ -11,10 +11,10 @@ def dashboard():
     user_info = {
         'user_name': 'TheCowanPlayz',
         'profile_picture': 'amazons3.com/cool-profile-picture',
-        'gems_explored': 10,
-        'reviews_made': 5,
-        'gems_created': 3,
-        'gems_saved': 2
+        'gems_explored': 1030023908,
+        'reviews_made': 5349084350,
+        'gems_created': 334098534,
+        'gems_saved': 230495830495834
     }
 
     gem_visted_frequency = {
@@ -36,7 +36,13 @@ def dashboard():
     gem_distribution = {
             'Restaurant': 2,
             'Park': 1,
-            'Museum': 1
+            'Museum': 1,
+            'Beach': 1,
+            'Trail': 1,
+            'Bar': 1,
+            'Hotel': 1,
+            'Store': 1,
+    
         }  
     
     gems_pinned = [
@@ -63,7 +69,7 @@ def dashboard():
     reviews_made =  [
             {
                 'gem_name': 'Rocky Mountian',
-                'rating': 4,
+                'rating': 1,
                 'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
             }, 
             {

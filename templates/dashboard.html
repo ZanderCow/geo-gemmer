@@ -144,6 +144,7 @@
                     <div class="card-body px-4 py-5 px-md-5">
                         <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title" style="padding-bottom: 30px;">Gems Pinned</h5>
                         <section class="overflow-auto" style="height: 300px">
+                            {% for pinned_gem in gems_pinned %}
                             <div class="card shadow-sm" id="gem-1">
                                 <div class="card-body px-4 py-5 px-md-5">
                                     <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center align-items-md-center justify-content-lg-center">
@@ -155,8 +156,8 @@
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="text-center">
-                                                                    <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                                    <h4 class="fw-bold">Old Father Mountian</h4>
+                                                                    <p class="fw-bold text-success mb-2">Hidden Gem</p>
+                                                                    <h4 class="fw-bold">{{pinned_gem.gem_name}}</h4>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -167,7 +168,7 @@
                                                                             <path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1z"></path>
                                                                         </svg>
                                                                         <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
-                                                                        <p class="text-center text-muted card-text">Hiking Trail</p>
+                                                                        <p class="text-center text-muted card-text">{{pinned_gem.gem_type}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -175,17 +176,18 @@
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
+                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-calendar-date-fill text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
+                                                                            <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zm5.402 9.746c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2z"></path>
+                                                                            <path d="M16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-6.664-1.21c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm-2.89-5.435v5.332H5.77V8.079h-.012c-.29.156-.883.52-1.258.777V8.16a12.6 12.6 0 0 1 1.313-.805h.632z"></path>
                                                                         </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
-                                                                        <p class="text-center text-muted card-text">30 mi away</p>
+                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Date Visited</h5>
+                                                                        <p class="text-center text-muted card-text">{{pinned_gem.date_pinned}}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Details</span></button></div>
+                                                    <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;"><a class="btn btn-success btn-lg d-lg-flex align-items-lg-center" role="button" href="{{pinned_gem.gem_url}}"><span style="color: rgb(255, 255, 255);">View Details</span></a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -202,180 +204,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card shadow-sm" id="gem-2">
-                                <div class="card-body px-4 py-5 px-md-5">
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center align-items-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 col-xxl-3 d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><img class="rounded fit-cover" src="/static/img/nature-image.png" width="314" height="193"></div>
-                                        <div class="col-md-9 col-lg-10 col-xxl-9 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="container">
-                                                <div class="row d-xxl-flex justify-content-xxl-center">
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="text-center">
-                                                                    <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                                    <h4 class="fw-bold">Old Father Mountian</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-grid-1x2-fill text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
-                                                                        <p class="text-center text-muted card-text">Hiking Trail</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
-                                                                        <p class="text-center text-muted card-text">30 mi away</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Details</span></button></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="w-100"></div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card shadow-sm" id="gem-4">
-                                <div class="card-body px-4 py-5 px-md-5">
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center align-items-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 col-xxl-3 d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><img class="rounded fit-cover" src="/static/img/nature-image.png" width="314" height="193"></div>
-                                        <div class="col-md-9 col-lg-10 col-xxl-9 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="container">
-                                                <div class="row d-xxl-flex justify-content-xxl-center">
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="text-center">
-                                                                    <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                                    <h4 class="fw-bold">Old Father Mountian</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-grid-1x2-fill text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
-                                                                        <p class="text-center text-muted card-text">Hiking Trail</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
-                                                                        <p class="text-center text-muted card-text">30 mi away</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Details</span></button></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="w-100"></div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card shadow-sm" id="gem-3">
-                                <div class="card-body px-4 py-5 px-md-5">
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center align-items-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 col-xxl-3 d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><img class="rounded fit-cover" src="/static/img/nature-image.png" width="314" height="193"></div>
-                                        <div class="col-md-9 col-lg-10 col-xxl-9 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="container">
-                                                <div class="row d-xxl-flex justify-content-xxl-center">
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="text-center">
-                                                                    <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                                    <h4 class="fw-bold">Old Father Mountian</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-grid-1x2-fill text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1zm0 9a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
-                                                                        <p class="text-center text-muted card-text">Hiking Trail</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                                    <div class="card-body"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
-                                                                        </svg>
-                                                                        <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
-                                                                        <p class="text-center text-muted card-text">30 mi away</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Details</span></button></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="w-100"></div>
-                                    </div>
-                                    <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                        <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </section>
                     </div>
                 </div>
@@ -389,19 +218,73 @@
                     <div class="card-body px-4 py-5 px-md-5">
                         <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title" style="padding-bottom: 30px;">Reviews Made</h5>
                         <section class="overflow-auto" style="height: 300px">
-                            <div class="card shadow-sm" id="gem-6">
+                            {% for review in reviews_made %}
+                            <div class="card shadow-sm" id="review-1">
                                 <div class="card-body px-4 py-5 px-md-5">
                                     <div class="row">
                                         <div class="col-md-4 justify-content-center align-items-center align-content-center">
                                             <div class="text-center">
-                                                <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                <h4 class="fw-bold">Old Father Mountian</h4>
+                                                <p class="fw-bold text-success mb-2">Review </p>
+                                                <h4 class="fw-bold">{{review.gem_name}}</h4>
                                             </div>
                                             <div class="card shadow-sm flex-grow-1 flex-fill">
                                                 <div class="card-body">
                                                     <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Rating</h5>
-                                                    <p class="text-center text-muted card-text">4/5</p>
-                                                </div>
+                                                    
+                                                    <section class="d-xxl-flex justify-content-xxl-center">
+                                                        {% if review.rating == 1 %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                        {% elif review.rating == 2 %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                        {% elif review.rating == 3 %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                        {% elif review.rating == 4 %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                        {% elif review.rating == 5 %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 30px;">
+                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                            </svg>
+                                                        {% endif %}
+                                                    </section>
+                                            </div>
                                             </div>
                                             <div class="card shadow-sm flex-grow-1 flex-fill">
                                                 <div class="card-body d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Rating</span></button></div>
@@ -413,75 +296,14 @@
                                             <div class="card shadow-sm flex-grow-1 flex-fill">
                                                 <div class="card-body">
                                                     <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Review</h5>
-                                                    <p class="text-center text-muted card-text">&nbsp;awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a30 mi awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a</p>
+                                                    <p class="text-center text-muted card-text">&nbsp;{{review.review}}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card shadow-sm" id="gem-7">
-                                <div class="card-body px-4 py-5 px-md-5">
-                                    <div class="row">
-                                        <div class="col-md-4 justify-content-center align-items-center align-content-center">
-                                            <div class="text-center">
-                                                <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                <h4 class="fw-bold">Old Father Mountian</h4>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body">
-                                                    <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Rating</h5>
-                                                    <p class="text-center text-muted card-text">4/5</p>
-                                                </div>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Rating</span></button></div>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill"></div>
-                                            <section></section>
-                                        </div>
-                                        <div class="col-md-4 col-xl-4 col-xxl-8 d-xxl-flex flex-grow-1 align-items-xxl-center">
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body">
-                                                    <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Review</h5>
-                                                    <p class="text-center text-muted card-text">&nbsp;awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a30 mi awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card shadow-sm" id="gem-5">
-                                <div class="card-body px-4 py-5 px-md-5">
-                                    <div class="row">
-                                        <div class="col-md-4 justify-content-center align-items-center align-content-center">
-                                            <div class="text-center">
-                                                <p class="fw-bold text-success mb-2">Gem 1</p>
-                                                <h4 class="fw-bold">Old Father Mountian</h4>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body">
-                                                    <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Rating</h5>
-                                                    <p class="text-center text-muted card-text">4/5</p>
-                                                </div>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body d-sm-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center"><button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">View Rating</span></button></div>
-                                            </div>
-                                            <div class="card shadow-sm flex-grow-1 flex-fill"></div>
-                                            <section></section>
-                                        </div>
-                                        <div class="col-md-4 col-xl-4 col-xxl-8 d-xxl-flex flex-grow-1 align-items-xxl-center">
-                                            <div class="card shadow-sm flex-grow-1 flex-fill">
-                                                <div class="card-body">
-                                                    <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Review</h5>
-                                                    <p class="text-center text-muted card-text">&nbsp;awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a30 mi awayajskdf;sakjfsa;lkdjfas;lkdjfa;skldjfsa;kldfjsa;dklfjas;lkdjfa;slkdjfsa;kldjfsa;lkdjflk;asdjf;klasdjf;kasldjfk;lsadjf;skladjflk;sdajfk;alsdjf;klasjfas;lkfjasl;kdfj;skldja;skdfsa;lkfjs;a</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </section>
                     </div>
                 </div>
