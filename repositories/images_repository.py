@@ -14,16 +14,3 @@ def get_images_for_a_hidden_gem(gem_id):
     '''
     pass
 
-
-def add_image_to_hidden_gem(gem_id, image_data):
-    '''
-    Adds an image to a hidden gem on an Amazon S3 server.
-
-    Parameters:
-        gem_id (int): The ID of the hidden gem.
-        image_data (bytes): The image data to be uploaded.
-        
-    Returns:
-        None
-    '''
-    pass

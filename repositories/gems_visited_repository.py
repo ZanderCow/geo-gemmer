@@ -48,19 +48,6 @@ def add_gem_to_visited_list(user_id, gem_id, date_visited):
     '''
     pass
 
-def remove_gem_from_visited_list(user_id, gem_id):
-    '''
-    Removes a gem from a user's visited list.
-
-    Parameters:
-        user_id (int): The ID of the user.
-        gem_id (int): The ID of the gem.
-
-    Returns:
-        None
-    '''
-    pass
-
 def get_distribution_of_hidden_gems_visited_by_a_user(user_id):
     '''
     Get the distribution of hidden gems visited by a user.

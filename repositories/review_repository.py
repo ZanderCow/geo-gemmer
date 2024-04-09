@@ -54,58 +54,6 @@ def add_review_to_hidden_gem(gem_id, user_id, rating, review):
 
     pass
 
-def delete_review(review_id) -> None:
-    '''
-    Delete a review from a hidden gem.
-    
-    Parameters:
-        gem_id (int): The ID of the hidden gem.
-        user_id (int): The ID of the user.
-    
-    Returns:
-        None
-
-    Example:
-        >>> delete_review(67e55044-10b1-426f-9247-bb680e5fe0c8)
-    
-    '''
-    pass
-
-def update_review_for_hidden_gem(gem_id, user_id, rating, review):
-    '''
-    Update a review for a hidden gem.
-    
-    Parameters:
-        gem_id (int): The ID of the hidden gem.
-        user_id (int): The ID of the user.
-        rating (int): The rating of the hidden gem.
-        review (str): The review of the hidden gem.
-    
-    Returns:
-        None
-    '''
-    pass
-
-def get_review_by_id(review_id) -> dict[str, Any]:
-    '''
-    Retrieve a review by its ID.
-    
-    Parameters:
-        review_id (int): The ID of the review.
-    
-    Returns:
-        dict[str, Any]: A dictionary representing the review.
-
-    Example:
-        >>> get_review_by_id(67e55044-10b1-426f-9247-bb680e5fe0c8)
-        {
-            'user_name': 'Sally', 
-            'rating': 4,
-            'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
-        }
-    '''
-    pass
-
 
 def get_review_distribution_of_a_hidden_gem_visited_by_a_user(user_id):
     '''
