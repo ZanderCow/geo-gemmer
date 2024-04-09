@@ -19,10 +19,10 @@ def dashboard():
 
     gem_visted_frequency = {
         'January': 2,
-        'February': 1,
+        'February': 6,
         'March': 3,
         'April': 2,
-        'May': 1,
+        'May': 4,
         'June': 1,
         'July': 1,
         'August': 1,
@@ -39,10 +39,6 @@ def dashboard():
             'Museum': 1,
             'Beach': 1,
             'Trail': 1,
-            'Bar': 1,
-            'Hotel': 1,
-            'Store': 1,
-    
         }  
     
     gems_pinned = [

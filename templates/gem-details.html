@@ -28,7 +28,7 @@
     <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Hidden Gem</p>
-            <h1 class="fw-bold">Old Father Mountian</h1>
+            <h1 class="fw-bold">{{gem_basic_info.type}}</h1>
         </div>
     </header>
     <div class="container" id="Pictures">
@@ -37,17 +37,18 @@
                 <div class="card-body" style="padding-top: 30px;">
                     <div class="row nav-fill">
                         <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
-                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="../static/img/nature-image.png" width="727" height="646"></div>
+                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_images.image_1}}" width="727" height="646"></div>
                         </div>
                         <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                             <div class="row">
+                                
                                 <div class="col-md-12">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="../static/img/nature-image.png" width="513" height="272"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="{{gem_images.image_2}}" width="513" height="272"></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="../static/img/nature-image.png" width="300" height="450"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_images.image_3}}" width="300" height="450"></div>
                                 </div>
                             </div>
                         </div>
@@ -71,19 +72,30 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email"><strong>4.3/ 5</strong></label></div>
+                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email"><strong>{{gem_average_rating_in_float | string}}/ 5</strong></label></div>
                                         <div class="row">
-                                            <div class="col text-center d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
+                                            <div class="col text-center d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center">
+
+                                                {% for i in range(full_stars)%}
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
                                                     <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half fs-1">
+                                                </svg>
+
+                                                {% endfor %}
+
+
+
+                                                
+                                                {% for i in range(half_stars)%}
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half fs-1">
                                                     <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"></path>
-                                                </svg></div>
+                                                </svg>
+
+                                                {% endfor %}
+                                                
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +116,7 @@
                                 <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Type</h5>
-                        <p class="text-muted card-text mb-4">Hiking Trail</p>
+                        <p class="text-muted card-text mb-4">{{gem_basic_info.type}}</p>
                     </div>
                 </div>
                 <div class="card shadow-sm" data-aos="fade">
@@ -113,7 +125,7 @@
                                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Distance</h5>
-                        <p class="text-muted card-text mb-4">30 mi away</p>
+                        <p class="text-muted card-text mb-4">{{gem_basic_info.distance_from_user}} mi away</p>
                     </div>
                 </div>
                 <div class="card shadow-sm" data-aos="fade">
@@ -122,7 +134,7 @@
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Times Visited</h5>
-                        <p class="text-muted card-text mb-4">3300</p>
+                        <p class="text-muted card-text mb-4">{{gem_basic_info.times_visited}}</p>
                     </div>
                 </div>
             </div>
@@ -131,6 +143,7 @@
     <div class="container py-4 py-xl-5">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             <div class="col">
+                {% if gem_accessibility_info.wheelchair_accessible  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-wheelchair text-success">
@@ -140,8 +153,11 @@
                         <p class="text-muted card-text mb-4">Wheelchairs are easy to use&nbsp;</p>
                     </div>
                 </div>
+                {% else %}
+                {% endif %}
             </div>
             <div class="col">
+                {% if gem_accessibility_info.service_animal_friendly  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-dog text-success">
@@ -159,7 +175,10 @@
                         <p class="text-muted card-text mb-4">Service animals are allowed&nbsp;</p>
                     </div>
                 </div>
+                {% else %}
+                {% endif %}
             </div>
+            {% if gem_accessibility_info.multilingual_support  %}
             <div class="col-md-12 col-lg-8">
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
@@ -167,11 +186,15 @@
                         <h5 class="fw-bold card-title">Multilingual Support</h5>
                         <p class="text-muted card-text mb-4">Multiple languages are supported here</p>
                     </div>
-                </div>
+                </div>   
             </div>
+            {% else %}
+            {% endif %}
         </div>
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center" style="padding-top: 25px;">
             <div class="col">
+                {% if gem_accessibility_info.braille_signage  %}
+
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 20 20" fill="none" class="text-success">
@@ -181,11 +204,15 @@
                                 <path d="M16 12C17.1046 12 18 11.1046 18 10C18 8.89543 17.1046 8 16 8C14.8954 8 14 8.89543 14 10C14 11.1046 14.8954 12 16 12Z" fill="currentColor"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Braille Signage</h5>
-                        <p class="text-muted card-text mb-4">3300</p>
+                        <p class="text-muted card-text mb-4">Those with impaired vision can have fun too!</p>
                     </div>
                 </div>
+                {% else %}
+                {% endif %}
             </div>
             <div class="col">
+                {% if gem_accessibility_info.hearing_assistance  %}
+
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ear text-success">
@@ -195,8 +222,11 @@
                         <p class="text-muted card-text mb-4">Those troubled with hearing can request aid.</p>
                     </div>
                 </div>
+                {% else %}
+                {% endif %}
             </div>
             <div class="col-md-12 col-lg-8">
+                {% if gem_accessibility_info.large_print_materials  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-newspaper text-success">
@@ -207,6 +237,8 @@
                         <p class="text-muted card-text mb-4">Can't see the map or a menu? Larger printed materials are provided</p>
                     </div>
                 </div>
+                {% else %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -216,21 +248,21 @@
                 <div class="card shadow-sm mb-3" data-aos="fade">
                     <div class="card-body">
                         <h1 class="small fw-bold"></h1>
-                        <h4 class="small fw-bold"><span class="float-end">10%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span class="float-end">{{formatted_gem_review_cdf.one}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"><span class="visually-hidden">10%</span></div>
+                            <div class="progress-bar bg-primary" aria-valuenow="{{gem_review_distribution.1}}" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{formatted_gem_review_cdf.one}};"><span class="visually-hidden">10%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">20%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span class="float-end">{{formatted_gem_review_cdf.two}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
+                            <div class="progress-bar bg-primary" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{formatted_gem_review_cdf.two}};"><span class="visually-hidden">20%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">30%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span class="float-end">{{formatted_gem_review_cdf.three}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -238,9 +270,9 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"><span class="visually-hidden">30%</span></div>
+                            <div class="progress-bar bg-primary" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: {{formatted_gem_review_cdf.three}};"><span class="visually-hidden">30%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">40%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span class="float-end">{{formatted_gem_review_cdf.four}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -250,9 +282,9 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span></div>
+                            <div class="progress-bar bg-primary" aria-valuemin="0" aria-valuemax="100" style="width: {{formatted_gem_review_cdf.four}};"><span class="visually-hidden">40%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">60%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span class="float-end">{{formatted_gem_review_cdf.five}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -264,7 +296,7 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="visually-hidden">60%</span></div>
+                            <div class="progress-bar bg-primary" aria-valuemin="0" aria-valuemax="100" style="width: {{formatted_gem_review_cdf.five}};"><span class="visually-hidden">60%</span></div>
                         </div>
                     </div>
                 </div>
@@ -278,108 +310,51 @@
                     <div class="card-body" style="overflow: auto;background: #ffffff;">
                         <section class="text-truncate" style="color: rgb(255,255,255);background-color: #ffffff;padding: 30px;height: 700px;overflow: scroll;border-color: rgb(255,255,255);">
                             <div class="container scstyle-1 sc-overflow" style="max-height: 675px;background: #ffffff;">
+                                {% for review in gem_reviews %}
                                 <div class="card mb-3">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col"><img class="border rounded-circle img-profile" src="../static/img/neckbeard.png" width="65" height="61"></div>
+                                            <div class="col"><img class="border rounded-circle img-profile" src="{{review.pfp}}" width="65" height="61"></div>
                                             <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xl-end justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;">
-                                                    <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg></div>
+                                                </svg>
+                                                    {% for i in range(review.rating) %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
+                                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                    </svg>
+                                                    {% endfor %}
+                                                    
+                                                    {% if review.rating < 5 %}
+                                                    {% for i in range(5 - review.rating) %}
+
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
+                                                    </svg>
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% endif %}
+                                               
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
+                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.user_name}}</h5>
                                             </div>
                                             <div class="col d-xxl-flex justify-content-xxl-end">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
+                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.rating}}/5</h5>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
                                                 <div>
-                                                    <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
+                                                    <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="mb-3"></div>
                                     </div>
                                 </div>
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col"><img class="border rounded-circle img-profile" src="../static/img/normalguy.png" width="65" height="61"></div>
-                                            <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill" style="font-size: 39px;">
-                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg></div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
-                                            </div>
-                                            <div class="col d-xxl-flex justify-content-xxl-end">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
-                                                <div>
-                                                    <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3"></div>
-                                    </div>
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col"><img class="border rounded-circle img-profile" src="../static/img/neckbeard.png" width="65" height="61"></div>
-                                            <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                </svg></div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">Janie Smith</h5>
-                                            </div>
-                                            <div class="col d-xxl-flex justify-content-xxl-end">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">4/5</h5>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
-                                                <div>
-                                                    <p class="text-muted mb-4 text-wrap text-break">From the moment my boots touched the soft, pine-needle-laden path of Whispering Pine Trail, I knew this hike was going to be something special. Nestled in the heart of an ancient forest, this 8-mile loop offers a breathtaking array of natural beauty, challenging terrains, and serene moments that are sure to captivate any outdoor enthusiast.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3"></div>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </section>
                     </div>
