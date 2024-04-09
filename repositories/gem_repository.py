@@ -95,25 +95,17 @@ def get_all_hidden_gems_with_a_specific_type(gem_type):
         >>> get_all_hidden_gems_with_a_specific_type("hiking_trail")
         [
             {
-                'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
+                'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
                 'name': 'Rocky Mountian', 
-                'latitude': '40.7128',
-                'longitude': '74.0060',
+                'distance_away_from_user': 20.3346
                 'type': 'hiking_trail',
-                'times_visited': 2,
-                'user_created': True,
-                'website_link': 'https://www.ruby-lang.org/en/',
                 
                 }, 
                 {
-                'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
+                'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
                 'name': 'Rocky Mountian',
-                'latitude': '84.2315',
-                'longitude': '31.3151',
+                distance_away_from_user': 20.3346
                 'type': 'hiking_trail',
-                'times_visited': 2,
-                'user_created': True,
-                'website_link': 'https://www.penis.com', 
                 }           
         ]
     '''
@@ -149,8 +141,6 @@ def get_all_gems_with_a_specific_assesiblity(assesiblity):
             {
                 'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
                 'name': 'Rocky Mountian', 
-                'latitude': '40.7128',
-                'longitude': '74.0060',
                 'type': 'Restaurant',
                 'times_visited': 2,
                 'user_created': True,
