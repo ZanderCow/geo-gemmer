@@ -132,6 +132,7 @@ def get_all_gems_within_a_certain_distance_from_the_user(geo_location, distance)
     '''
     pass
 
+
 def get_all_gems_with_a_specific_assesiblity(assesiblity):
     """
     Retrieves all gems with a specific accessibility level.
