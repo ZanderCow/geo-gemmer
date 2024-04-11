@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,redirect,request
+from flask import Blueprint, render_template,redirect,request,jsonify
 from math import ceil
 
 gem = Blueprint('gem', __name__)
@@ -19,7 +19,7 @@ def gem_search_page():
     searched_gems = [
         {
             'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
-            'name': 'Rocky Mountian', 
+            'name': 'fuck you bitch', 
             "image" : "/static/img/nature-image.png",
             'distance_from_user': 20.3346,
             'type': 'hiking Trail'
@@ -30,9 +30,31 @@ def gem_search_page():
             'name': 'Rocky Mountian',
             "distance_from_user" : 20.3346,
             'type': 'hiking Trail'
+        },
+        {
+            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
+            'name': 'Rocky Mountian',
+            "distance_from_user" : 20.3346,
+            'type': 'hiking Trail'
+        },
+        {
+            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
+            'name': 'Rocky Mountian',
+            "distance_from_user" : 20.3346,
+            'type': 'hiking Trail'
         }           
     ]
     return render_template('gem-search.html',gem_data=searched_gems, user_query="rocky mountain")
+
+@gem.post('/send-location')
+def receive_location():
+    data = request.json
+    latitude = data['latitude']
+    longitude = data['longitude']
+    print(f"Received location: Latitude = {latitude}, Longitude = {longitude}")
+    # Process the data as needed
+    return jsonify({'status': 'success'})
+
 
 @gem.get('/<gem_id>')
 def gem_details(gem_id):
