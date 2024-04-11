@@ -1,4 +1,5 @@
 from repositories.db import get_pool
+from psycopg.rows import dict_row
 from typing import Any
 
 def get_all_gems() -> list[dict[str, Any]]:
@@ -15,7 +16,7 @@ def get_all_gems() -> list[dict[str, Any]]:
         >>> get_all_gems()
         [
             {
-                'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
+                'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
                 'name': 'Rocky Mountian', 
                 'latitude': '40.7128',
                 'longitude': '74.0060',
@@ -26,7 +27,7 @@ def get_all_gems() -> list[dict[str, Any]]:
                 
                 }, 
                 {
-                'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
+                'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
                 'name': 'Rocky Mountian',
                 'latitude': '84.2315',
                 'longitude': '31.3151',
@@ -37,7 +38,21 @@ def get_all_gems() -> list[dict[str, Any]]:
                 }           
         ]
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''SELECT
+                                    gem_id,
+                                    name,
+                                    ST_X(location::geometry) AS longitude,
+                                    ST_Y(location::geometry) AS latitude,
+                                    gem_type AS type,
+                                    times_visited,
+                                    user_created,
+                                    website_link
+                                FROM
+                                    hidden_gem;''')
+            return cursor.fetchall()
 
 def create_new_gem(name, gem_type, location, user_created):
     '''
@@ -57,9 +72,21 @@ def create_new_gem(name, gem_type, location, user_created):
         - the website_link should be None by default (not all gems have a website)
         
     '''
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                INSERT INTO hidden_gem (name, gem_type, location, times_visited, user_created, website_link) VALUES (
+                    '{name}',
+                    '{gem_type}',
+                    ST_SetSRID(ST_MakePoint(-80.7324, 35.3036), 4326),
+                    0,
+                    true,
+                    'https://www.charlotte.edu/'
+                );''')
     
-def get_hidden_gem_by_id(gem_id) -> dict[str, Any]:
+    
+def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
     '''
     Retrieve a hidden gem from the repository based on its ID.
 
@@ -82,7 +109,23 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any]:
             'website_link': 'https://www.ruby-lang.org/en/',
         }
     '''
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''SELECT
+                                    gem_id,
+                                    name,
+                                    ST_X(location::geometry) AS longitude,
+                                    ST_Y(location::geometry) AS latitude,
+                                    gem_type AS type,
+                                    times_visited,
+                                    user_created,
+                                    website_link
+                                FROM
+                                    hidden_gem
+                                WHERE
+                                    gem_id={gem_id};''')
+            return cursor.fetchall()
 
 def get_all_hidden_gems_with_a_specific_type(gem_type):
     '''
@@ -109,7 +152,23 @@ def get_all_hidden_gems_with_a_specific_type(gem_type):
                 }           
         ]
     '''
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''SELECT
+                                    gem_id,
+                                    name,
+                                    ST_X(location::geometry) AS longitude,
+                                    ST_Y(location::geometry) AS latitude,
+                                    gem_type AS type,
+                                    times_visited,
+                                    user_created,
+                                    website_link
+                                FROM
+                                    hidden_gem
+                                WHERE
+                                    gem_type={gem_type};''')
+            return cursor.fetchall()
 
 def get_all_gems_within_a_certain_distance_from_the_user(geo_location, distance):
     '''
@@ -122,10 +181,30 @@ def get_all_gems_within_a_certain_distance_from_the_user(geo_location, distance)
     Returns:
         list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
     '''
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+            SELECT
+                gem_id AS id,
+                name,
+                gem_type AS type,
+                ST_Y(location::geometry) AS latitude,
+                ST_X(location::geometry) AS longitude,
+                times_visited,
+                user_created,
+                website_link
+            FROM
+                hidden_gem
+            WHERE ST_DWithin(
+                location::geography,
+                ST_MakePoint({geo_location[1]}, {geo_location[0]})::geography,
+                {distance*1000}
+            );''') # geo_location is latitude THEN longitude. right?
+            return cursor.fetchall()
 
 
-def get_all_gems_with_a_specific_assesiblity(assesiblity):
+def get_all_gems_with_a_specific_assesiblity(assesiblity) -> dict[str, Any] | None:
     """
     Retrieves all gems with a specific accessibility level.
 
@@ -159,6 +238,25 @@ def get_all_gems_with_a_specific_assesiblity(assesiblity):
             }           
         ]
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+            SELECT
+                h.gem_id AS id,
+                h.name,
+                h.gem_type,
+                ST_Y(h.location::geometry) AS latitude,
+                ST_X(h.location::geometry) AS longitude,
+                h.times_visited,
+                h.user_created,
+                h.website_link
+            FROM
+                hidden_gem h
+            INNER JOIN
+                accessibility a
+            USING
+                h.gem_id = a.gem_id;''') # geo_location is latitude THEN longitude. right?
+            return cursor.fetchall()
 
 
