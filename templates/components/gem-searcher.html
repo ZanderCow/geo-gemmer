@@ -1,0 +1,57 @@
+{% macro gem_searcher(gem_data) %}
+<div class="col-md-12 flex-fill scstyle-1 sc-overflow">
+    <section class="overflow-auto" style="height: 700px">
+
+        {% for gem in gem_data %}
+
+        <div id="gem1" class="card shadow-sm">
+            <div class="card-body px-4 py-5 px-md-5">
+                <header id="greeting-1" class="bg-primary-gradient pt-5" style="background: #ffffff;">
+                    <div class="text-center">
+                        <p class="fw-bold text-success mb-2">Gem </p>
+                        <h3 class="fw-bold" style="padding: 15px;">{{gem.name}}</h3>
+                    </div>
+                </header><img class="rounded w-100 h-100 fit-cover" style="min-height: 300px;" src="{{gem.image}}" />
+                <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
+                    <div class="w-100"></div>
+                    <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
+                        <div class="card shadow-sm flex-grow-1 flex-fill">
+                            <div class="card-body"><svg class="text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11 17.9C8.71776 17.4367 7 15.419 7 13V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V13C17 15.419 15.2822 17.4367 13 17.9V21C13 21.5523 12.5523 22 12 22C11.4477 22 11 21.5523 11 21V17.9ZM12 4C13.6569 4 15 5.34315 15 7V13C15 14.3062 14.1652 15.4175 13 15.8293V11C13 10.4477 12.5523 10 12 10C11.4477 10 11 10.4477 11 11V15.8293C9.83481 15.4175 9 14.3062 9 13V7C9 5.34315 10.3431 4 12 4Z" fill="currentColor"></path>
+                                </svg>
+                                <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
+                                <p class="text-center text-muted card-text mb-4">{{gem.type}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
+                        <div class="card shadow-sm flex-grow-1 flex-fill">
+                            <div class="card-body"><svg class="bi bi-globe-americas text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
+                                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
+                                </svg>
+                                <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
+                                <p class="text-center text-muted card-text mb-4">{{gem.distance_from_user}} mi away</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
+                    <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
+                        <div class="card shadow-sm flex-grow-1 flex-fill">
+                            <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><a class="btn btn-success btn-lg" role="button" href="/gem/{{gem.gem_id}}"><span style="color: rgb(255, 255, 255);">View Details</span></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        <div id="loader" class="card shadow-sm">
+            <div class="card-body px-4 py-5 px-md-5">
+                <div class="d-xl-flex justify-content-xl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endmacro %}
+
