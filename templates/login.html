@@ -33,7 +33,10 @@
                             <form method="post" data-bs-theme="light">
                                 <div class="mb-3"><input class="form-control" type="email" data-bss-hover-animate="pulse" name="email" placeholder="Email"></div>
                                 <div class="mb-3"><input class="form-control" type="password" data-bss-hover-animate="pulse" name="password" placeholder="Password">
-                                    <p class="text-muted d-none" style="padding-top: 10px;"><span style="color: rgba(213, 31, 31, 0.75);">Username or password</span><br><span style="color: rgba(213, 31, 31, 0.75);">is incorrect</span></p>
+                                    {% if incorrect_login %}
+                                    <p class="text-muted" style="padding-top: 10px;"><span style="color: rgba(213, 31, 31, 0.75);">Username or password</span><br><span style="color: rgba(213, 31, 31, 0.75);">is incorrect</span></p>
+                                    {% else %}
+                                    {% endif %}
                                 </div>
                                 <div class="mb-3"><button class="btn btn-primary shadow d-block w-100" type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Log in</span></button></div>
                             </form><a href="/forgot-password">Forgot your password?</a>
