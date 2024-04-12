@@ -9,26 +9,26 @@ def dashboard():
     # get user hidden gems from database
 
     user_info = {
-        'user_name': 'TheCowanPlayz',
+        'user_name': 'Zander',
         'profile_picture': 'amazons3.com/cool-profile-picture',
-        'gems_explored': 1030023908,
-        'reviews_made': 5349084350,
-        'gems_created': 334098534,
-        'gems_saved': 230495830495834
+        'gems_explored': 420,
+        'reviews_made': 69,
+        'gems_created': 1134,
+        'gems_saved': 1738
     }
 
     gem_visted_frequency = {
-        'January': 2,
+        'January': 45,
         'February': 6,
-        'March': 3,
+        'March': 45,
         'April': 2,
-        'May': 4,
+        'May': 45,
         'June': 1,
-        'July': 1,
+        'July': 45,
         'August': 1,
-        'September': 1,
+        'September': 45,
         'October': 1,
-        'November': 10,
+        'November': 45,
         'December': 1
     }
 
