@@ -56,7 +56,6 @@ def receive_location():
     return jsonify({'status': 'success'})
 
 
-@gem.get('/<gem_id>')
 def gem_details(gem_id):
     #TODO:
     #auethenticate user (user must be logged in to view a gem)
