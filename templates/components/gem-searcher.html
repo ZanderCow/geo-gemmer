@@ -1,23 +1,22 @@
 {% macro gem_searcher(gem_data) %}
-
 <div class="col-1 col-md-12 col-xl-7 col-xxl-7 flex-grow-1 flex-fill scstyle-1 sc-overflow">
     <section class="overflow-auto" style="height: 600px;">
         {% for gem in gem_data %}
         <div class="card shadow-sm" id="gem-3">
             <div class="card-body px-4 py-5 px-md-5" style="padding: 0px;">
                 <div class="row">
-                    <div class="col-md-4 col-xl-4 col-xxl-5 d-md-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center align-items-xl-center align-items-xxl-center">
+                    <div class="col-md-4 col-lg-6 col-xl-5 col-xxl-6 offset-xl-0 offset-xxl-0 d-md-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center align-items-xl-center align-items-xxl-center">
                         <header id="greeting-2" class="bg-primary-gradient" style="background: #ffffff;">
                             <div class="text-center">
-                                <p class="fw-bold text-success mb-2">Gem </p>
+                                <p class="fw-bold text-success mb-2">Gem 1</p>
                                 <h3 class="fw-bold" style="padding: 15px;">{{gem.name}}</h3>
                             </div>
                         </header>
                     </div>
-                    <div class="col-md-4 col-xxl-7 flex-fill"><img class="rounded d-xl-flex align-items-xl-center w-100 h-100 fit-cover" style="min-height: 300px;" src="{{gem.image}}" width="393" height="300"></div>
+                    <div class="col-md-8 col-lg-6 col-xl-7 col-xxl-6 offset-xl-0 offset-xxl-0 d-xxl-flex justify-content-xxl-end"><img class="rounded d-xl-flex align-items-xl-center fit-cover w-100" style="min-height: 300px;" src="{{gem.image}}" width="659" height="373"></div>
                 </div>
                 <div class="row" style="padding-top: 20px;">
-                    <div class="col-md-4 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
+                    <div class="col-md-4 offset-xxl-1 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
                         <div class="card flex-grow-1 flex-fill">
                             <div class="card-body">
                                 <div class="row">
@@ -32,7 +31,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
+                    <div class="col-md-4 offset-xxl-0 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
                         <div class="card flex-grow-1 flex-fill">
                             <div class="card-body">
                                 <div class="row">
@@ -41,18 +40,14 @@
                                         </svg></div>
                                     <div class="col-md-12 col-xl-12 col-xxl-9">
                                         <h5 class="fw-bold text-center" style="padding-top: 10px;">Distance</h5>
-                                        <p class="text-center text-muted mb-4">{{gem.distance_from_user}}mi away</p>
+                                        <p class="text-center text-muted mb-4">{{gem.distance_from_user}} mi away</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 d-md-flex d-xl-flex d-xxl-flex align-items-md-center align-items-xl-center justify-content-xxl-center align-items-xxl-center">
-                        <div class="card flex-grow-1 flex-fill">
-                            <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center">
-                                <a class="btn btn-success btn-lg" role="button" href="/gem/{{gem.gem_id}}"><span style="color: rgb(255, 255, 255);">View Details</span></a>
-                        </div>
-                    </div>
+                    <div class="col-md-4 col-xxl-3 offset-xxl-0 d-flex d-md-flex d-xl-flex d-xxl-flex justify-content-center align-items-md-center align-items-xl-center justify-content-xxl-center align-items-xxl-center">
+                        <a class="btn btn-success btn-lg" role="button" href="/gem/{{gem.gem_id}}"><span style="color: rgb(255, 255, 255);">View Details</span></a>
                 </div>
             </div>
         </div>
@@ -60,6 +55,8 @@
         <div id="bottom-spinner" class="card shadow-sm flex-grow-1 flex-fill">
             <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
         </div>
+
+       
     </section>
 </div>
 

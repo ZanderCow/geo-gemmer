@@ -22,15 +22,12 @@
 
 <body id="page-top">
     {{ signed_in_navbar() }}
+
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
-                <div class="text-center" style="padding-top: 15px;">
-                    <p class="fw-bold text-success mb-2">Gem Search</p>
-                    <h2 class="fw-bold">Searching For {{user_query}}</h2>
-                </div>
-            </div>
-            <div class="col-md-6 text-center d-lg-flex d-xl-flex d-xxl-flex justify-content-lg-center align-items-lg-start justify-content-xl-start align-items-xl-center justify-content-xxl-start align-items-xxl-center">
+        <div class="text-center" style="padding-top: 15px;">
+            <p class="fw-bold text-success mb-2" data-aos="fade">Gem Search</p>
+            <h2 class="fw-bold" data-aos="fade">Searching For _________________</h2>
+            <div style="padding-top: 15px;padding-bottom: 15px;">
                 <form class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
                     <div class="dropdown" style="padding-left: 15px;padding-right: 15px;"><button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);"><span style="color: rgb(0, 0, 0);">Type</span></button>
                         <div class="dropdown-menu">
@@ -57,7 +54,6 @@
                             <label class="dropdown-item"><input type="checkbox" name="accessibility" value="large_print_materials"> Large Print Materials</label>
                             <label class="dropdown-item"><input type="checkbox" name="accessibility" value="accessible_restrooms"> Accessible Restrooms</label>
 
-
                         </div>
                     </div>
                     <div class="dropdown" style="padding-left: 15px;padding-right: 15px;"><button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);"><span style="color: rgb(0, 0, 0);">Distance</span></button>
@@ -68,7 +64,6 @@
                             <label class="dropdown-item">
                                 <span class="text-cente justify-content-md-center" id="distanceValue">50km</span> 
                             </label>
-
                         </div>
                     </div>
                     <div class="dropdown" style="padding-left: 15px;padding-right: 25px;"><button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);"><span style="color: rgb(0, 0, 0);">Reviews</span></button>
@@ -129,13 +124,11 @@
                                 </svg>
                             </label>
                         </div>
-                    </div>
-                    <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
+                    </div><button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
                 </form>
             </div>
         </div>
     </div>
-    
     <div class="container-fluid scstyle-1 sc-overflow" data-aos="fade" id="gem-search">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             {{ gem_searcher(gem_data) }}
