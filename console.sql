@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 
-CREATE TABLE IF NOT EXISTS geo_users (
+CREATE TABLE IF NOT EXISTS geo_user (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(255),
     password VARCHAR(255),

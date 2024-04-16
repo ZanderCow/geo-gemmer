@@ -65,11 +65,10 @@ def delete_pinned_gem_user(user_id, gem_pinned_id):
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute(f'''
+            cursor.execute('''
                 DELETE FROM
                     gems_pinned
                 WHERE
-                    user_id = '{user_id}'
-                    AND gem_id = '{gem_pinned_id}';
-            ''')
-            return cursor.fetchall()
+                    user_id = %s
+                    AND gem_id = %s;
+            ''', (user_id, gem_pinned_id))
