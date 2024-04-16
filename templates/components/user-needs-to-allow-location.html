@@ -1,0 +1,51 @@
+{% macro user_needs_location() %}
+<section class="py-4 py-xl-5">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top: 200px;">
+                <div>
+                    <img src="/static/imgeo-gemmer-logo.png" width="157" height="72" />
+                    <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
+                    <p class="mb-4">We need your geolocation so we can provide hidden gems<br />nearby you!</p>
+                    <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
+                        <span style="color: rgb(255, 255, 255);">Enable Location</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  document.getElementById('enableLocationBtn').addEventListener('click', function() {
+    const geoStatusElement = document.getElementById('geoStatus');
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        // Handle position here
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        geoStatusElement.innerHTML = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+      }, function(error) {
+        // Handle errors here
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            geoStatusElement.innerHTML = "User denied the request for Geolocation.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            geoStatusElement.innerHTML = "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            geoStatusElement.innerHTML = "The request to get user location timed out.";
+            break;
+          default:
+            geoStatusElement.innerHTML = "An unknown error occurred.";
+            break;
+        }
+      });
+    } else {
+      geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
+    }
+  });
+</script>
+
+{% endmacro %}

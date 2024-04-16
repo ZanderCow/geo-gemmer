@@ -34,7 +34,7 @@ def dashboard():
 
 
     gem_distribution = {
-            'Restaurant': 2,
+            'Restaurant': 100,
             'Park': 1,
             'Museum': 1,
             'Beach': 1,

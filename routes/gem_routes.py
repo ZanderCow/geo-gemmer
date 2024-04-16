@@ -55,7 +55,7 @@ def receive_location():
     # Process the data as needed
     return jsonify({'status': 'success'})
 
-
+@gem.get('/<gem_id>')
 def gem_details(gem_id):
     #TODO:
     #auethenticate user (user must be logged in to view a gem)
@@ -77,6 +77,7 @@ def gem_details(gem_id):
 
     
     gem_info =  { 
+            "gem_id": "67e55044-10b1-426f-9247-bb680e5fe0c8",
             'name': 'hello',
             'type': 'hiking Trail',
             'distance_from_user': 20.3346,
@@ -112,7 +113,6 @@ def gem_details(gem_id):
     }
 
     formatted_gem_review_cdf = {k: f"{v:.0%}" for k, v in gem_review_cdf.items()}
-    print(formatted_gem_review_cdf)
 
 
     gem_reviews = [
@@ -145,21 +145,19 @@ def gem_details(gem_id):
         )
 
 
-
-
-
 @gem.get('/<gem_id>/create-review')
-def render_create_gem_review():
+def render_create_gem_review(gem_id):
     #TODO:
     #auethenticate user (user must be logged create a review for a gem)
     #If user is not logged in, redirect to login page
 
     return render_template('add-hidden-gem-review.html')
 
-@gem.post('/<gem_id>/create-review')
-def create_gem_review():
-    #TODO:
-    #auethenticate user (user must be logged in to create a review for a gem)
-    #If user is not logged in, redirect to login page
 
-    return render_template('gem-details.html')
+@gem.get('/<gem_id>/edit-review')
+def render_edit_gem_review(gem_id):
+    pass
+
+@gem.get("/success")
+def success():
+    return render_template("gem-success.html")
