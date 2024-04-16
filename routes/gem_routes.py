@@ -19,7 +19,7 @@ def gem_search_page():
     searched_gems = [
         {
             'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
-            'name': 'fuck you bitch', 
+            'name': 'Lorem ipsum, dolor sit amet consectetur',
             "image" : "/static/img/nature-image.png",
             'distance_from_user': 20.3346,
             'type': 'hiking Trail'
