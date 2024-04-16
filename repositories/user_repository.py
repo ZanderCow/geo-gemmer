@@ -27,7 +27,7 @@ def create_new_user(username, password):
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute('''
-                INSERT INTO geo_users (username, password, first_name, last_name, profile_picture, gems_explored, reviews_made, gems_created, gems_saved)
+                INSERT INTO geo_user (username, password, first_name, last_name, profile_picture, gems_explored, reviews_made, gems_created, gems_saved)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
             ''', (username, password, None, None, None, 0, 0, 0, 0))
 
@@ -72,7 +72,7 @@ def get_user_by_id(user_id) -> dict[str, Any]:
                     gems_created,
                     gems_saved
                 FROM
-                    geo_users
+                    geo_user
                 WHERE
                     user_id = '{user_id}';
             ''')
@@ -98,7 +98,7 @@ def delete_user_by_id(user_id):
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
                 DELETE FROM
-                    geo_users
+                    geo_user
                 WHERE
                     user_id = '{user_id}';
             ''')
@@ -131,7 +131,7 @@ def get_user_settings_details(user_id) -> dict[str, Any]:
                     first_name,
                     last_name
                 FROM
-                    geo_users
+                    geo_user
                 WHERE
                     user_id = %s;
             ''', (user_id,))
@@ -157,7 +157,7 @@ def change_user_settings(user_id, first_name, last_name, email_address):
             try:
                 cursor.execute('''
                     UPDATE
-                        geo_users
+                        geo_user
                     SET
                         first_name = %s,
                         last_name = %s
