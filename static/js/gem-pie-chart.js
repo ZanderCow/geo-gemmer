@@ -1,12 +1,7 @@
-
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('gemChart').getContext('2d');
+    const ctx = document.getElementById('gem-pie-chart').getContext('2d');
+    const data = gemDistribution;
 
-    // Replace the static data with a Jinja2 variable
-    // Assuming gem_variety_distribution is a dictionary like {'Restaurant': 2, 'Park': 1, ...}
-    const data = {{ {{gem_distribution}} | tojson }};
-
-    // Interpolate RGB colors from dark green to light green
     function interpolateColors(startColor, endColor, n) {
         const lerp = (start, end, t) => start + (end - start) * t;
         let colors = [];
@@ -26,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const chartLabels = Object.keys(data);
     const chartData = Object.values(data);
-    const startColor = [77, 111, 63]; // Dark green
-    const endColor = [163, 230, 134]; // Light green
-    const backgroundColors = interpolateColors(startColor, endColor, chartLabels.length); // Generate dynamic green colors
+    const startColor = [77, 111, 63];
+    const endColor = [163, 230, 134];
+    const backgroundColors = interpolateColors(startColor, endColor, chartLabels.length);
 
     const myChart = new Chart(ctx, {
         type: 'pie',
@@ -38,13 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 label: 'Gem Variety',
                 data: chartData,
                 backgroundColor: backgroundColors,
-                borderColor: 'rgba(0,0,0,0.1)', // A consistent border color
+                borderColor: 'rgba(0,0,0,0.1)', // Consistent border color for visibility
             }]
         },
         options: {
             maintainAspectRatio: true,
             legend: {
-                display: false,
+                display: true, // Enable legend display
                 labels: {
                     fontStyle: 'normal'
                 }
@@ -57,4 +52,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
