@@ -98,11 +98,6 @@ def change_settings_page():
     # update user settings data in database
     return render_template('user-settings.html')
 
-
-
-
-
-
 @user.get('/create-gem')
 def render_create_gem_page():
     return render_template('create-hidden-gem.html')
