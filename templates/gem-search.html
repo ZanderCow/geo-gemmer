@@ -29,9 +29,10 @@
             <h2 class="fw-bold" data-aos="fade">Searching For _________________</h2>
             <div style="padding-top: 15px;padding-bottom: 15px;">
                 <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
-                    <div id="uniqueDropdown1" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+                    <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
+                    <div id="type-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
                         <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
-                            <span id="dropdownMenuButton1" style="color: rgb(0, 0, 0);">Type</span>
+                            <span id="selected-type" style="color: rgb(0, 0, 0);">Type</span>
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" data-value="hiking-trail">Hiking Trail</a>
@@ -46,25 +47,13 @@
                             <a class="dropdown-item" href="#" data-value="aquarium">Aquarium</a>
                         </div>
                     </div>
-                    <script type="text/javascript">
-                        document.addEventListener("DOMContentLoaded", function () {
-                            var dropdown = document.getElementById('uniqueDropdown1');
-                            var dropdownItems = dropdown.querySelectorAll('.dropdown-item');
-                            dropdownItems.forEach(function(item) {
-                                item.addEventListener('click', function() {
-                                    var value = this.getAttribute('data-value');
-                                    var text = this.textContent;
-                                    document.getElementById('dropdownMenuButton1').textContent = text;
-                                });
-                            });
-                        });
-                    </script>
+          
                     
                     
                     <!-- Unique ID for each dropdown, using 'AccessibilityMenu1' as an example -->
-                    <div id="AccessibilityMenu1" class="dropdown" style="padding: 15px;">
+                    <div id="accessibility-dropdown" class="dropdown" style="padding: 15px;">
                         <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: black;">
-                            <span id="selectedAccessibility1" style="color: black;">Acces   sibility</span>
+                            <span id="selected-accesibility" style="color: black;">Accessibility</span>
                         </button>
                         <div class="dropdown-menu">
                             <label class="dropdown-item"><input type="checkbox" name="accessibility" value="wheelchair_accessible"> Wheelchair Accessible</label>
@@ -76,43 +65,44 @@
                             <label class="dropdown-item"><input type="checkbox" name="accessibility" value="accessible_restrooms"> Accessible Restrooms</label>
                         </div>
                     </div>
-                    <script type="text/javascript">
-                        document.addEventListener("DOMContentLoaded", function () {
-                            // Use the unique ID to scope the event listener to this specific dropdown
-                            var dropdownMenu1 = document.querySelector('#AccessibilityMenu1 .dropdown-menu');
-                            dropdownMenu1.addEventListener('change', function (event) {
-                                if (event.target.type === 'checkbox') {
-                                    var selectedItems = Array.from(dropdownMenu1.querySelectorAll('input[type="checkbox"]:checked'))
-                                                            .map(item => item.parentElement.textContent.trim());
-                                    var updatedText = selectedItems.length > 0 ? selectedItems.join(', ') : 'Accessibility';
-                                    document.getElementById('selectedAccessibility1').textContent = updatedText;
-                                }
-                            });
-                        });
-                    </script>
-
+                
+           
+                    
+                
                     
                     
             
-                    <div class="dropdown" style="padding-left: 15px;padding-right: 15px;"><button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);"><span style="color: rgb(0, 0, 0);">Distance</span></button>
+                    <div id="distance-dropdown" class="dropdown" style="padding-left: 15px; padding-right: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: rgb(0,0,0);">
+                            <span id="selected-distance" style="color: rgb(0, 0, 0);">Distance</span>
+                        </button>
                         <div class="dropdown-menu">
                             <label class="dropdown-item">
-                                <input id="distanceSlider" class="form-range" type="range" min="0" max="100" /> <!-- Added min and max values for demonstration -->
+                                <input id="distanceSlider" class="form-range" type="range" min="0" max="100" value="50" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
                             </label>
                             <label class="dropdown-item">
-                                <span class="text-cente justify-content-md-center" id="distanceValue">50km</span> 
+                                <span class="text-center justify-content-md-center" id="distanceValue">50km</span> 
                             </label>
                         </div>
                     </div>
-                    <div class="dropdown" style="padding-left: 15px;padding-right: 25px;"><button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);"><span style="color: rgb(0, 0, 0);">Reviews</span></button>
+                 
+                    
+                    <div id="review-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                            <span id="selected-review-option" style="color: rgb(0, 0, 0);">Type</span>
+                        </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" data-value="1">1</a>
+                            <a class="dropdown-item" href="#" data-value="1">1l</a>
                             <a class="dropdown-item" href="#" data-value="2">2</a>
                             <a class="dropdown-item" href="#" data-value="3">3</a>
                             <a class="dropdown-item" href="#" data-value="4">4</a>
                             <a class="dropdown-item" href="#" data-value="5">5</a>
+                            
                         </div>
-                    </div><button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
+                    </div>
+           
+                    
+                    <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
                 </div>
             </div>
         </div>
@@ -167,22 +157,9 @@
             console.log("Geolocation is not supported by your browser");
           }          
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var slider = document.getElementById('distanceSlider');
-            var output = document.getElementById('distanceValue');
-        
-            // Update the current slider value (each time you drag the slider handle)
-            slider.oninput = function() {
-                output.innerHTML = this.value + " km";
-            }
-        });
-    </script>
-
-        
-
-
+    <script src="/static/js/gem-search-filter-selection.js"></script>
     <script src="/static/js/script.min.js"></script>
 </body>
 
 </html>
+
