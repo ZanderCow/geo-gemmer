@@ -26,11 +26,12 @@ def test_making_gem():
     assert newgem['gem_type'] == "big place"
     assert newgem['times_visited'] == 0
     assert newgem['user_created'] == False
+    assert newgem['image_1'] == None
 
 
 def test_adding_gems_to_repo():
     reset_database()
-    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
+    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False, "/static/img/neckbeard.png", "no, u", "")
     newgem = repo.get_hidden_gem_by_id(newgemid)
     print(f"NEW GEM ID {newgemid}")
 
@@ -41,6 +42,9 @@ def test_adding_gems_to_repo():
     assert newgem['gem_type'] == "big place"
     assert newgem['times_visited'] == 0
     assert newgem['user_created'] == False
+    assert newgem['image_1'] == "/static/img/neckbeard.png"
+    assert newgem['image_2'] == "no, u"
+    assert newgem['image_3'] == None
 
     #see ALL gems
     all_gems = repo.get_all_gems()
