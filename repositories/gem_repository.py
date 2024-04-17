@@ -2,6 +2,37 @@ from repositories.db import get_pool
 from psycopg.rows import dict_row
 from typing import Any
 
+class accessibility_class:
+    def __init__(self, wheelchair:bool=False, service_animal:bool=False, multilingual:bool=False, braille:bool=False, hearing_assistance:bool=False, large_print:bool=False, restrooms:bool=False):
+        self.wheelchair_accessible = wheelchair
+        self.service_animal_friendly = service_animal
+        self.multilingual_support = multilingual
+        self.braille_signage = braille
+        self.hearing_assistance = hearing_assistance
+        self.large_print_materials = large_print
+        self.accessible_restrooms = restrooms
+    
+    def has_a_true(self):
+        return self.wheelchair_accessible or self.service_animal_friendly or self.multilingual_support or self.braille_signage or self.hearing_assistance or self.large_print_materials or self.accessible_restrooms
+
+    def to_string(self):
+        stringy = ''
+        if self.wheelchair_accessible:
+            stringy += " AND wheelchair_accessible = true"
+        if self.service_animal_friendly:
+            stringy += " AND service_animal_friendly = true"
+        if self.multilingual_support:
+            stringy += " AND multilingual_support = true"
+        if self.braille_signage:
+            stringy += " AND braille_signage = true"
+        if self.hearing_assistance:
+            stringy += " AND hearing_assistance = true"
+        if self.large_print_materials:
+            stringy += " AND large_print_materials = true"
+        if self.accessible_restrooms:
+            stringy += " AND accessible_restrooms = true"
+        return stringy
+
 #grabbing from gems
 
 def get_all_gems() -> list[dict[str, Any]]:
@@ -107,24 +138,42 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
             'times_visited': 2,
             'user_created': True,
             'website_link': 'https://www.ruby-lang.org/en/',
+            'wheelchair_accessible': false,
+            'service_animal_friendly': false,
+            'multilingual_support': false,
+            'braille_signage': false,
+            'hearing_assistance': false,
+            'large_print_materials': false,
+            'accessible_restrooms': false
         }
     '''
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''SELECT
-                                    gem_id,
-                                    name,
-                                    ST_X(location::geometry) AS longitude,
-                                    ST_Y(location::geometry) AS latitude,
-                                    gem_type,
-                                    times_visited,
-                                    user_created,
-                                    website_link
+                                    g.gem_id,
+                                    g.name,
+                                    ST_X(g.location::geometry) AS longitude,
+                                    ST_Y(g.location::geometry) AS latitude,
+                                    g.gem_type,
+                                    g.times_visited,
+                                    g.user_created,
+                                    g.website_link,
+                                    a.wheelchair_accessible,
+                                    a.service_animal_friendly,
+                                    a.multilingual_support,
+                                    a.braille_signage,
+                                    a.hearing_assistance,
+                                    a.large_print_materials,
+                                    a.accessible_restrooms
                                 FROM
-                                    hidden_gem
+                                    hidden_gem g
+                                JOIN
+                                    accessibility a
+                                ON
+                                    g.gem_id = a.gem_id
                                 WHERE
-                                    gem_id='{gem_id}';''')
+                                    g.gem_id='{gem_id}';''')
             list = cursor.fetchall()
             if (len(list) == 0):
                 return None
@@ -215,10 +264,12 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
             ORDER BY
                 distance
             OFFSET
-                {offset};''') # distance is in meters
+                {offset}
+            LIMIT
+                20;''') # distance is in meters
             return cursor.fetchall()
 
-def search_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, offset:int):
+def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, offset:int):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -239,6 +290,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(longitude:float, lat
                 gem_id,
                 name,
                 gem_type,
+                similarity(name, 'closey') AS name_similarity,
                 ST_Y(location::geometry) AS latitude,
                 ST_X(location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
@@ -250,9 +302,113 @@ def search_all_gems_within_a_certain_distance_from_the_user(longitude:float, lat
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
-                {outer_distance*1000})
+                {outer_distance*1000}) AND similarity(name, {search_string}) > 0.2
+            ORDER BY
+                name_similarity DESC, distance ASC
+            OFFSET
+                {offset}
+            LIMIT
+                20;''')
+            return cursor.fetchall()
+
+def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int=0):
+    '''
+    Retrieves all gems within a certain distance from the user's location.
+
+    Args:
+        latitude (float): The latitude of the user's location.
+        longitude (float): The longitude of the user's location.
+        outer_distance (float): The maximum distance in kilometers from the user's location.
+
+    Returns:
+        list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+            SELECT
+                g.gem_id,
+                name,
+                gem_type,
+                ST_Y(location::geometry) AS latitude,
+                ST_X(location::geometry) AS longitude,
+                ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
+                times_visited,
+                user_created,
+                website_link,
+                wheelchair_accessible,
+                service_animal_friendly,
+                multilingual_support,
+                braille_signage,
+                hearing_assistance,
+                large_print_materials,
+                accessible_restrooms
+            FROM
+                hidden_gem g
+            JOIN
+                accessibility a
+            ON
+                g.gem_id = a.gem_id
+            WHERE ST_DWithin(
+                location::geography,
+                ST_MakePoint({longitude}, {latitude})::geography, {outer_distance*1000}){accessibility.to_string()}
             ORDER BY
                 distance
+            OFFSET
+                {offset}
+            LIMIT
+                20;''') # distance is in meters
+            return cursor.fetchall()
+
+def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int):
+    '''
+    Retrieves all gems within a certain distance from the user's location.
+
+    Args:
+        latitude (float): The latitude of the user's location.
+        longitude (float): The longitude of the user's location.
+        outer_distance (float): The maximum distance in kilometers from the user's location.
+        offset (int): the number of entries to skip before grabbing the next 20
+
+    Returns:
+        list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+            SELECT
+                g.gem_id,
+                name,
+                gem_type,
+                similarity(name, 'closey') AS name_similarity,
+                ST_Y(location::geometry) AS latitude,
+                ST_X(location::geometry) AS longitude,
+                ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
+                times_visited,
+                user_created,
+                website_link,
+                wheelchair_accessible,
+                service_animal_friendly,
+                multilingual_support,
+                braille_signage,
+                hearing_assistance,
+                large_print_materials,
+                accessible_restrooms
+            FROM
+                hidden_gem g
+            JOIN
+                accessibility a
+            ON
+                g.gem_id = a.gem_id
+            WHERE ST_DWithin(
+                location::geography,
+                ST_MakePoint({longitude}, {latitude})::geography,
+                {outer_distance*1000}){accessibility.to_string()}
+                AND similarity(name, {search_string}) > 0.2
+            ORDER BY
+                name_similarity DESC, distance ASC
             OFFSET
                 {offset}
             LIMIT
@@ -369,7 +525,11 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
             #failsafe
             fetched_stuff = cursor.fetchone()
             if (fetched_stuff is not None):
-                return str(fetched_stuff['gem_id'])
+                gem_id = str(fetched_stuff['gem_id'])
+                cursor.execute(f'''
+                    INSERT INTO accessibility (gem_id) VALUES (
+                        '{gem_id}');''')
+                return gem_id
             return None
 
 
@@ -412,6 +572,33 @@ def increment_gem_times_visited(gem_id:str):
             cursor.execute(f'''UPDATE hidden_gem
                                 SET
                                     times_visited = times_visited+1
+                                WHERE
+                                    gem_id='{gem_id}';''')
+
+def change_gem_times_visited(gem_id:str, times_visited:int=-1):
+    if (times_visited > -1):
+        pool = get_pool()
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute(f'''UPDATE hidden_gem
+                                    SET
+                                        times_visited = {times_visited}
+                                    WHERE
+                                        gem_id='{gem_id}';''')
+
+def change_accessibility(gem_id:str, acc:accessibility_class):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''UPDATE accessibility
+                                SET
+                                    wheelchair_accessible = {'true' if acc.wheelchair_accessible else 'false'},
+                                    service_animal_friendly = {'true' if acc.service_animal_friendly else 'false'},
+                                    multilingual_support = {'true' if acc.multilingual_support else 'false'},
+                                    braille_signage = {'true' if acc.braille_signage else 'false'},
+                                    hearing_assistance = {'true' if acc.hearing_assistance else 'false'},
+                                    large_print_materials = {'true' if acc.large_print_materials else 'false'},
+                                    accessible_restrooms = {'true' if acc.accessible_restrooms else 'false'}
                                 WHERE
                                     gem_id='{gem_id}';''')
 

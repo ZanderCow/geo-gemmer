@@ -4,6 +4,7 @@ write test code
 import pytest
 from repositories import gem_repository as repo
 from repositories.db import get_pool
+from repositories.gem_repository import accessibility_class
 
 #this is just a debug tool to reset the database
 def reset_database():
@@ -132,6 +133,35 @@ def test_modifying_gem():
     repo.delete_hidden_gem(newgemid)
     assert repo.get_hidden_gem_by_id(newgemid) is None
 
+def test_accessibility():
+    reset_database()
+    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
+    access = accessibility_class()
+    access.braille_signage = True
+    access.accessible_restrooms = True
+
+    repo.change_accessibility(newgemid, access)
+    newgem = repo.get_hidden_gem_by_id(newgemid)
+
+    assert newgem['wheelchair_accessible'] == False
+    assert newgem['service_animal_friendly'] ==  False
+    assert newgem['multilingual_support'] ==  False
+    assert newgem['braille_signage'] ==  True
+    assert newgem['hearing_assistance'] ==  False
+    assert newgem['large_print_materials'] ==  False
+    assert newgem['accessible_restrooms'] == True
+
+    access.accessible_restrooms = False
+    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, "big place", access, 0)
+    assert len(listo) == 1
+    assert listo[0]['name'] == 'nameo'
+
+    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
+    assert len(listo) == 1
+
+    access.service_animal_friendly = True
+    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
+    assert len(listo) == 0
 '''
 def test_adding_several_gems():
     repo = gem_repository.get_gem_repository()
