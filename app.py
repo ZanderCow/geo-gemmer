@@ -2,6 +2,7 @@ from flask import Flask
 from routes.main_routes import main
 from routes.user_routes import user
 from routes.gem_routes import gem
+import os
 
 app = Flask(__name__)
 

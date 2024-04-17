@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Sign up - Brand</title>
+    <title>Sign up</title>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
@@ -33,7 +33,11 @@
                             <form method="post" action="/sign-up" data-bs-theme="light">
                                 <div class="mb-3"><input class="form-control" type="email" data-bss-hover-animate="pulse" name="email" placeholder="Email"></div>
                                 <div class="mb-3"><input class="form-control" type="password" data-bss-hover-animate="pulse" name="password" placeholder="Password">
-                                    <p class="text-muted d-none" style="padding-top: 10px;"><span style="color: rgb(186, 49, 0);">User already&nbsp;exists</span></p>
+                                    {% if user_already_exists %}
+                                    <p class="text-muted " style="padding-top: 10px;"><span style="color: rgb(186, 49, 0);">User already&nbsp;exists</span></p>
+
+                                    {% else %}
+                                    {% endif %}
                                 </div>
                                 <div class="mb-3"><button class="btn btn-primary shadow d-block w-100" type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Sign up</span></button></div>
                             </form>
