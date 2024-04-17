@@ -72,3 +72,4 @@ def delete_pinned_gem_user(user_id, gem_pinned_id):
                     user_id = %s
                     AND gem_id = %s;
             ''', (user_id, gem_pinned_id))
+
