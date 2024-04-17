@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,redirect,request,jsonify
-
+from repositories import user_repository
 user = Blueprint('user', __name__)
 
 @user.get('/')
@@ -8,14 +8,9 @@ def dashboard():
     # get user data from database
     # get user hidden gems from database
 
-    user_info = {
-        'user_name': 'Zander',
-        'profile_picture': 'amazons3.com/cool-profile-picture',
-        'gems_explored': 420,
-        'reviews_made': 69,
-        'gems_created': 1134,
-        'gems_saved': 1738
-    }
+    user_info = user_repository.get_user_by_id('a61b0b93-0a44-43be-a10e-3d4977a5c4f1')
+
+    
 
     gem_visted_frequency = {
         'January': 45,
