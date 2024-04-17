@@ -8,6 +8,7 @@ def get_pool():
     if pool is None:
         pool = ConnectionPool(
             conninfo=os.getenv('DATABASE_URL', ''),
+            open=True,
         )
         print(pool.conninfo)
     return pool
