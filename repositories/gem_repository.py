@@ -75,16 +75,21 @@ def get_all_gems() -> list[dict[str, Any]]:
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''SELECT
-                                    gem_id,
+                                    g.gem_id,
                                     name,
                                     ST_X(location::geometry) AS longitude,
                                     ST_Y(location::geometry) AS latitude,
                                     gem_type,
                                     times_visited,
                                     user_created,
-                                    website_link
+                                    website_link,
+                                    image_1,
+                                    image_2,
+                                    image_3
                                 FROM
-                                    hidden_gem;''')
+                                    hidden_gem g
+                                JOIN image_group i
+                                ON g.gem_id = i.gem_id;''')
             return cursor.fetchall()
 
 def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dict[str, Any]]:
@@ -102,17 +107,22 @@ def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dic
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
                 SELECT
-                    gem_id,
-                    name,
-                    ST_X(location::geometry) AS longitude,
-                    ST_Y(location::geometry) AS latitude,
+                    g.gem_id,
+                    g.name,
+                    ST_X(g.location::geometry) AS longitude,
+                    ST_Y(g.location::geometry) AS latitude,
                     ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
-                    gem_type,
-                    times_visited,
-                    user_created,
-                    website_link
+                    g.gem_type,
+                    g.times_visited,
+                    g.user_created,
+                    g.website_link,
+                    i.image_1,
+                    i.image_2,
+                    i.image_3
                 FROM
-                    hidden_gem
+                    hidden_gem g
+                JOIN image_group i
+                ON g.gem_id = i.gem_id
                 ORDER BY
                     distance;''')
             return cursor.fetchall()
@@ -150,30 +160,34 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute(f'''SELECT
-                                    g.gem_id,
-                                    g.name,
-                                    ST_X(g.location::geometry) AS longitude,
-                                    ST_Y(g.location::geometry) AS latitude,
-                                    g.gem_type,
-                                    g.times_visited,
-                                    g.user_created,
-                                    g.website_link,
-                                    a.wheelchair_accessible,
-                                    a.service_animal_friendly,
-                                    a.multilingual_support,
-                                    a.braille_signage,
-                                    a.hearing_assistance,
-                                    a.large_print_materials,
-                                    a.accessible_restrooms
-                                FROM
-                                    hidden_gem g
-                                JOIN
-                                    accessibility a
-                                ON
-                                    g.gem_id = a.gem_id
-                                WHERE
-                                    g.gem_id='{gem_id}';''')
+            cursor.execute(f'''
+        SELECT
+            g.gem_id,
+            g.name,
+            ST_X(g.location::geometry) AS longitude,
+            ST_Y(g.location::geometry) AS latitude,
+            g.gem_type,
+            g.times_visited,
+            g.user_created,
+            g.website_link,
+            a.wheelchair_accessible,
+            a.service_animal_friendly,
+            a.multilingual_support,
+            a.braille_signage,
+            a.hearing_assistance,
+            a.large_print_materials,
+            a.accessible_restrooms,
+            i.image_1,
+            i.image_2,
+            i.image_3
+        FROM
+            hidden_gem g
+        JOIN accessibility a
+        ON g.gem_id = a.gem_id
+        JOIN image_group i
+        ON g.gem_id = i.gem_id
+        WHERE
+            g.gem_id='{gem_id}';''')
             list = cursor.fetchall()
             if (len(list) == 0):
                 return None
@@ -246,23 +260,28 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
             SELECT
-                gem_id,
-                name,
-                gem_type,
-                ST_Y(location::geometry) AS latitude,
-                ST_X(location::geometry) AS longitude,
+                g.gem_id,
+                g.name,
+                g.gem_type,
+                ST_Y(g.location::geometry) AS latitude,
+                ST_X(g.location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
-                times_visited,
-                user_created,
-                website_link
+                g.times_visited,
+                g.user_created,
+                g.website_link,
+                i.image_1,
+                i.image_2,
+                i.image_3
             FROM
-                hidden_gem
+                hidden_gem g
+            JOIN image_group i
+            ON g.gem_id = i.gem_id
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
                 {outer_distance*1000})
             ORDER BY
-                distance
+                distance ASC
             OFFSET
                 {offset}
             LIMIT
@@ -287,18 +306,23 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
             SELECT
-                gem_id,
-                name,
-                gem_type,
-                similarity(name, 'closey') AS name_similarity,
-                ST_Y(location::geometry) AS latitude,
-                ST_X(location::geometry) AS longitude,
+                g.gem_id,
+                g.name,
+                g.gem_type,
+                g.similarity(name, 'closey') AS name_similarity,
+                ST_Y(g.location::geometry) AS latitude,
+                ST_X(g.location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
-                times_visited,
-                user_created,
-                website_link
+                g.times_visited,
+                g.user_created,
+                g.website_link,
+                i.image_1,
+                i.image_2,
+                i.image_3
             FROM
-                hidden_gem
+                hidden_gem g
+            JOIN image_group i
+            ON g.gem_id = i.gem_id
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
@@ -343,13 +367,16 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 braille_signage,
                 hearing_assistance,
                 large_print_materials,
-                accessible_restrooms
+                accessible_restrooms,
+                i.image_1,
+                i.image_2,
+                i.image_3
             FROM
                 hidden_gem g
-            JOIN
-                accessibility a
-            ON
-                g.gem_id = a.gem_id
+            JOIN accessibility a
+            ON g.gem_id = a.gem_id
+            JOIN image_group i
+            ON g.gem_id = i.gem_id
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography, {outer_distance*1000}){accessibility.to_string()}
@@ -396,12 +423,15 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 hearing_assistance,
                 large_print_materials,
                 accessible_restrooms
+                image_1,
+                image_2,
+                image_3
             FROM
                 hidden_gem g
-            JOIN
-                accessibility a
-            ON
-                g.gem_id = a.gem_id
+            JOIN accessibility a
+            ON  g.gem_id = a.gem_id
+            JOIN image_group i
+            ON g.gem_id = i.gem_id
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
@@ -475,12 +505,17 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
                 h.times_visited,
                 h.user_created,
                 h.website_link
+                i.image_1,
+                i.image_2,
+                i.image_3
             FROM
                 hidden_gem h
             INNER JOIN
                 accessibility a
             ON
                 h.gem_id = a.gem_id
+            JOIN image_group i
+            ON h.gem_id = i.gem_id
             WHERE
                 a.{assesibility} = true
             ORDER BY
@@ -490,7 +525,11 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
 
 
 #adding gem
-def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created:bool) -> str:
+def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created:bool, image1:str=None,image2:str=None,image3:str=None) -> str:
+    # img failsafes
+    if (image1 == ''): image1 = None
+    if (image2 == ''): image2 = None
+    if (image3 == ''): image3 = None
     '''
     Creates a new hidden gem and adds it to the database.
 
@@ -529,6 +568,12 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
                 cursor.execute(f'''
                     INSERT INTO accessibility (gem_id) VALUES (
                         '{gem_id}');''')
+                cursor.execute(f'''
+                    INSERT INTO image_group (gem_id, image_1, image_2, image_3) VALUES (
+                        '{gem_id}',
+                        {'\''+image1+'\'' if image1 is not None else 'null'},
+                        {'\''+image2+'\'' if image2 is not None else 'null'},
+                        {'\''+image3+'\'' if image3 is not None else 'null'});''')
                 return gem_id
             return None
 
@@ -601,6 +646,22 @@ def change_accessibility(gem_id:str, acc:accessibility_class):
                                     accessible_restrooms = {'true' if acc.accessible_restrooms else 'false'}
                                 WHERE
                                     gem_id='{gem_id}';''')
+
+def change_images(gem_id:str, image_1:str='', image_2:str='', image_3:str=''):
+    if (image_1 == None): image_1 = ''
+    if (image_2 == None): image_2 = ''
+    if (image_3 == None): image_3 = ''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''UPDATE image_group
+                                SET
+                                    image_1 = {image_1 if image_1 == '' else 'image_1'},
+                                    image_2 = {image_2 if image_2 == '' else 'image_2'},
+                                    image_3 = {image_3 if image_3 == '' else 'image_3'}
+                                WHERE
+                                    gem_id='{gem_id}';''')
+
 
 def delete_hidden_gem(gem_id:str):
     pool = get_pool()
