@@ -1,6 +1,7 @@
 create DATABASE geogemmer;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 
 CREATE TABLE IF NOT EXISTS user (
@@ -16,16 +17,25 @@ CREATE TABLE IF NOT EXISTS user (
     gems_saved INT
 );
 
+CREATE TABLE IF NOT EXISTS hidden_gem (
+    gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(128) NOT NULL,
+    gem_type VARCHAR(50),
+    location GEOGRAPHY(Point, 4326),
+    times_visited INT,
+    user_created BOOLEAN,
+    website_link VARCHAR(255) DEFAULT ('/gems/'+gem_id)
+);
+
 CREATE TABLE IF NOT EXISTS review (
     review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES user(user_id) ON DELETE CASCADE,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     rating CHAR(1),
-    review TEXT
+    review VARCHAR(1023)
 );
 
 CREATE TABLE IF NOT EXISTS accessibility (
-    accessibility_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     wheelchair_accessible BOOLEAN,
     service_animal_friendly BOOLEAN,
@@ -34,16 +44,6 @@ CREATE TABLE IF NOT EXISTS accessibility (
     hearing_assistance BOOLEAN,
     large_print_materials BOOLEAN,
     accessible_restrooms BOOLEAN
-);
-
-CREATE TABLE IF NOT EXISTS hidden_gem (
-    gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(128) NOT NULL,
-    gem_type VARCHAR(50),
-    location GEOGRAPHY(Point, 4326),
-    times_visited INT,
-    user_created BOOLEAN,
-    website_link VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS gems_visited (
