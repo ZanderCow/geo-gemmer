@@ -30,8 +30,8 @@
                 <div class="col-md-6 col-xl-4">
                     <div class="card">
                         <div class="card-body text-center d-flex flex-column align-items-center">
-                            <form method="post" data-bs-theme="light">
-                                <div class="mb-3"><input class="form-control" type="email" data-bss-hover-animate="pulse" name="email" placeholder="Email"></div>
+                            <form method="post" action="/login" data-bs-theme="light">
+                                <div class="mb-3"><input class="form-control" type="text" data-bss-hover-animate="pulse" name="username" placeholder="Username"></div>
                                 <div class="mb-3"><input class="form-control" type="password" data-bss-hover-animate="pulse" name="password" placeholder="Password">
                                     {% if incorrect_login %}
                                     <p class="text-muted" style="padding-top: 10px;"><span style="color: rgba(213, 31, 31, 0.75);">Username or password</span><br><span style="color: rgba(213, 31, 31, 0.75);">is incorrect</span></p>
