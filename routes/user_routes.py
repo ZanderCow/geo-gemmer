@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template,redirect,request,jsonify
+from flask import Blueprint, render_template,redirect,request,jsonify, session
 from repositories import user_repository
+
 user = Blueprint('user', __name__)
 
 @user.get('/')
@@ -8,9 +9,8 @@ def dashboard():
     # get user data from database
     # get user hidden gems from database
 
-    user_info = user_repository.get_user_by_id('a61b0b93-0a44-43be-a10e-3d4977a5c4f1')
-
-    
+    user_id = request.args.get('user_id')
+    user_info = user_repository.get_user_by_id(user_id)
 
     gem_visted_frequency = {
         'January': 45,
@@ -85,13 +85,23 @@ def logout():
 def render_settings_page():
     #TODO:
     # get user settings data from database
-    return render_template('user-settings.html')
+
+    user_id = request.args.get('user_id')
+    user_settings = user_repository.get_user_settings_details(user_id)
+
+    return render_template('user-settings.html', user_settings=user_settings)
 
 @user.post('/settings')
 def change_settings_page():
     #TODO:
     # update user settings data in database
-    return render_template('user-settings.html')
+
+    user_id = request.args.get('user_id')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    user_repository.change_user_settings(user_id, first_name, last_name)
+
+    return render_template('user-settings.html', message='Settings updated successfully')
 
 @user.get('/create-gem')
 def render_create_gem_page():

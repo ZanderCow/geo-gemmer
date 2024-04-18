@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template,redirect,request
+from repositories import user_repository
 
 main = Blueprint('main', __name__)
 
@@ -65,15 +66,16 @@ def signup_user():
     '''
     signs up user and redirects to dashboard
     '''
-    email = request.form.get('email')
+    username = request.form.get('username')
     password = request.form.get('password')
 
     #TODO:
     # check if user exists already
     #adds user to database
     #logs in user
+    user_id = user_repository.create_new_user(username, password)
 
-    return redirect('/user')
+    return redirect(f'/user?user_id={user_id}')
 
 
 
@@ -89,7 +91,7 @@ def get_login():
 @main.post('/login')
 def login_user():
 
-    email = request.form.get('email')
+    username = request.form.get('username')
     password = request.form.get('password')
 
     #TODO:
