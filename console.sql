@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
 
 CREATE TABLE IF NOT EXISTS review (
     review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES geo_users(user_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     rating CHAR(1),
     review VARCHAR(1023)
@@ -48,14 +48,14 @@ CREATE TABLE IF NOT EXISTS accessibility (
 
 CREATE TABLE IF NOT EXISTS gems_visited (
     gem_visited_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES geo_users(user_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     date_visited date NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS gems_pinned (
     gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES geo_users(user_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     date_pinned date NOT NULL
 );

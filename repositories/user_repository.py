@@ -28,8 +28,11 @@ def create_new_user(username, password):
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute('''
                 INSERT INTO geo_user (username, password, first_name, last_name, profile_picture, gems_explored, reviews_made, gems_created, gems_saved)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING user_id;
             ''', (username, password, None, None, None, 0, 0, 0, 0))
+            user_id = cursor.fetchone()['user_id']
+            return user_id
 
 
 def get_user_by_id(user_id) -> dict[str, Any]:
@@ -137,7 +140,7 @@ def get_user_settings_details(user_id) -> dict[str, Any]:
             ''', (user_id,))
             return cursor.fetchone()
 
-def change_user_settings(user_id, first_name, last_name, email_address):
+def change_user_settings(user_id, first_name, last_name):
     """
     Change the settings of a user.
 
@@ -145,7 +148,6 @@ def change_user_settings(user_id, first_name, last_name, email_address):
         user_id (str): The user_id of the user to change the settings for.
         first_name (str): The new first name of the user.
         last_name (str): The new last name of the user.
-        email_address (str): The new email address of the user.
 
     Returns:
         None
