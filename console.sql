@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS review (
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE NOT NULL,
     rating CHAR NOT NULL,
     review VARCHAR(511),
-    date VARCHAR(15) NOT NULL
+    date INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS accessibility (
