@@ -42,7 +42,8 @@ def get_all_reviews_for_a_hidden_gem(gem_id) -> list[dict[str, Any]]:
                     date
                 FROM
                     review r
-                WHERE gem_id = '{gem_id}';''')
+                WHERE gem_id = '{gem_id}'
+                ORDER BY date DESC;''')
             return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
