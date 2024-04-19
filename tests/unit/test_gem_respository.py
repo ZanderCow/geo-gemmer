@@ -222,7 +222,7 @@ def test_reviews():
     reviews = reviewpo.get_all_reviews_for_a_hidden_gem(newgemid)
     print(len(reviews))
     review = reviews[0]
-    assert review['user_id'] == user_id
+    assert review['user_id'] == str(user_id)
     assert review['gem_id'] == newgemid
     assert review['rating'] == 4
     assert review['review'] == "This place's food is awful"

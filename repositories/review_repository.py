@@ -89,7 +89,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
         with conn.cursor() as cursor:
             cursor.execute(f'''
                 INSERT INTO review (user_id, gem_id, rating, review, date) VALUES (
-                    {'NULL' if user_id is None else f'{user_id}'},
+                    '{user_id}',
                     '{gem_id}',
                     '{rating}',
                     '{review}',

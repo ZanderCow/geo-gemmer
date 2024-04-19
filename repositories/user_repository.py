@@ -1,5 +1,6 @@
 from repositories.db import get_pool
 from typing import Any
+from psycopg.rows import dict_row
 
 
 def create_new_user(username, password):
@@ -16,14 +17,22 @@ def create_new_user(username, password):
     NOTE: when a user is created it should have a default value for the following:
         - first_name (None)
         - last_name (None)
-        - email_address (None)
         - profile_picture (None)
-        - gems_explored_count (0)
-        - reviews_made_count (0)
-        - gems_created_count (0)
-        - gems_saved_count (0)
+        - gems_explored (0)
+        - reviews_made (0)
+        - gems_created (0)
+        - gems_saved (0)
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                INSERT INTO geo_user (username, password, first_name, last_name, profile_picture, gems_explored, reviews_made, gems_created, gems_saved)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING user_id;
+            ''', (username, password, None, None, None, 0, 0, 0, 0))
+            user_id = cursor.fetchone()['user_id']
+            return user_id
 
 
 def get_user_by_id(user_id) -> dict[str, Any]:
@@ -41,18 +50,36 @@ def get_user_by_id(user_id) -> dict[str, Any]:
     Example: 
         >>> get_user_by_id('67e55044-10b1-426f-9247-bb680e5fe0c8')
         {
-            'user_name': 'TheCowanPlayz', 
+            'username': 'TheCowanPlayz', 
             'first_name': 'Zander', 
             'last_name': 'Cowan',
             'profile_picture': 'amazons3.com/thisisapicture.jpg',
-            'gems_explored_count': 'Restaurant',
-            'reviews_made_count': 2,
-            'gems_created_count': 3,
-            'gems_saved_count': '3',
+            'gems_explored': 'Restaurant',
+            'reviews_made': 2,
+            'gems_created': 3,
+            'gems_saved': '3'
         }
     '''
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    username,
+                    first_name,
+                    last_name,
+                    profile_picture,
+                    gems_explored,
+                    reviews_made,
+                    gems_created,
+                    gems_saved
+                FROM
+                    geo_user
+                WHERE
+                    user_id = '{user_id}';
+            ''')
+            return cursor.fetchall()
 
 def delete_user_by_id(user_id):
     """
@@ -69,7 +96,16 @@ def delete_user_by_id(user_id):
         - delete their user saved gems from the database
         - delete their reviews from the database  
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                DELETE FROM
+                    geo_user
+                WHERE
+                    user_id = '{user_id}';
+            ''')
+            return cursor.fetchall()
 
 
 def get_user_settings_details(user_id) -> dict[str, Any]:
@@ -90,9 +126,21 @@ def get_user_settings_details(user_id) -> dict[str, Any]:
             'email_address': 'zandercowan3424@gmail.com',
         }
     """
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                SELECT
+                    first_name,
+                    last_name
+                FROM
+                    geo_user
+                WHERE
+                    user_id = %s;
+            ''', (user_id,))
+            return cursor.fetchone()
 
-def change_user_settings(user_id, first_name, last_name, email_address):
+def change_user_settings(user_id, first_name, last_name):
     """
     Change the settings of a user.
 
@@ -100,11 +148,23 @@ def change_user_settings(user_id, first_name, last_name, email_address):
         user_id (str): The user_id of the user to change the settings for.
         first_name (str): The new first name of the user.
         last_name (str): The new last name of the user.
-        email_address (str): The new email address of the user.
 
     Returns:
         None
 
     """
-    pass
-
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            try:
+                cursor.execute('''
+                    UPDATE
+                        geo_user
+                    SET
+                        first_name = %s,
+                        last_name = %s
+                    WHERE
+                        user_id = %s;
+                ''', (first_name, last_name, user_id))
+            except psycopg.Error as e:
+                print("Error occurred:", e)

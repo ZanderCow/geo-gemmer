@@ -1,13 +1,13 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
-
+{% from "components/gem-searcher.html" import gem_searcher %}
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Profile - Brand</title>
+    <title>Gem Search</title>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
@@ -22,126 +22,144 @@
 
 <body id="page-top">
     {{ signed_in_navbar() }}
-    
-    <header data-aos="fade" id="greeting" class="bg-primary-gradient pt-5" style="background: #ffffff;">
-        <div class="text-center">
-            <p class="fw-bold text-success mb-2">Gem Search</p>
-            <h3 class="fw-bold">Searching For {{user_query}}</h3>
-        </div>
-    </header>
-    <nav class="navbar navbar-expand-md py-3" id="filter-bar-2">
-        <div class="container-fluid">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="padding-right: 40px;padding-left: 40px;">Type</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#">Hiking Trail</a><a class="dropdown-item" href="#">Restaurant</a><a class="dropdown-item" href="#">Gym</a><a class="dropdown-item" href="#">Museum</a><a class="dropdown-item" href="#">Rock Quarry</a><a class="dropdown-item" href="#">Abandoned Place</a><a class="dropdown-item" href="#">Graveyard</a><a class="dropdown-item" href="#"></a></div>
-                </li>
-                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="padding-right: 40px;padding-left: 40px;">Acessibility</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#">Elderly Friendly</a><a class="dropdown-item" href="#">Autistic Friendly</a><a class="dropdown-item" href="#">Kid Friendly</a><a class="dropdown-item" href="#"></a></div>
-                </li>
-                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="padding-right: 40px;padding-left: 40px;">Distance</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#">10mi away</a><a class="dropdown-item" href="#">30mi away</a><a class="dropdown-item" href="#">50mi away</a><a class="dropdown-item" href="#">100mi away</a></div>
-                </li>
-                <li class="nav-item dropdown"><a class="dropdown-toggle nav-link text-center" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="padding-right: 40px;padding-left: 40px;">Reviews</a>
-                    <div class="dropdown-menu"><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg></a><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg></a><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg></a><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg></a><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
-                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                            </svg></a></div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container scstyle-1 sc-overflow" data-aos="fade" id="gem-search">
-        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
-            <div class="col-md-12 flex-fill scstyle-1 sc-overflow">
-                <section class="overflow-auto" style="height: 700px">
 
-                    {% for gem in gem_data %}
-
-                    <div id="gem1" class="card shadow-sm">
-                        <div class="card-body px-4 py-5 px-md-5">
-                            <header id="greeting-1" class="bg-primary-gradient pt-5" style="background: #ffffff;">
-                                <div class="text-center">
-                                    <p class="fw-bold text-success mb-2">Gem </p>
-                                    <h3 class="fw-bold" style="padding: 15px;">{{gem.name}}</h3>
-                                </div>
-                            </header><img class="rounded w-100 h-100 fit-cover" style="min-height: 300px;" src="{{gem.image}}" />
-                            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                <div class="w-100"></div>
-                                <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                    <div class="card shadow-sm flex-grow-1 flex-fill">
-                                        <div class="card-body"><svg class="text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11 17.9C8.71776 17.4367 7 15.419 7 13V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V13C17 15.419 15.2822 17.4367 13 17.9V21C13 21.5523 12.5523 22 12 22C11.4477 22 11 21.5523 11 21V17.9ZM12 4C13.6569 4 15 5.34315 15 7V13C15 14.3062 14.1652 15.4175 13 15.8293V11C13 10.4477 12.5523 10 12 10C11.4477 10 11 10.4477 11 11V15.8293C9.83481 15.4175 9 14.3062 9 13V7C9 5.34315 10.3431 4 12 4Z" fill="currentColor"></path>
-                                            </svg>
-                                            <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Type</h5>
-                                            <p class="text-center text-muted card-text mb-4">{{gem.type}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                    <div class="card shadow-sm flex-grow-1 flex-fill">
-                                        <div class="card-body"><svg class="bi bi-globe-americas text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" style="top: 1rem;center: 1rem;position: absolute;font-size: 35px;">
-                                                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
-                                            </svg>
-                                            <h5 class="fw-bold text-center card-title" style="padding-top: 10px;">Distance</h5>
-                                            <p class="text-center text-muted card-text mb-4">{{gem.distance_from_user}} mi away</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-                                <div class="col-md-9 col-lg-10 d-xxl-flex flex-fill align-items-xxl-center">
-                                    <div class="card shadow-sm flex-grow-1 flex-fill">
-                                        <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><a class="btn btn-success btn-lg" role="button" href="/gem/{{gem.gem_id}}"><span style="color: rgb(255, 255, 255);">View Details</span></a></div>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="container-fluid">
+        <div class="text-center" style="padding-top: 15px;">
+            <p class="fw-bold text-success mb-2" data-aos="fade">Gem Search</p>
+            <h2 class="fw-bold" data-aos="fade">Searching For _________________</h2>
+            <div style="padding-top: 15px;padding-bottom: 15px;">
+                <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
+                    <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
+                    <div id="type-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                            <span id="selected-type" style="color: rgb(0, 0, 0);">Type</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" data-value="hiking-trail">Hiking Trail</a>
+                            <a class="dropdown-item" href="#" data-value="restaurant">Restaurant</a>
+                            <a class="dropdown-item" href="#" data-value="park">Park</a>
+                            <a class="dropdown-item" href="#" data-value="gym">Gym</a>
+                            <a class="dropdown-item" href="#" data-value="museum">Museum</a>
+                            <a class="dropdown-item" href="#" data-value="beach">Beach</a>
+                            <a class="dropdown-item" href="#" data-value="shopping-mall">Shopping Mall</a>
+                            <a class="dropdown-item" href="#" data-value="movie-theater">Movie Theater</a>
+                            <a class="dropdown-item" href="#" data-value="zoo">Zoo</a>
+                            <a class="dropdown-item" href="#" data-value="aquarium">Aquarium</a>
                         </div>
                     </div>
-
-                    {% endfor %}
-
-                </section>
+          
+                    
+                    
+                    <!-- Unique ID for each dropdown, using 'AccessibilityMenu1' as an example -->
+                    <div id="accessibility-dropdown" class="dropdown" style="padding: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: black;">
+                            <span id="selected-accesibility" style="color: black;">Accessibility</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="wheelchair_accessible"> Wheelchair Accessible</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="service_animal_friendly"> Service Animal Friendly</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="multilingual_support"> Multilingual Support</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="braille_signage"> Braille Signage</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="hearing_assistance"> Hearing Assistance</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="large_print_materials"> Large Print Materials</label>
+                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="accessible_restrooms"> Accessible Restrooms</label>
+                        </div>
+                    </div>
+                
+           
+                    
+                
+                    
+                    
+            
+                    <div id="distance-dropdown" class="dropdown" style="padding-left: 15px; padding-right: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: rgb(0,0,0);">
+                            <span id="selected-distance" style="color: rgb(0, 0, 0);">Distance</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <label class="dropdown-item">
+                                <input id="distanceSlider" class="form-range" type="range" min="0" max="100" value="50" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
+                            </label>
+                            <label class="dropdown-item">
+                                <span class="text-center justify-content-md-center" id="distanceValue">50km</span> 
+                            </label>
+                        </div>
+                    </div>
+                 
+                    
+                    <div id="review-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                            <span id="selected-review-option" style="color: rgb(0, 0, 0);">Type</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" data-value="1">1l</a>
+                            <a class="dropdown-item" href="#" data-value="2">2</a>
+                            <a class="dropdown-item" href="#" data-value="3">3</a>
+                            <a class="dropdown-item" href="#" data-value="4">4</a>
+                            <a class="dropdown-item" href="#" data-value="5">5</a>
+                            
+                        </div>
+                    </div>
+           
+                    
+                    <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
+                </div>
             </div>
-            <div class="col flex-fill">
-                <div class="card shadow-sm">
-                    <div class="card-body px-4 py-5 px-md-5">
-                        <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title" style="padding-bottom: 15px;">Map</h5><iframe allowfullscreen="" frameborder="0" src="https://cdn.bootstrapstudio.io/placeholders/map.html" width="100%" height="400" style="height: 550px;"></iframe>
+        </div>
+    </div>
+    <div class="container-fluid scstyle-1 sc-overflow" data-aos="fade" id="gem-search">
+        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+            {{ gem_searcher(gem_data) }}
+
+            <div class="col flex-grow-1 flex-fill" style="height: 600px;">
+                <div class="card shadow-sm" style="height: 600px;">
+                    <div class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="height: 500px;">
+                        <iframe class="d-xxl-flex align-items-xxl-center" 
+                        allowfullscreen="" 
+                        src="https://www.google.com/maps/embed/v1/place?key=API_KEY&q=Space+Needle,Seattle+WA" 
+                        width="100%" 
+                        style="height: inherit;" 
+                        height="fill">
+                        </iframe>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
+   
+    
     {{ footer() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        function sendLocationToServer(latitude, longitude) {
+            fetch('/gem/send-location', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                latitude: latitude,
+                longitude: longitude,
+              }),
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
+          }
+          
+          if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              sendLocationToServer(position.coords.latitude, position.coords.longitude);
+            });
+          } else {
+            console.log("Geolocation is not supported by your browser");
+          }          
+    </script>
+    <script src="/static/js/gem-search-filter-selection.js"></script>
     <script src="/static/js/script.min.js"></script>
 </body>
 
 </html>
+
