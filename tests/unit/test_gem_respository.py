@@ -3,15 +3,19 @@ write test code
 """
 import pytest
 from repositories import gem_repository as repo
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from repositories.gem_repository import accessibility_class
+from repositories import review_repository as reviewpo
+from repositories import user_repository as userrepo
 
 #this is just a debug tool to reset the database
 def reset_database():
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cursor:
-            cursor.execute(f'''DELETE FROM hidden_gem;''')
+            cursor.execute(f'''DELETE FROM hidden_gem;
+                                DELETE FROM review;
+                                DELETE FROM geo_user;''')
 
 
 def test_making_gem():
@@ -33,7 +37,6 @@ def test_adding_gems_to_repo():
     reset_database()
     newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False, "/static/img/neckbeard.png", "no, u", "")
     newgem = repo.get_hidden_gem_by_id(newgemid)
-    print(f"NEW GEM ID {newgemid}")
 
     #make sure the data is right
     assert newgem['name'] == "nameo"
@@ -163,9 +166,71 @@ def test_accessibility():
     listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
     assert len(listo) == 1
 
+    
+    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, None, access, 0)
+    assert len(listo) == 1
+    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, None, access, 0)
+    assert len(listo) == 1
+
     access.service_animal_friendly = True
     listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
     assert len(listo) == 0
+
+    
+    newgemid = repo.create_new_gem("DUNKIN' DONUTS", "DUNKIN'", -80.843124, 35.227085, False)
+    newgem = repo.get_hidden_gem_by_id(newgemid)
+    assert newgem['name'] == "DUNKIN' DONUTS"
+    assert newgem['gem_type'] == "DUNKIN'"
+
+def test_inflater():
+    #test the apostrophes
+    stringy = "'this' string's stringin'"
+    stringy = inflate_string(stringy)
+    assert stringy == "''this'' string''s stringin''"
+
+    stringy = inflate_string("dunkin'")
+    assert stringy == "dunkin''"
+
+    #TEST THE LIMITS; MUST BE ROBUST OR ELSE
+    stringy = inflate_string("this is a limited string", 9)
+    assert stringy == "this is a"
+    stringy = inflate_string("this is 'a limited string", 9)
+    assert stringy == "this is "
+    stringy = inflate_string("this i''''a funny string", 9)
+    assert stringy == "this i''"
+    stringy = inflate_string("this i '''a less funny string", 9)
+    assert stringy == "this i ''"
+
+def test_reviews():
+    shrunk = reviewpo._shrink_rating(6)
+    assert reviewpo._expand_rating(shrunk) is 5
+    for i in range(5):
+        shrunk = reviewpo._shrink_rating(i)
+        assert reviewpo._expand_rating(shrunk) is i
+    shrunk = reviewpo._shrink_rating(-1)
+    assert reviewpo._expand_rating(shrunk) is 0
+
+    newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, False)
+    user_id = userrepo.create_new_user('nameo', 'nameom')
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
+
+    print(newgemid, end='\n')
+    reviews = reviewpo.get_all_reviews_for_a_hidden_gem(newgemid)
+    print(len(reviews))
+    review = reviews[0]
+    assert review['user_id'] == user_id
+    assert review['gem_id'] == newgemid
+    assert review['rating'] == 4
+    assert review['review'] == "This place's food is awful"
+    assert review['date'][2] == '/'
+    assert review['date'][5] == '/'
+    assert len(review['date']) == 10
+
+
 '''
 def test_adding_several_gems():
     repo = gem_repository.get_gem_repository()

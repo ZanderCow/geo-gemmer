@@ -1,4 +1,4 @@
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from psycopg.rows import dict_row
 from typing import Any
 
@@ -335,7 +335,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 20;''')
             return cursor.fetchall()
 
-def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int=0):
+def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str|None, accessibility:accessibility_class, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -380,6 +380,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography, {outer_distance*1000}){accessibility.to_string()}
+                {f"AND g.gem_type = '{type}'" if type != None else ""}
             ORDER BY
                 distance
             OFFSET
@@ -437,6 +438,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 ST_MakePoint({longitude}, {latitude})::geography,
                 {outer_distance*1000}){accessibility.to_string()}
                 AND similarity(name, {search_string}) > 0.2
+                {f"AND g.gem_type = '{type}'" if type != None else ""}
             ORDER BY
                 name_similarity DESC, distance ASC
             OFFSET
@@ -528,17 +530,23 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
 def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created:bool, image1:str=None,image2:str=None,image3:str=None) -> str:
     # img failsafes
     if (image1 == ''): image1 = None
+    elif (image1 != None): image1 = inflate_string(image1, 255)
     if (image2 == ''): image2 = None
+    elif (image2 != None): image2 = inflate_string(image2, 255)
     if (image3 == ''): image3 = None
+    elif (image3 != None): image3 = inflate_string(image3, 255)
     '''
     Creates a new hidden gem and adds it to the database.
 
     Parameters:
-        name (str): The name of the gem.
-        gem_type (str): The type of the gem.
+        name (str): The name of the gem. (max length: 127)
+        gem_type (str): The type of the gem. (max length: 63)
         longitude (float): The location (E/W) of the gem.
         latitude (float): The location (N/S) of the gem.
         user_created (bool): Whether a user created the gem or not
+        image1 (str): Link to image 1 (max length: 255)
+        image2 (str): Link to image 2 (max length: 255)
+        image3 (str): Link to image 3 (max length: 255)
 
     Returns:
         id (str): The id of the newly created gem
@@ -548,17 +556,20 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
         - the website_link should be None by default (not all gems have a website)
         
     '''
+    #FAILSAFE IN CASE OF APOSTROPHES
+    name = inflate_string(name, 127)
+    gem_type = inflate_string(gem_type, 63)
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
-                INSERT INTO hidden_gem (name, gem_type, location, times_visited, user_created, website_link) VALUES (
+                INSERT INTO hidden_gem (name, gem_type, location, times_visited, user_created) VALUES (
                     '{name}',
                     '{gem_type}',
                     ST_SetSRID(ST_MakePoint({longitude}, {latitude}), 4326),
                     0,
-                    {'true' if user_created else 'false'},
-                    'https://www.charlotte.edu/')
+                    {'true' if user_created else 'false'})
                 RETURNING
                     gem_id;''')
             #failsafe
@@ -620,7 +631,7 @@ def increment_gem_times_visited(gem_id:str):
                                 WHERE
                                     gem_id='{gem_id}';''')
 
-def change_gem_times_visited(gem_id:str, times_visited:int=-1):
+def _change_gem_times_visited(gem_id:str, times_visited:int=-1):
     if (times_visited > -1):
         pool = get_pool()
         with pool.connection() as conn:

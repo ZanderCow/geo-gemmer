@@ -1,4 +1,6 @@
-from repositories.db import db
+from psycopg.rows import dict_row
+from repositories.db import get_pool, inflate_string
+from datetime import datetime
 from typing import Any
 
 def get_all_reviews_for_a_hidden_gem(gem_id) -> list[dict[str, Any]]:
@@ -28,15 +30,36 @@ def get_all_reviews_for_a_hidden_gem(gem_id) -> list[dict[str, Any]]:
         ]
     
     '''
-    pass
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    user_id,
+                    gem_id,
+                    rating,
+                    review,
+                    date
+                FROM
+                    review r
+                WHERE gem_id = '{gem_id}';''')
+            the_reviews = cursor.fetchall()
 
-def add_review_to_hidden_gem(gem_id, user_id, rating, review):
+            if (the_reviews != None):
+                for review in the_reviews:
+                    review['rating'] = _expand_rating(review['rating'])
+                    review['user_id'] = str(review['user_id'])
+                    review['gem_id'] = str(review['gem_id'])
+            
+            return the_reviews
+
+def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     '''
     Add a review to a hidden gem.
     
     Parameters:
-        gem_id (int): The ID of the hidden gem.
-        user_id (int): The ID of the user.
+        gem_id (str): The ID of the hidden gem.
+        user_id (str): The ID of the user.
         rating (int): The rating of the hidden gem.
         review (str): The review of the hidden gem.
     
@@ -51,8 +74,28 @@ def add_review_to_hidden_gem(gem_id, user_id, rating, review):
             'This hidden gem was amazing! I would definitely recommend it to others.'
             )
     '''
+    #convert rating to smaller form for postgres
+    rating = _shrink_rating(rating)
 
-    pass
+    #inflate review, in case of apostrophe catastrophe
+    review = inflate_string(review, 511)
+
+    #DAY
+    day = str(datetime.today().date())
+    day = day[5:].replace('-', "/")+'/'+day[:4]
+
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f'''
+                INSERT INTO review (user_id, gem_id, rating, review, date) VALUES (
+                    {'NULL' if user_id is None else f'{user_id}'},
+                    '{gem_id}',
+                    '{rating}',
+                    '{review}',
+                    '{day}'
+                );''')
+
 
 
 def get_review_distribution_of_a_hidden_gem_visited_by_a_user(user_id):
@@ -119,3 +162,11 @@ def get_all_reviews_user_has_made(user_id) -> list[dict[str, Any]]:
         ]
     '''
     pass
+
+def _shrink_rating(num:int) -> chr:
+    #print(datetime.day()+"/"+datetime.month()+"/"+datetime.year())
+    num = max(0, min(5, num))
+    return chr(num+30)
+
+def _expand_rating(rating:chr) -> int:
+    return ord(rating)-30
