@@ -43,15 +43,7 @@ def get_all_reviews_for_a_hidden_gem(gem_id) -> list[dict[str, Any]]:
                 FROM
                     review r
                 WHERE gem_id = '{gem_id}';''')
-            the_reviews = cursor.fetchall()
-
-            if (the_reviews != None):
-                for review in the_reviews:
-                    review['rating'] = _expand_rating(review['rating'])
-                    review['user_id'] = str(review['user_id'])
-                    review['gem_id'] = str(review['gem_id'])
-            
-            return the_reviews
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     '''
@@ -81,8 +73,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     review = inflate_string(review, 511)
 
     #DAY
-    day = str(datetime.today().date())
-    day = day[5:].replace('-', "/")+'/'+day[:4]
+    day = _date_to_int()
 
     pool = get_pool()
     with pool.connection() as conn:
@@ -135,12 +126,12 @@ def get_average_rating_for_a_hidden_gem(gem_id) -> float:
     '''
     pass
 
-def get_all_reviews_user_has_made(user_id) -> list[dict[str, Any]]:
+def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
     '''
     Retrieve all the reviews a user has made.
     
     Parameters:
-        user_id (int): The ID of the user.
+        user_id (str): The ID of the user.
     
     Returns:
         list[dict[str, Any]]: A list of dictionaries representing the reviews.
@@ -161,12 +152,58 @@ def get_all_reviews_user_has_made(user_id) -> list[dict[str, Any]]:
         
         ]
     '''
-    pass
+    #for some reason user ids are stored as uuids and not strings
+    #i made the gems convert to strings for abstraction but oh well :p
+    if (user_id is not str):
+        user_id = str(user_id)
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    user_id,
+                    gem_id,
+                    rating,
+                    review,
+                    date
+                FROM
+                    review r
+                WHERE user_id = '{user_id}'
+                ORDER BY
+                    date DESC;''')
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def _shrink_rating(num:int) -> chr:
-    #print(datetime.day()+"/"+datetime.month()+"/"+datetime.year())
+    
     num = max(0, min(5, num))
     return chr(num+30)
 
 def _expand_rating(rating:chr) -> int:
     return ord(rating)-30
+
+def _date_to_int() -> int:
+    day = str(datetime.today().date())
+    day = int(day[:4]+day[5:7]+day[8:])
+    return day
+
+def _date_int_to_string(date:int) -> str:
+    day = str(date)
+    day = day[4:6]+'/'+day[6:]+'/'+day[:4]
+    return day
+
+def _convert_reviews_to_proper_form(the_reviews:list[dict[str,Any]]):
+    if (the_reviews != None):
+        for review in the_reviews:
+            review['rating'] = _expand_rating(review['rating'])
+            review['user_id'] = str(review['user_id'])
+            review['gem_id'] = str(review['gem_id'])
+            review['date'] = _date_int_to_string(review['date'])
+    return the_reviews
+
+def _convert_to_proper_form(review:dict[str,Any]):
+    if (review != None):
+        review['rating'] = _expand_rating(review['rating'])
+        review['user_id'] = str(review['user_id'])
+        review['gem_id'] = str(review['gem_id'])
+        review['date'] = _date_int_to_string(review['date'])
+    return review

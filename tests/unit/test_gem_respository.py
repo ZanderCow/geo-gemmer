@@ -7,6 +7,7 @@ from repositories.db import get_pool, inflate_string
 from repositories.gem_repository import accessibility_class
 from repositories import review_repository as reviewpo
 from repositories import user_repository as userrepo
+from datetime import datetime
 
 #this is just a debug tool to reset the database
 def reset_database():
@@ -211,16 +212,11 @@ def test_reviews():
     assert reviewpo._expand_rating(shrunk) is 0
 
     newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, False)
+    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, False)
     user_id = userrepo.create_new_user('nameo', 'nameom')
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
 
-    print(newgemid, end='\n')
     reviews = reviewpo.get_all_reviews_for_a_hidden_gem(newgemid)
-    print(len(reviews))
     review = reviews[0]
     assert review['user_id'] == str(user_id)
     assert review['gem_id'] == newgemid
@@ -230,6 +226,25 @@ def test_reviews():
     assert review['date'][5] == '/'
     assert len(review['date']) == 10
 
+    reviews = reviewpo.get_all_reviews_user_has_made(user_id)
+    review = reviews[0]
+    assert review['user_id'] == str(user_id)
+    assert review['gem_id'] == newgemid
+    assert review['rating'] == 4
+    assert review['review'] == "This place's food is awful"
+    assert review['date'][2] == '/'
+    assert review['date'][5] == '/'
+    assert len(review['date']) == 10
+    
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 5, "This place is awesome")
+    reviews = reviewpo.get_all_reviews_user_has_made(user_id)
+    review = reviews[1]
+    assert review['gem_id'] == newgemid
+    assert review['rating'] == 5
+    assert review['review'] == "This place is awesome"
+    assert review['date'][2] == '/'
+    assert review['date'][5] == '/'
+    assert len(review['date']) == 10
 
 '''
 def test_adding_several_gems():
