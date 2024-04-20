@@ -53,6 +53,10 @@ CREATE TABLE IF NOT EXISTS gems_visited (
     date_visited date NOT NULL
 );
 
+
+
+
+
 CREATE TABLE IF NOT EXISTS gems_pinned (
     gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
