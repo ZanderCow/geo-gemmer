@@ -200,7 +200,8 @@
                 
             })
             .catch((error) => {
-                // Check if the error message matches the expected format
+                
+                // Check if the error message is the missing fields error
                 const match = error.message.match(/required and were not provided: (.*)/);
                 if (match && match[1]) {
                     // Split the fields, trim whitespace, and remove any extraneous quotes

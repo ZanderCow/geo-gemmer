@@ -125,6 +125,9 @@ def create_gem():
     if missing_fields:
         return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
 
+
+    
+
     return jsonify(
     {
         'message': 'Gem created successfully',

@@ -32,6 +32,7 @@ def get_all_gems_visited_by_user(user_id) -> list[dict[str, Any]]:
             }         
         ]
     '''
+    
     pass
 
 def add_gem_to_visited_list(user_id, gem_id, date_visited):

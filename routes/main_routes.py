@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template,redirect,request
+from flask import Blueprint, render_template,redirect,request, jsonify
 from repositories import user_repository
+import bcrypt
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 main = Blueprint('main', __name__)
 
@@ -66,16 +68,30 @@ def signup_user():
     '''
     signs up user and redirects to dashboard
     '''
-    username = request.form.get('username')
-    password = request.form.get('password')
 
-    #TODO:
-    # check if user exists already
-    #adds user to database
-    #logs in user
-    user_id = user_repository.create_new_user(username, password)
+    data = request.get_json()  # get the incoming JSON data
 
-    return redirect(f'/user?user_id={user_id}')
+    required_fields = ['username', 'password']
+
+    created_username = data.get('username')
+    created_password = data.get('password')
+  
+
+    missing_fields = [field for field in required_fields if not data.get(field)]
+
+    #check if all required fields are provided
+    if missing_fields:
+        return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
+
+    #check if username already exists
+    if user_repository.does_username_exist(created_username):
+        return jsonify({'error': 'Username already exists'}), 400
+    
+
+    user_id = user_repository.create_new_user(created_username, created_password)
+
+    return jsonify({'message': 'Gem created successfully'}), 200
+
 
 
 
@@ -91,15 +107,19 @@ def get_login():
 @main.post('/login')
 def login_user():
 
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
 
     #TODO:
-    # check if user exists
     # check if password is correct
-    # if user does not exist or password is incorrect, return error message
-    # if user exists and password is correct, log in user and redirect to dashboard
-    #authenticates user
-    return redirect('/user')
+    stored_password = user_repository.get_password(username)
+    if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
+
+        user_id = user_repository.get_user_id(username)
+        access_token = create_access_token(identity=str(user_id))
+        return jsonify(access_token=access_token), 200
+    else:
+        return jsonify({"msg": "Bad username or password"}), 401
+
 
 
