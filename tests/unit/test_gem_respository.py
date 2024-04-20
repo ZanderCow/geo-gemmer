@@ -10,7 +10,7 @@ from repositories import user_repository as userrepo
 from datetime import datetime
 
 #this is just a debug tool to reset the database
-def reset_database():
+def _reset_database():
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cursor:
@@ -20,7 +20,7 @@ def reset_database():
 
 
 def test_making_gem():
-    reset_database()
+    _reset_database()
     newgemid = repo.create_new_gem("nameo", "big place", 80.843124, 35.227085, False)
     
     newgem = repo.get_hidden_gem_by_id(newgemid)
@@ -35,7 +35,7 @@ def test_making_gem():
 
 
 def test_adding_gems_to_repo():
-    reset_database()
+    _reset_database()
     newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False, "/static/img/neckbeard.png", "no, u", "")
     newgem = repo.get_hidden_gem_by_id(newgemid)
 
@@ -111,11 +111,11 @@ def test_adding_gems_to_repo():
     assert all_gems[0]['user_created'] == False
 
     #delet
-    reset_database()
+    _reset_database()
 
 
 def test_modifying_gem():
-    reset_database()
+    _reset_database()
     newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
     
     #modify
@@ -142,7 +142,7 @@ def test_modifying_gem():
     assert repo.get_hidden_gem_by_id(newgemid) is None
 
 def test_accessibility():
-    reset_database()
+    _reset_database()
     newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
     access = accessibility_class()
     access.braille_signage = True
@@ -212,7 +212,6 @@ def test_reviews():
     assert reviewpo._expand_rating(shrunk) is 0
 
     newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, False)
-    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, False)
     user_id = userrepo.create_new_user('nameo', 'nameom')
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
 
@@ -236,6 +235,7 @@ def test_reviews():
     assert review['date'][5] == '/'
     assert len(review['date']) == 10
     
+    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, False)
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 5, "This place is awesome")
     reviews = reviewpo.get_all_reviews_user_has_made(user_id)
     review = reviews[1]
@@ -245,6 +245,14 @@ def test_reviews():
     assert review['date'][2] == '/'
     assert review['date'][5] == '/'
     assert len(review['date']) == 10
+
+    reviews = reviewpo.get_review_distribution_of_a_hidden_gems_visited_by_a_user(user_id)
+    assert reviews == [0, 0, 0, 1, 1]
+
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 2, "This place is ahh")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place is uh some")
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 1, "This place is awful")
+    assert reviewpo.get_average_rating_for_a_hidden_gem(newgemid) == 3
 
 '''
 def test_adding_several_gems():

@@ -3,12 +3,12 @@ from repositories.db import get_pool, inflate_string
 from datetime import datetime
 from typing import Any
 
-def get_all_reviews_for_a_hidden_gem(gem_id) -> list[dict[str, Any]]:
+def get_all_reviews_for_a_hidden_gem(gem_id:str) -> list[dict[str, Any]]:
     '''
     Retrieve all the reviews for a hidden gem.
     
     Parameters:
-        gem_id (int): The ID of the hidden gem.
+        gem_id (str): The ID of the hidden gem.
     
     Returns:
         list[dict[str, Any]]: A list of dictionaries representing the reviews.
@@ -90,33 +90,48 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
 
 
 
-def get_review_distribution_of_a_hidden_gem_visited_by_a_user(user_id):
+def get_review_distribution_of_a_hidden_gems_visited_by_a_user(user_id:str) -> list:
     '''
-    Get the distribution of hidden gems visited by a user.
+    Get the distribution of hidden gem ratings visited by a user.
     
     Parameters:
-        user_id (int): The ID of the user.
+        user_id (str): The ID of the user.
     
     Returns:
-        dict[str, int]: A dictionary with the distribution of hidden gems visited by a user.
+        list(int): A list with the distribution of hidden gems visited by a user. Index 0 is 1 star, index 4 is 5 stars
     
     Example:
-        >>> get_review_distribution_of_a_hidden_gem_visited_by_a_user(67e55044-10b1-426f-9247-bb680e5fe0c8)
-        {
-            '1': 23,
-            '2': 5,
-            '3': 0,
-            '4': 1,
-            '5': 2
+        >>> get_review_distribution_of_a_hidden_gem_visited_by_a_user('67e55044-10b1-426f-9247-bb680e5fe0c8')
+        { #rating    1, 2, 3, 4, 5
+                    23, 5, 0, 1, 2
     '''
-    pass
+    distro = [0,0,0,0,0]
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    user_id,
+                    gem_id,
+                    rating,
+                    review,
+                    date
+                FROM
+                    review r
+                WHERE user_id = '{user_id}';''')
+            reviews = _convert_reviews_to_proper_form(cursor.fetchall())
+            for review in reviews:
+                distro[review['rating']-1]+=1
+            return distro
 
-def get_average_rating_for_a_hidden_gem(gem_id) -> float:
+
+
+def get_average_rating_for_a_hidden_gem(gem_id:str) -> float:
     '''
     Get the average rating for a hidden gem.
     
     Parameters:
-        gem_id (int): The ID of the hidden gem.
+        gem_id (str): The ID of the hidden gem.
     
     Returns:
         float: The average rating of the hidden gem.
@@ -125,7 +140,15 @@ def get_average_rating_for_a_hidden_gem(gem_id) -> float:
         >>> get_average_rating_for_a_hidden_gem(67e55044-10b1-426f-9247-bb680e5fe0c8)
         4.5
     '''
-    pass
+    #this is probably gonna lag like crazy on the server since its not particularly fast and this is the .
+    total:float = 0
+    list = get_all_reviews_for_a_hidden_gem(gem_id)
+    for review in list:
+        total+=review['rating']
+    total /= len(list)
+    return total
+
+
 
 def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
     '''
