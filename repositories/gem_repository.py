@@ -90,7 +90,7 @@ def get_all_gems() -> list[dict[str, Any]]:
                                     hidden_gem g
                                 JOIN image_group i
                                 ON g.gem_id = i.gem_id;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dict[str, Any]]:
     """
@@ -125,7 +125,7 @@ def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dic
                 ON g.gem_id = i.gem_id
                 ORDER BY
                     distance;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
     '''
@@ -188,7 +188,7 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
         ON g.gem_id = i.gem_id
         WHERE
             g.gem_id='{gem_id}';''')
-            list = cursor.fetchall()
+            list = _format_gem(cursor.fetchall())
             if (len(list) == 0):
                 return None
             return list[0]
@@ -241,7 +241,7 @@ def get_all_hidden_gems_with_a_specific_type(longitude:float, latitude:float, ge
                                     {offset}
                                 LIMIT
                                     20;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, offset:int=0):
     '''
@@ -286,7 +286,7 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, offset:int):
     '''
@@ -333,7 +333,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 {offset}
             LIMIT
                 20;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str|None, accessibility:accessibility_class, offset:int=0):
     '''
@@ -387,7 +387,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int):
     '''
@@ -445,7 +445,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, assesiblity) -> dict[str, Any] | None:
     """
@@ -522,7 +522,7 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
                 a.{assesibility} = true
             ORDER BY
                 distance;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 
 
@@ -683,3 +683,11 @@ def delete_hidden_gem(gem_id:str):
                                     hidden_gem
                                 WHERE
                                     gem_id='{gem_id}';''')
+
+
+#abstracted stuff so i dont have to rewrite a bunch of boilerplate
+def _format_gem(gems:dict[str:Any]):
+    if gems != None:
+        for gem in gems:
+            gem['gem_id'] = str(gem['gem_id'])
+    return gems
