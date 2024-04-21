@@ -45,3 +45,4 @@ def inflate_string(input:str, max_length:int|None=None) -> str:
                 input = input[:max_length-1]
     
     return input
+
