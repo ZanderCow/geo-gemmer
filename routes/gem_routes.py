@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template,redirect,request,jsonify
+import repositories.gem_repository as gem_repo
 from math import ceil
 
 gem = Blueprint('gem', __name__)
@@ -16,7 +17,9 @@ def gem_search_page():
     #If user is not logged in, redirect to login page
     #get search query 
     #search for gems in database based on search query
-    searched_gems = [
+    location = (-80.843124, 35.227085)
+    searched_gems = gem_repo.filtered_search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
+    '''[
         {
             'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
             'name': 'Lorem ipsum, dolor sit amet consectetur',
@@ -43,8 +46,8 @@ def gem_search_page():
             "distance_from_user" : 20.3346,
             'type': 'hiking Trail'
         }           
-    ]
-    return render_template('gem-search.html',gem_data=searched_gems, user_query="rocky mountain")
+    ]'''
+    return render_template('gem-search.html',gem_data=searched_gems, user_query=search_query)
 
 @gem.post('/send-location')
 def receive_location():
@@ -61,11 +64,12 @@ def gem_details(gem_id):
     #auethenticate user (user must be logged in to view a gem)
     #If user is not logged in, redirect to login page
     #get gem details from database
-
+    location = (-80.843124, 35.227085)
+    gem_info = gem_repo.get_hidden_gem_by_id(gem_id, location[0], location[1])
     gem_images = {
-        "image_1": "/static/img/nature-image.png",
-        "image_2": "/static/img/nature-image.png",
-        "image_3": "/static/img/nature-image.png",
+        "image_1": gem_info['image_1'],
+        "image_2": gem_info['image_2'],
+        "image_3": gem_info['image_3'],
     }
 
     gem_average_rating_in_float = 4.3
@@ -76,7 +80,7 @@ def gem_details(gem_id):
 
 
     
-    gem_info =  { 
+    '''gem_info =  { 
             "gem_id": "67e55044-10b1-426f-9247-bb680e5fe0c8",
             'name': 'hello',
             'type': 'hiking Trail',
@@ -93,7 +97,7 @@ def gem_details(gem_id):
         "braille_signage": True,
         "hearing_assistance": True,
         "large_print_materials": True,   
-          }
+    }'''
 
     gem_review_distribution = {
         "one": 2,
@@ -138,7 +142,6 @@ def gem_details(gem_id):
         full_stars=full_stars,
         half_stars=half_stars,
         gem_average_rating_in_float=gem_average_rating_in_float,
-        gem_accessibility_info=gem_accessibility_info, 
         gem_review_distribution=gem_review_distribution,
         formatted_gem_review_cdf=formatted_gem_review_cdf,
         gem_reviews=gem_reviews
@@ -158,6 +161,6 @@ def render_create_gem_review(gem_id):
 def render_edit_gem_review(gem_id):
     pass
 
-@gem.get("/success")
-def success():
-    return render_template("gem-success.html")
+@gem.get("/success/<gemid>")
+def success(gemid:str):
+    return render_template("gem-success.html", gemid=gemid)

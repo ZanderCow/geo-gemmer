@@ -127,7 +127,7 @@ def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dic
                     distance;''')
             return _format_gem(cursor.fetchall())
 
-def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
+def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> dict[str, Any] | None:
     '''
     Retrieve a hidden gem from the repository based on its ID.
 
@@ -166,6 +166,7 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
             g.name,
             ST_X(g.location::geometry) AS longitude,
             ST_Y(g.location::geometry) AS latitude,
+            {f'ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance, ' if longitude != None and latitude != None else ''}
             g.gem_type,
             g.times_visited,
             g.user_created,
@@ -309,7 +310,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 g.gem_id,
                 g.name,
                 g.gem_type,
-                g.similarity(name, 'closey') AS name_similarity,
+                word_similarity(g.name, 'closey') AS name_similarity,
                 ST_Y(g.location::geometry) AS latitude,
                 ST_X(g.location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
@@ -326,7 +327,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
-                {outer_distance*1000}) AND similarity(name, {search_string}) > 0.2
+                {outer_distance*1000}) AND word_similarity(name, '{search_string}') > 0.1
             ORDER BY
                 name_similarity DESC, distance ASC
             OFFSET
@@ -389,7 +390,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 20;''') # distance is in meters
             return _format_gem(cursor.fetchall())
 
-def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int):
+def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str|None=None, accessibility:accessibility_class|None=None, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -410,7 +411,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 g.gem_id,
                 name,
                 gem_type,
-                similarity(name, 'closey') AS name_similarity,
+                word_similarity(g.name, 'closey') AS name_similarity,
                 ST_Y(location::geometry) AS latitude,
                 ST_X(location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
@@ -423,7 +424,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 braille_signage,
                 hearing_assistance,
                 large_print_materials,
-                accessible_restrooms
+                accessible_restrooms,
                 image_1,
                 image_2,
                 image_3
@@ -436,8 +437,8 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
-                {outer_distance*1000}){accessibility.to_string()}
-                AND similarity(name, {search_string}) > 0.2
+                {outer_distance*1000}) {accessibility.to_string() if accessibility != None else ''}
+                AND word_similarity(name, '{search_string}') > 0.1
                 {f"AND g.gem_type = '{type}'" if type != None else ""}
             ORDER BY
                 name_similarity DESC, distance ASC
@@ -519,7 +520,7 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
             JOIN image_group i
             ON h.gem_id = i.gem_id
             WHERE
-                a.{assesibility} = true
+                a.{assesiblity} = true
             ORDER BY
                 distance;''')
             return _format_gem(cursor.fetchall())
@@ -689,5 +690,6 @@ def delete_hidden_gem(gem_id:str):
 def _format_gem(gems:dict[str:Any]):
     if gems != None:
         for gem in gems:
+            if ('distance' in gem): gem['distance'] = round(gem['distance']/1000, 4)
             gem['gem_id'] = str(gem['gem_id'])
     return gems
