@@ -1,4 +1,4 @@
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from psycopg.rows import dict_row
 from typing import Any
 
@@ -90,7 +90,7 @@ def get_all_gems() -> list[dict[str, Any]]:
                                     hidden_gem g
                                 JOIN image_group i
                                 ON g.gem_id = i.gem_id;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dict[str, Any]]:
     """
@@ -125,9 +125,9 @@ def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dic
                 ON g.gem_id = i.gem_id
                 ORDER BY
                     distance;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
-def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
+def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> dict[str, Any] | None:
     '''
     Retrieve a hidden gem from the repository based on its ID.
 
@@ -166,6 +166,7 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
             g.name,
             ST_X(g.location::geometry) AS longitude,
             ST_Y(g.location::geometry) AS latitude,
+            {f'ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance, ' if longitude != None and latitude != None else ''}
             g.gem_type,
             g.times_visited,
             g.user_created,
@@ -188,7 +189,7 @@ def get_hidden_gem_by_id(gem_id) -> dict[str, Any] | None:
         ON g.gem_id = i.gem_id
         WHERE
             g.gem_id='{gem_id}';''')
-            list = cursor.fetchall()
+            list = _format_gem(cursor.fetchall())
             if (len(list) == 0):
                 return None
             return list[0]
@@ -241,7 +242,7 @@ def get_all_hidden_gems_with_a_specific_type(longitude:float, latitude:float, ge
                                     {offset}
                                 LIMIT
                                     20;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, offset:int=0):
     '''
@@ -286,7 +287,7 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, offset:int):
     '''
@@ -309,7 +310,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 g.gem_id,
                 g.name,
                 g.gem_type,
-                g.similarity(name, 'closey') AS name_similarity,
+                word_similarity(g.name, 'closey') AS name_similarity,
                 ST_Y(g.location::geometry) AS latitude,
                 ST_X(g.location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
@@ -326,16 +327,16 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
-                {outer_distance*1000}) AND similarity(name, {search_string}) > 0.2
+                {outer_distance*1000}) AND word_similarity(name, '{search_string}') > 0.1
             ORDER BY
                 name_similarity DESC, distance ASC
             OFFSET
                 {offset}
             LIMIT
                 20;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
-def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int=0):
+def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str|None, accessibility:accessibility_class, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -380,15 +381,16 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography, {outer_distance*1000}){accessibility.to_string()}
+                {f"AND g.gem_type = '{type}'" if type != None else ""}
             ORDER BY
                 distance
             OFFSET
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
-def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str, accessibility:accessibility_class, offset:int):
+def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str|None=None, accessibility:accessibility_class|None=None, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -409,7 +411,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 g.gem_id,
                 name,
                 gem_type,
-                similarity(name, 'closey') AS name_similarity,
+                word_similarity(g.name, 'closey') AS name_similarity,
                 ST_Y(location::geometry) AS latitude,
                 ST_X(location::geometry) AS longitude,
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
@@ -422,7 +424,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 braille_signage,
                 hearing_assistance,
                 large_print_materials,
-                accessible_restrooms
+                accessible_restrooms,
                 image_1,
                 image_2,
                 image_3
@@ -435,15 +437,16 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
             WHERE ST_DWithin(
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography,
-                {outer_distance*1000}){accessibility.to_string()}
-                AND similarity(name, {search_string}) > 0.2
+                {outer_distance*1000}) {accessibility.to_string() if accessibility != None else ''}
+                AND word_similarity(name, '{search_string}') > 0.1
+                {f"AND g.gem_type = '{type}'" if type != None else ""}
             ORDER BY
                 name_similarity DESC, distance ASC
             OFFSET
                 {offset}
             LIMIT
                 20;''') # distance is in meters
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, assesiblity) -> dict[str, Any] | None:
     """
@@ -517,10 +520,10 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
             JOIN image_group i
             ON h.gem_id = i.gem_id
             WHERE
-                a.{assesibility} = true
+                a.{assesiblity} = true
             ORDER BY
                 distance;''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 
 
@@ -528,17 +531,23 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
 def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created:bool, image1:str=None,image2:str=None,image3:str=None) -> str:
     # img failsafes
     if (image1 == ''): image1 = None
+    elif (image1 != None): image1 = inflate_string(image1, 255)
     if (image2 == ''): image2 = None
+    elif (image2 != None): image2 = inflate_string(image2, 255)
     if (image3 == ''): image3 = None
+    elif (image3 != None): image3 = inflate_string(image3, 255)
     '''
     Creates a new hidden gem and adds it to the database.
 
     Parameters:
-        name (str): The name of the gem.
-        gem_type (str): The type of the gem.
+        name (str): The name of the gem. (max length: 127)
+        gem_type (str): The type of the gem. (max length: 63)
         longitude (float): The location (E/W) of the gem.
         latitude (float): The location (N/S) of the gem.
         user_created (bool): Whether a user created the gem or not
+        image1 (str): Link to image 1 (max length: 255)
+        image2 (str): Link to image 2 (max length: 255)
+        image3 (str): Link to image 3 (max length: 255)
 
     Returns:
         id (str): The id of the newly created gem
@@ -548,17 +557,20 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
         - the website_link should be None by default (not all gems have a website)
         
     '''
+    #FAILSAFE IN CASE OF APOSTROPHES
+    name = inflate_string(name, 127)
+    gem_type = inflate_string(gem_type, 63)
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
-                INSERT INTO hidden_gem (name, gem_type, location, times_visited, user_created, website_link) VALUES (
+                INSERT INTO hidden_gem (name, gem_type, location, times_visited, user_created) VALUES (
                     '{name}',
                     '{gem_type}',
                     ST_SetSRID(ST_MakePoint({longitude}, {latitude}), 4326),
                     0,
-                    {'true' if user_created else 'false'},
-                    'https://www.charlotte.edu/')
+                    {'true' if user_created else 'false'})
                 RETURNING
                     gem_id;''')
             #failsafe
@@ -620,7 +632,7 @@ def increment_gem_times_visited(gem_id:str):
                                 WHERE
                                     gem_id='{gem_id}';''')
 
-def change_gem_times_visited(gem_id:str, times_visited:int=-1):
+def _change_gem_times_visited(gem_id:str, times_visited:int=-1):
     if (times_visited > -1):
         pool = get_pool()
         with pool.connection() as conn:
@@ -672,3 +684,12 @@ def delete_hidden_gem(gem_id:str):
                                     hidden_gem
                                 WHERE
                                     gem_id='{gem_id}';''')
+
+
+#abstracted stuff so i dont have to rewrite a bunch of boilerplate
+def _format_gem(gems:dict[str:Any]):
+    if gems != None:
+        for gem in gems:
+            if ('distance' in gem): gem['distance'] = round(gem['distance']/1000, 4)
+            gem['gem_id'] = str(gem['gem_id'])
+    return gems
