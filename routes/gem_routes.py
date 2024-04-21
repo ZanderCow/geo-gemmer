@@ -17,7 +17,7 @@ def gem_search_page():
     #If user is not logged in, redirect to login page
     #get search query 
     #search for gems in database based on search query
-    location = (-80.843124, 35.227085)
+    location = (-80.734436, 35.306274)
     searched_gems = gem_repo.filtered_search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
     '''[
         {
@@ -64,7 +64,7 @@ def gem_details(gem_id):
     #auethenticate user (user must be logged in to view a gem)
     #If user is not logged in, redirect to login page
     #get gem details from database
-    location = (-80.843124, 35.227085)
+    location = (-80.734436, 35.306274)
     gem_info = gem_repo.get_hidden_gem_by_id(gem_id, location[0], location[1])
     gem_images = {
         "image_1": gem_info['image_1'],
