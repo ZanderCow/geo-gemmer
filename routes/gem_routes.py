@@ -1,10 +1,13 @@
 from flask import Blueprint, render_template,redirect,request,jsonify
 from math import ceil
+from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 
 gem = Blueprint('gem', __name__)
 
 @gem.get('/search/')
+@jwt_required()
 def gem_search_page():
+    user_id = get_jwt_identity()
     search_query = request.args.get('searchbar', '')
 
     if not search_query:
@@ -47,7 +50,9 @@ def gem_search_page():
     return render_template('gem-search.html',gem_data=searched_gems, user_query="rocky mountain")
 
 @gem.post('/send-location')
+@jwt_required()
 def receive_location():
+    user_id = get_jwt_identity()
     data = request.json
     latitude = data['latitude']
     longitude = data['longitude']
@@ -56,7 +61,9 @@ def receive_location():
     return jsonify({'status': 'success'})
 
 @gem.get('/<gem_id>')
+@jwt_required()
 def gem_details(gem_id):
+    user_id = get_jwt_identity()
     #TODO:
     #auethenticate user (user must be logged in to view a gem)
     #If user is not logged in, redirect to login page
@@ -146,7 +153,9 @@ def gem_details(gem_id):
 
 
 @gem.get('/<gem_id>/create-review')
+@jwt_required()
 def render_create_gem_review(gem_id):
+    user_id = get_jwt_identity()
     #TODO:
     #auethenticate user (user must be logged create a review for a gem)
     #If user is not logged in, redirect to login page
@@ -155,9 +164,13 @@ def render_create_gem_review(gem_id):
 
 
 @gem.get('/<gem_id>/edit-review')
+@jwt_required()
 def render_edit_gem_review(gem_id):
+    user_id = get_jwt_identity()
     pass
 
 @gem.get("/success")
+@jwt_required()
 def success():
+    user_id = get_jwt_identity()
     return render_template("gem-success.html")
