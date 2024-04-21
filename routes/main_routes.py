@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template,redirect,request, jsonify
 from repositories import user_repository
 import bcrypt
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, jwt_required, get_jwt_identity
+from datetime import timedelta
 
 main = Blueprint('main', __name__)
 
@@ -71,26 +72,36 @@ def signup_user():
 
     data = request.get_json()  # get the incoming JSON data
 
-    required_fields = ['username', 'password']
 
     created_username = data.get('username')
     created_password = data.get('password')
-  
 
-    missing_fields = [field for field in required_fields if not data.get(field)]
+    errors = {}
 
-    #check if all required fields are provided
-    if missing_fields:
-        return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
-
-    #check if username already exists
     if user_repository.does_username_exist(created_username):
-        return jsonify({'error': 'Username already exists'}), 400
+        errors['username'] = 'Username already exists'
+
+    
+    if created_username == '':
+        errors['username'] = 'Username is required'
+
+
+    if created_password == '':
+        errors['password'] = 'Password is required'
+
+
     
 
-    user_id = user_repository.create_new_user(created_username, created_password)
+    # if there are no errors, create the user
+    if errors == {}:
+         user_id = user_repository.create_new_user(created_username, created_password)
+         return jsonify({'message': 'user created successfully'}), 200
+    
+    else:
+        return jsonify(errors), 400
+    
 
-    return jsonify({'message': 'Gem created successfully'}), 200
+
 
 
 
@@ -107,19 +118,44 @@ def get_login():
 @main.post('/login')
 def login_user():
 
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
+    data = request.get_json()  # get the incoming JSON data
 
-    #TODO:
-    # check if password is correct
-    stored_password = user_repository.get_password(username)
-    if bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8')):
 
-        user_id = user_repository.get_user_id(username)
-        access_token = create_access_token(identity=str(user_id))
-        return jsonify(access_token=access_token), 200
-    else:
-        return jsonify({"msg": "Bad username or password"}), 401
+    entered_username = data.get('username')
+    entered_password = data.get('password')
+
+    errors = {}
+
+    if entered_username == '':
+        errors['error'] = 'username or password is incorrect'
+    if entered_password == '':
+        errors['error'] = 'username or password is incorrect'
+    else: 
+        if not user_repository.does_username_exist(entered_username):
+            errors['error'] = 'username or password is incorrect'
+        else:
+            actual_password = user_repository.get_password(entered_username)["password"]
+
+
+            if bcrypt.checkpw(entered_password.encode('utf-8'), actual_password):
+                user_id = user_repository.get_userid_by_username(entered_username)
+                access_token = create_access_token(identity=str(user_id),expires_delta=timedelta(days=7))
+                response = jsonify(
+                    {'login': True},
+                    {'username': entered_username}
+                    )
+                set_access_cookies(response, access_token)
+                return response
+            
+            else:
+                errors['error'] = 'username or password is incorrect'
+ 
+    return jsonify(errors), 400   
+        
+
+
+
+
 
 
 

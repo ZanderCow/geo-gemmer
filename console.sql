@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE TABLE IF NOT EXISTS geo_user (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(255),
-    password VARCHAR(255),
+    password BYTEA,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     profile_picture VARCHAR(255),

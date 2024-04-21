@@ -10,5 +10,4 @@ def get_pool():
             conninfo=os.getenv('DATABASE_URL', ''),
             open=True,
         )
-        print(pool.conninfo)
     return pool

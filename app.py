@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from routes.main_routes import main
 from routes.user_routes import user
 from routes.gem_routes import gem
@@ -11,6 +11,11 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback_secret_key')
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_SECURE'] = True  # Ensure to use True in production to send cookies over HTTPS only
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # Enable CSRF protection
+app.config['JWT_COOKIE_SAMESITE'] = 'Lax'  # CSRF protection setting
+
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -23,7 +28,7 @@ app.register_blueprint(gem, url_prefix='/gem')
 
 @app.errorhandler(exceptions.NoAuthorizationError)
 def handle_auth_error(e):
-    return jsonify(error=str(e)), 401
+    return render_template('unauthorized.html', error=str(e)), 401
 
 @app.errorhandler(exceptions.CSRFError)
 def handle_csrf_error(e):
@@ -32,7 +37,7 @@ def handle_csrf_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(ssl_context='adhoc')
 
 
 
