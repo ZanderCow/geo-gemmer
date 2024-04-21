@@ -21,9 +21,10 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,
     gem_type VARCHAR(50),
+    location GEOGRAPHY(POINT,4326),
     times_visited INT,
     user_created BOOLEAN,
-    website_link VARCHAR(255) DEFAULT ('/gems/'+gem_id)
+    website_link VARCHAR(255) 
 
 );
 
