@@ -180,11 +180,6 @@ def create_gem():
 )
 
 
-@user.post("/logout")
-def logout():
-    response = jsonify({"msg": "Logout successful"})
-    unset_jwt_cookies(response)
-    return response 
 
 
 @user.post("/logout")
