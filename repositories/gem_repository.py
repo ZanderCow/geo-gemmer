@@ -577,15 +577,15 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
             fetched_stuff = cursor.fetchone()
             if (fetched_stuff is not None):
                 gem_id = str(fetched_stuff['gem_id'])
-                cursor.execute(f'''
+                cursor.execute(f"""
                     INSERT INTO accessibility (gem_id) VALUES (
-                        '{gem_id}');''')
-                cursor.execute(f'''
+                        '{gem_id}');""")
+                cursor.execute(f"""
                     INSERT INTO image_group (gem_id, image_1, image_2, image_3) VALUES (
                         '{gem_id}',
-                        {'\''+image1+'\'' if image1 is not None else 'null'},
-                        {'\''+image2+'\'' if image2 is not None else 'null'},
-                        {'\''+image3+'\'' if image3 is not None else 'null'});''')
+                        {"'" + image1 + "'" if image1 is not None else 'null'},
+                        {"'" + image2 + "'" if image2 is not None else 'null'},
+                        {"'" + image3 + "'" if image3 is not None else 'null'});""")
                 return gem_id
             return None
 
