@@ -8,12 +8,12 @@
                     <div class="col-md-4 col-lg-6 col-xl-5 col-xxl-6 offset-xl-0 offset-xxl-0 d-md-flex d-xl-flex d-xxl-flex justify-content-md-center align-items-md-center align-items-xl-center align-items-xxl-center">
                         <header id="greeting-2" class="bg-primary-gradient" style="background: #ffffff;">
                             <div class="text-center">
-                                <p class="fw-bold text-success mb-2">Gem 1</p>
+                                <p class="fw-bold text-success mb-2">Gem {{loop.index0+1}}</p>
                                 <h3 class="fw-bold" style="padding: 15px;">{{gem.name}}</h3>
                             </div>
                         </header>
                     </div>
-                    <div class="col-md-8 col-lg-6 col-xl-7 col-xxl-6 offset-xl-0 offset-xxl-0 d-xxl-flex justify-content-xxl-end"><img class="rounded d-xl-flex align-items-xl-center fit-cover w-100" style="min-height: 300px;" src="{{gem.image}}" width="659" height="373"></div>
+                    <div class="col-md-8 col-lg-6 col-xl-7 col-xxl-6 offset-xl-0 offset-xxl-0 d-xxl-flex justify-content-xxl-end"><img class="rounded d-xl-flex align-items-xl-center fit-cover w-100" style="min-height: 300px;" src="{{gem.image_1}}" width="659" height="373"></div>
                 </div>
                 <div class="row" style="padding-top: 20px;">
                     <div class="col-md-4 offset-xxl-1 d-xxl-flex justify-content-xxl-center align-items-xxl-center">
@@ -25,7 +25,7 @@
                                         </svg></div>
                                     <div class="col-md-12 col-xl-12 col-xxl-9">
                                         <h5 class="fw-bold text-center" style="padding-top: 10px;">Type</h5>
-                                        <p class="text-center text-muted mb-4">{{gem.type}}</p>
+                                        <p class="text-center text-muted mb-4">{{gem.gem_type}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                                         </svg></div>
                                     <div class="col-md-12 col-xl-12 col-xxl-9">
                                         <h5 class="fw-bold text-center" style="padding-top: 10px;">Distance</h5>
-                                        <p class="text-center text-muted mb-4">{{gem.distance_from_user}} mi away</p>
+                                        <p class="text-center text-muted mb-4">{{gem.distance}} km away</p>
                                     </div>
                                 </div>
                             </div>
