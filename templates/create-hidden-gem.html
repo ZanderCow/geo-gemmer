@@ -195,9 +195,7 @@
             })
             .then(data => {
                 console.log(data);
-                window.location.href = '/gem/success';
-
-                
+                window.location.href = '/gem/success/'+data.gem_id;
             })
             .catch((error) => {
                 // Check if the error message matches the expected format

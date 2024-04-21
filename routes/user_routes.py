@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,redirect,request,jsonify, session
-from repositories import user_repository
+from repositories import user_repository, gem_repository as gem_repo
 
 user = Blueprint('user', __name__)
 
@@ -125,10 +125,23 @@ def create_gem():
     if missing_fields:
         return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
 
+    print('LONGITUDE: '+data['latitude'])
+    print('LATITUDE: '+data['longitude'])
+
+    #get the images into a list
+    images = list()
+    if ('image_1' in data): images.append(images['image_1'])
+    if ('image_2' in data): images.append(images['image_2'])
+    if ('image_3' in data): images.append(images['image_3'])
+
+    #TODO : something with the images T_T
+    #actually create the gem
+    gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
+
     return jsonify(
     {
         'message': 'Gem created successfully',
-        'gem_url': '/gem/67e55044-10b1-426f-9247-bb680e5fe0c8'
+        'gem_id': gem_url
     }
 )
 
