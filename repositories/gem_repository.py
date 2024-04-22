@@ -55,8 +55,7 @@ def get_all_gems() -> list[dict[str, Any]]:
             'longitude': '74.0060',
             'type': 'Restaurant',
             'times_visited': 2,
-            'user_created': True,
-            'website_link': 'https://www.ruby-lang.org/en/',
+            'user_created': True
             
             }, 
             {
@@ -66,8 +65,7 @@ def get_all_gems() -> list[dict[str, Any]]:
             'longitude': '31.3151',
             'type': 'Restaurant',
             'times_visited': 2,
-            'user_created': True,
-            'website_link': 'https://www.pennies.com', 
+            'user_created': True
             }
         ]
     """
@@ -82,7 +80,6 @@ def get_all_gems() -> list[dict[str, Any]]:
                                     gem_type,
                                     times_visited,
                                     user_created,
-                                    website_link,
                                     image_1,
                                     image_2,
                                     image_3
@@ -115,7 +112,6 @@ def get_all_gems_ordered_by_nearest(longitude:float, latitude:float) -> list[dic
                     g.gem_type,
                     g.times_visited,
                     g.user_created,
-                    g.website_link,
                     i.image_1,
                     i.image_2,
                     i.image_3
@@ -147,7 +143,6 @@ def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> d
             'gem_type': 'Restaurant',
             'times_visited': 2,
             'user_created': True,
-            'website_link': 'https://www.ruby-lang.org/en/',
             'wheelchair_accessible': false,
             'service_animal_friendly': false,
             'multilingual_support': false,
@@ -170,7 +165,7 @@ def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> d
             g.gem_type,
             g.times_visited,
             g.user_created,
-            g.website_link,
+            g.avg_rat,
             a.wheelchair_accessible,
             a.service_animal_friendly,
             a.multilingual_support,
@@ -230,8 +225,7 @@ def get_all_hidden_gems_with_a_specific_type(longitude:float, latitude:float, ge
                                     ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                                     gem_type,
                                     times_visited,
-                                    user_created,
-                                    website_link
+                                    user_created
                                 FROM
                                     hidden_gem
                                 WHERE
@@ -269,7 +263,7 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                 g.times_visited,
                 g.user_created,
-                g.website_link,
+                g.avg_rat,
                 i.image_1,
                 i.image_2,
                 i.image_3
@@ -289,7 +283,7 @@ def get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitu
                 20;''') # distance is in meters
             return _format_gem(cursor.fetchall())
 
-def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, offset:int):
+def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -316,7 +310,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                 g.times_visited,
                 g.user_created,
-                g.website_link,
+                g.avg_rat,
                 i.image_1,
                 i.image_2,
                 i.image_3
@@ -336,7 +330,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 20;''')
             return _format_gem(cursor.fetchall())
 
-def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str|None, accessibility:accessibility_class, offset:int=0):
+def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:float, latitude:float, outer_distance:float, type:str|None, accessibility:accessibility_class, min_avg_rating:int=0, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -348,6 +342,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
     Returns:
         list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
     '''
+    #clamp rating from 0-4
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -361,7 +356,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                 times_visited,
                 user_created,
-                website_link,
+                avg_rat,
                 wheelchair_accessible,
                 service_animal_friendly,
                 multilingual_support,
@@ -382,6 +377,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 location::geography,
                 ST_MakePoint({longitude}, {latitude})::geography, {outer_distance*1000}){accessibility.to_string()}
                 {f"AND g.gem_type = '{type}'" if type != None else ""}
+                AND avg_rat > {min_avg_rating}
             ORDER BY
                 distance
             OFFSET
@@ -390,7 +386,7 @@ def filtered_get_all_gems_within_a_certain_distance_from_the_user(longitude:floa
                 20;''') # distance is in meters
             return _format_gem(cursor.fetchall())
 
-def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str|None=None, accessibility:accessibility_class|None=None, offset:int=0):
+def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_string:str, longitude:float, latitude:float, outer_distance:float, type:str|None=None, accessibility:accessibility_class|None=None, min_avg_rating:int=0, offset:int=0):
     '''
     Retrieves all gems within a certain distance from the user's location.
 
@@ -403,6 +399,9 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
     Returns:
         list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
     '''
+    #clamp rating from 0-4
+    min_avg_rating = min(5, max(1, min_avg_rating))-1
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -417,7 +416,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                 times_visited,
                 user_created,
-                website_link,
+                avg_rat,
                 wheelchair_accessible,
                 service_animal_friendly,
                 multilingual_support,
@@ -440,6 +439,7 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
                 {outer_distance*1000}) {accessibility.to_string() if accessibility != None else ''}
                 AND word_similarity(name, '{search_string}') > 0.1
                 {f"AND g.gem_type = '{type}'" if type != None else ""}
+                AND avg_rat > {min_avg_rating}
             ORDER BY
                 name_similarity DESC, distance ASC
             OFFSET
@@ -467,8 +467,6 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
                 'type': 'Restaurant',
                 'times_visited': 2,
                 'user_created': True,
-                'website_link': 'https://www.ruby-lang.org/en/',
-                
             }, 
             {
                 'user_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
@@ -477,8 +475,7 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
                 'longitude': '31.3151',
                 'type': 'Restaurant',
                 'times_visited': 2,
-                'user_created': True,
-                'website_link': 'https://www.pennies.com', 
+                'user_created': True
             }           
         ]
     """
@@ -507,7 +504,6 @@ def get_all_gems_with_a_specific_assesiblity(longitude:float, latitude:float, as
                 ST_Distance(ST_MakePoint({longitude}, {latitude})::geography, location::geography) AS distance,
                 h.times_visited,
                 h.user_created,
-                h.website_link
                 i.image_1,
                 i.image_2,
                 i.image_3
@@ -554,8 +550,6 @@ def create_new_gem(name, gem_type, longitude:float, latitude:float, user_created
 
     NOTE: notice how not all the parameters for the hidden gem are present, this is on purpose.
         - when a gem is created it should have a default value for times_visited (0)
-        - the website_link should be None by default (not all gems have a website)
-        
     '''
     #FAILSAFE IN CASE OF APOSTROPHES
     name = inflate_string(name, 127)
