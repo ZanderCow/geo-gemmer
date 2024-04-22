@@ -10,6 +10,13 @@
                             <div class="text-center">
                                 <p class="fw-bold text-success mb-2">Gem {{loop.index0+1}}</p>
                                 <h3 class="fw-bold" style="padding: 15px;">{{gem.name}}</h3>
+                                {% for i in range(5) %}
+                                    {% if i < gem.avg_rat %}
+                                        <svg viewBox="0 0 16 16" height="16px"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path></svg>
+                                    {% else %}
+                                        <svg viewBox="-1 -1 19 19" height="16px"><path stroke="black" stroke-width="2" fill="white" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path></svg>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </header>
                     </div>
@@ -55,8 +62,6 @@
         <div id="bottom-spinner" class="card shadow-sm flex-grow-1 flex-fill">
             <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
         </div>
-
-       
     </section>
 </div>
 

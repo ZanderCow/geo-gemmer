@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     gem_type VARCHAR(50),
     times_visited INT,
     user_created BOOLEAN,
-    website_link VARCHAR(255) DEFAULT ('/gems/'+gem_id)
-
+    avg_rat FLOAT DEFAULT 2.5
 );
 
 CREATE TABLE IF NOT EXISTS review (
