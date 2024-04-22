@@ -191,8 +191,8 @@ def render_edit_gem_review(gem_id):
     user_id = get_jwt_identity()
     pass
 
-@gem.get("/success")
+@gem.get("/success/<gemid>")
 @jwt_required()
-def success():
+def success(gemid:str):
     user_id = get_jwt_identity()
-    return render_template("gem-success.html")
+    return render_template("gem-success.html", gemid=gemid)

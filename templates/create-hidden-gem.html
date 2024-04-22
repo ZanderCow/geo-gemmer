@@ -84,7 +84,7 @@
                             <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"></path>
                             <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"></path>
                         </svg></div>
-                    <h5 class="fw-bold card-title">Name</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name" placeholder="A cool place!" name="username">
+                    <h5 class="fw-bold card-title">Name</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name" placeholder="A cool place!">
                     <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> gem name  is not filled out please fill it out. </span></p>
                 </div>
             </div>
@@ -93,11 +93,23 @@
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                             <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
                         </svg></div>
-                    <h5 class="fw-bold card-title">Type</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-type" placeholder="A cool place!" name="username">
-                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> gem type  is not filled out please fill it out. </span></p>
+                    <h5 class="fw-bold card-title">Type</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-type" list="gem_types" placeholder="Hiking Trail" name="gem-type">
+                    <datalist id="gem_types">
+                        <option value="Hiking Trail">
+                        <option value="Restaurant">
+                        <option value="Park">
+                        <option value="Gym">
+                        <option value="Museum">
+                        <option value="Beach">
+                        <option value="Shopping Mall">
+                        <option value="Movie Theater">
+                        <option value="Zoo">
+                        <option value="Aquarium">
+                    </datalist>
+                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> Gem type is not filled out. Please fill it out. </span></p>
                 </div>
             </div>
-            <div id="location-card" class="card shadow-sm">
+            <div id="type-card-1" class="card shadow-sm">
                 <div class="card-body px-4 py-5 px-md-5">
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg class="bi bi-globe text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472M3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z"></path>
@@ -105,12 +117,12 @@
                     <h5 class="fw-bold card-title" style="padding-bottom: 15px;">Location</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <h6 class="fw-bold">Latitude</h6><input id="latitude" class="form-control" type="text" placeholder="A cool place!" name="latitude" />
-                            <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> latitude  is not filled out please fill it out. </span></p>
+                            <h6 class="fw-bold">Latitude (Degrees North, Negative for South)</h6><input id="latitude" class="form-control" type="number" min="-90" max="90" placeholder="35.3058012" name="latitude" oninput="(!validity.rangeOverflow||(value=90)) && (!validity.rangeUnderflow||(value=-90));"/>
+                            <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> latitude is not filled out. Please fill it out. </span></p>
                         </div>
                         <div class="col-md-6">
-                            <h6 class="fw-bold">Longitude</h6>
-                            <input id="longitude" class="form-control" type="text" placeholder="A cool place!" name="longitude" />
+                            <h6 class="fw-bold">Longitude (Degrees East, Negative for West)</h6>
+                            <input id="longitude" class="form-control" type="number" min="-180" max="180" placeholder="-80.7323799" name="longitude" oninput="(!validity.rangeOverflow||(value=180)) && (!validity.rangeUnderflow||(value=-180));"/>
                             <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">longitude is not filled out please fill it out.</span></p>
                         </div>
                     </div>
@@ -187,7 +199,11 @@
     </div>
     <div class="card shadow-sm" id="create-gem-button">
         <div class="card-body px-4 py-5 px-md-5">
-            <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;"><span style="color: rgb(255, 255, 255);">Create Gem</span></button></div>
+            <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;">
+                <button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" id="create-gem-submit-button" type="submit" style="width: auto;max-width: initial;min-width: auto;">
+                    <span style="color: rgb(255, 255, 255);">Create Gem</span>
+                </button>
+            </div>
         </div>
     </div>
     {{ footer() }}
@@ -252,11 +268,22 @@
                 hearing_assistance: hearingAssistance
             };
 
+            // Get the CSRF token from the cookie
+            let csrf_token = document.cookie.split('; ')  
+            .find(row => row.startsWith("csrf_access_token" + '=')) 
+            ?.split('=')[1];  
+
             // Sending the data as JSON
             fetch('/user/create-gem', {
                 method: 'POST',
                 body: JSON.stringify(data), // Converting the JSON object to a JSON string
                 headers: { 'Content-Type': 'application/json' }, // Setting the Content-Type as application/json
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                    }, // Setting the Content-Type as application/json
+                credentials: 'include'  // Necessary to include cookies with requests
             })
         
             .then((response) => {
