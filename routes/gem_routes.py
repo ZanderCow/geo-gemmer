@@ -18,7 +18,7 @@ def gem_search_page():
     #get search query 
     #search for gems in database based on search query
     location = (-80.734436, 35.306274)
-    searched_gems = gem_repo.filtered_search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
+    searched_gems = gem_repo.search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
     '''[
         {
             'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
@@ -49,6 +49,27 @@ def gem_search_page():
     ]'''
     return render_template('gem-search.html',gem_data=searched_gems, user_query=search_query)
 
+@gem.post('/search/')
+def filtered_gem_search_page():
+    search_query = request.args.get('searchbar', '')
+    data = request.json
+
+    if not search_query:
+        # Handle the case where search_query is empty or not provided
+        return redirect('/user')
+    #TODO:
+    #auethenticate user (user must be logged in to search for gems)
+    #If user is not logged in, redirect to login page
+    #get search query 
+    #search for gems in database based on search query
+    print(data)
+    acc = gem_repo.accessibility_class()
+
+    location = (-80.734436, 35.306274)
+    searched_gems = gem_repo.filtered_search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50, None, acc, 0, 0)
+    return render_template('gem-search.html',gem_data=searched_gems, user_query=search_query)
+
+
 @gem.post('/send-location')
 def receive_location():
     data = request.json
@@ -72,8 +93,7 @@ def gem_details(gem_id):
         "image_3": gem_info['image_3'],
     }
 
-    gem_average_rating_in_float = 4.3
-    gem_average_rating = round(gem_average_rating_in_float * 2) / 2
+    gem_average_rating = round(gem_info['avg_rat'] * 2) / 2
 
     full_stars = int((gem_average_rating // 1))
     half_stars = ceil(gem_average_rating % 1)
@@ -141,7 +161,6 @@ def gem_details(gem_id):
         gem_images=gem_images, 
         full_stars=full_stars,
         half_stars=half_stars,
-        gem_average_rating_in_float=gem_average_rating_in_float,
         gem_review_distribution=gem_review_distribution,
         formatted_gem_review_cdf=formatted_gem_review_cdf,
         gem_reviews=gem_reviews

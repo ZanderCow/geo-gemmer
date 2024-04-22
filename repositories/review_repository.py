@@ -78,7 +78,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
 
     pool = get_pool()
     with pool.connection() as conn:
-        with conn.cursor() as cursor:
+        with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
                 INSERT INTO review (user_id, gem_id, rating, review, date) VALUES (
                     '{user_id}',
@@ -87,6 +87,26 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
                     '{review}',
                     '{day}'
                 );''')
+            cursor.execute(f'''
+                SELECT
+                    rating
+                FROM
+                    review r
+                WHERE gem_id = '{gem_id}'
+                ORDER BY date DESC;''')
+            
+            #calculate new average
+            reviews = _convert_reviews_to_proper_form(cursor.fetchall())
+            newAvg = 0.0
+            for review in reviews:
+                newAvg+=review['rating']
+            newAvg /= len(reviews)
+
+            #give the updated average to the hidden gem
+            cursor.execute(f'''
+                UPDATE hidden_gem
+                SET
+                    avg_rat={newAvg};''')
 
 
 
@@ -218,16 +238,24 @@ def _date_int_to_string(date:int) -> str:
 def _convert_reviews_to_proper_form(the_reviews:list[dict[str,Any]]):
     if (the_reviews != None):
         for review in the_reviews:
-            review['rating'] = _expand_rating(review['rating'])
-            review['user_id'] = str(review['user_id'])
-            review['gem_id'] = str(review['gem_id'])
-            review['date'] = _date_int_to_string(review['date'])
+            if ('rating' in review):
+                review['rating'] = _expand_rating(review['rating'])
+            if ('user_id' in review):
+                review['user_id'] = str(review['user_id'])
+            if ('gem_id' in review):
+                review['gem_id'] = str(review['gem_id'])
+            if ('date' in review):
+                review['date'] = _date_int_to_string(review['date'])
     return the_reviews
 
 def _convert_to_proper_form(review:dict[str,Any]):
     if (review != None):
-        review['rating'] = _expand_rating(review['rating'])
-        review['user_id'] = str(review['user_id'])
-        review['gem_id'] = str(review['gem_id'])
-        review['date'] = _date_int_to_string(review['date'])
+        if ('rating' in review):
+            review['rating'] = _expand_rating(review['rating'])
+        if ('user_id' in review):
+            review['user_id'] = str(review['user_id'])
+        if ('gem_id' in review):
+            review['gem_id'] = str(review['gem_id'])
+        if ('date' in review):
+            review['date'] = _date_int_to_string(review['date'])
     return review

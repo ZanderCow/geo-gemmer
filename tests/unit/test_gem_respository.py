@@ -160,11 +160,11 @@ def test_accessibility():
     assert newgem['accessible_restrooms'] == True
 
     access.accessible_restrooms = False
-    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, "big place", access, 0)
+    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, "big place", access)
     assert len(listo) == 1
     assert listo[0]['name'] == 'nameo'
 
-    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
+    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access)
     assert len(listo) == 1
 
     
