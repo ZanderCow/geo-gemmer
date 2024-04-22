@@ -1,4 +1,4 @@
-{% from "components/footer.html" import footer %}
+={% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
 
 <!DOCTYPE html>
@@ -21,16 +21,6 @@
 </head>
 
 <body id="page-top">
-    <script>
-        const usernameValue = "{{ username | string }}"; // The value of the cookie
-        const daysToExpire = 7; // Duration in days for the cookie to expire
-
-        const date = new Date(); // Current date
-        date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000)); // Calculate expiration date
-        const expires = "expires=" + date.toUTCString(); // Format expiration as a UTC string
-
-        document.cookie = "username=" + usernameValue + ";" + expires + ";path=/"; // Set the cookie
-    </script>
     {{ signed_in_navbar() }}
     {% for user in user_info %}
     <header data-aos="fade" id="greeting" class="bg-primary-gradient pt-5" style="background: #ffffff;">
