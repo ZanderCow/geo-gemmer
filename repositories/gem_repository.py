@@ -296,6 +296,8 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
     Returns:
         list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
     '''
+    search_string = inflate_string(search_string, 255)
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -399,6 +401,9 @@ def filtered_search_all_gems_within_a_certain_distance_from_the_user(search_stri
     Returns:
         list[dict[str, Any]]: A list of all gems in the database that are within the specified distance from the user.
     '''
+    #in case
+    search_string = inflate_string(search_string, 255)
+
     #clamp rating from 0-4
     min_avg_rating = min(5, max(1, min_avg_rating))-1
 

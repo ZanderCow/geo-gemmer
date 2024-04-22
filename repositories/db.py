@@ -10,7 +10,6 @@ def get_pool():
             conninfo=os.getenv('DATABASE_URL', ''),
             open=True,
         )
-    print(pool.conninfo)
     return pool
 
 def inflate_string(input:str, max_length:int|None=None) -> str:
