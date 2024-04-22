@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     location GEOGRAPHY(POINT,4326),
     times_visited INT,
     user_created BOOLEAN,
+    avg_rat FLOAT DEFAULT 2.5
     website_link VARCHAR(255) 
-
 );
 
 CREATE TABLE IF NOT EXISTS review (
