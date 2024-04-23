@@ -21,25 +21,25 @@ def dashboard():
     
 
     gem_visted_frequency = {
-        'January': 45,
-        'February': 6,
-        'March': 45,
-        'April': 2,
-        'May': 45,
-        'June': 1,
-        'July': 45,
-        'August': 1,
-        'September': 45,
-        'October': 1,
-        'November': 45,
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 2,
+        'June': 5,
+        'July': 7,
+        'August': 5,
+        'September': 3,
+        'October': 2,
+        'November': 1,
         'December': 1
     }
 
 
     gem_distribution = {
-            'Restaurant': 100,
-            'Park': 1,
-            'Museum': 1,
+            'Restaurant': 7,
+            'Park': 3,
+            'Museum':2,
             'Beach': 1,
             'Trail': 1,
         }  
@@ -70,6 +70,7 @@ def dashboard():
                 'gem_name': 'Rocky Mountian',
                 'rating': 1,
                 'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+                
             }, 
             {
                 'gem_name': 'Rocky Mountian',
