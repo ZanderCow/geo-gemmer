@@ -325,7 +325,7 @@ def search_all_gems_within_a_certain_distance_from_the_user(search_string:str, l
                 ST_MakePoint({longitude}, {latitude})::geography,
                 {outer_distance*1000}) AND word_similarity(name, '{search_string}') > 0.1
             ORDER BY
-                name_similarity DESC, distance ASC
+                distance ASC,name_similarity DESC
             OFFSET
                 {offset}
             LIMIT
