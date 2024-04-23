@@ -95,7 +95,9 @@ def gem_details(gem_id):
     #If user is not logged in, redirect to login page
     #get gem details from database
     location = (-80.734436, 35.306274)
-    gem_info = gem_repo.get_hidden_gem_by_id(gem_id, location[0], location[1])
+    gem_info = None
+    if (gem_id is not None):
+        gem_info = gem_repo.get_hidden_gem_by_id(gem_id, location[0], location[1])
     gem_images = {
         "image_1": gem_info['image_1'],
         "image_2": gem_info['image_2'],

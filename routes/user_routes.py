@@ -157,8 +157,6 @@ def create_gem():
     if missing_fields:
         return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
 
-    print('LONGITUDE: '+data['latitude'])
-    print('LATITUDE: '+data['longitude'])
 
     #get the images into a list
     images = list()
@@ -170,7 +168,23 @@ def create_gem():
     #actually create the gem
     gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
 
-
+    #set the accesssibility
+    acc = gem_repo.accessibility_class()
+    if ('wheelchair_accessible' in data and data['wheelchair_accessible'] == True):
+        acc.wheelchair_accessible = True
+    if ('service_animal_friendly' in data and data['service_animal_friendly'] == True):
+        acc.service_animal_friendly = True
+    if ('multilingual_support' in data and data['multilingual_support'] == True):
+        acc.multilingual_support = True
+    if ('braille_signage' in data and data['braille_signage'] == True):
+        acc.braille_signage = True
+    if ('large_print_materials' in data and data['large_print_materials'] == True):
+        acc.large_print_materials = True
+    if ('accessible_restrooms' in data and data['accessible_restrooms'] == True):
+        acc.accessible_restrooms = True
+    if ('hearing_assistance' in data and data['hearing_assistance'] == True):
+        acc.hearing_assistance = True
+    gem_repo.change_accessibility(gem_url, acc)
     
 
     return jsonify(
