@@ -24,6 +24,10 @@
 
 <body id="page-top">
     {{ signed_in_navbar() }}
+
+    <script type="text/javascript">
+        var gemId = {{ gem_basic_info.gem_id | tojson }};
+    </script>
    
     <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">

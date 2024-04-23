@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template,redirect,request,jsonify
 import repositories.gem_repository as gem_repo
+import repositories.gems_pinned_repository as gem_pinned_repo
 from math import ceil
 from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
+import datetime
 
 gem = Blueprint('gem', __name__)
 
@@ -189,6 +191,11 @@ def render_create_gem_review(gem_id):
 @jwt_required()
 def render_edit_gem_review(gem_id):
     user_id = get_jwt_identity()
+    
+    #make sure user_id is the same as the user_id of the review
+
+    
+    #review_repo.get_review_by_id_and(gem_id)
     pass
 
 @gem.get("/success/<gemid>")
@@ -196,3 +203,19 @@ def render_edit_gem_review(gem_id):
 def success(gemid:str):
     user_id = get_jwt_identity()
     return render_template("gem-success.html", gemid=gemid)
+
+
+@gem.post('/<gem_id>/pin')
+@jwt_required()
+def pin_gem(gem_id):
+    user_id = get_jwt_identity()
+    current_date = datetime.date.today()
+
+    gem_pinned = gem_pinned_repo.add_pinned_gem(user_id, gem_id, current_date)
+
+    if gem_pinned == "gem already pinned":
+        return jsonify({'error': 'gem already pinned'}), 400
+
+    return jsonify(
+        {'message': 'gem pinned successfully'}), 200
+
