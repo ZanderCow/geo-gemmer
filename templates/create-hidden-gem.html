@@ -45,23 +45,23 @@
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                         <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
                     </svg></div>
-                <h5 class="fw-bold card-title">Type</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-type" list="gem_types" placeholder="Hiking Trail" name="gem-type">
-                <datalist id="gem_types">
-                    <option value="Hiking Trail">
-                    <option value="Restaurant">
-                    <option value="Park">
-                    <option value="Gym">
-                    <option value="Museum">
-                    <option value="Beach">
-                    <option value="Shopping Mall">
-                    <option value="Movie Theater">
-                    <option value="Zoo">
-                    <option value="Aquarium">
-                </datalist>
+                <h5 class="fw-bold card-title">Type</h5><select class="selector p-3" type="text" data-bss-hover-animate="pulse" id="gem-type" list="gem_types" placeholder="- Select Type -" name="gem-type">
+                    <option value=""> - Select Type - </option>
+                    <option value="Aquarium">Aquarium</option>
+                    <option value="Beach">Beach</option>
+                    <option value="Gym">Gym</option>
+                    <option value="Hiking Trail">Hiking Trail</option>
+                    <option value="Movie Theater">Movie Theater</option>
+                    <option value="Museum">Museum</option>
+                    <option value="Park">Park</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Shopping Mall">Shopping Mall</option>
+                    <option value="Zoo">Zoo</option>
+                    <option value="Other">Other</option>
+                </select>
                 <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> Gem type is not filled out. Please fill it out. </span></p>
             </div>
         </div>
-       
         <div id="type-card-1" class="card shadow-sm">
             <div class="card-body px-4 py-5 px-md-5">
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg class="bi bi-globe text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
@@ -125,7 +125,7 @@
                             <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="mb-3"><img id="img-2" class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="/static/img/gem-image-placeholder.png" width="513" height="272"></div>
+                                        <div class="mb-3"><img id="img-2" class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="/static/img/gem-image-placeholder.png" width="513" height="272"></div>
                                     </div>
                                 </div>
                                 <div class="row">
