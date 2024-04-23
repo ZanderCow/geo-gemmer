@@ -38,6 +38,22 @@
                 <div class="w-100"></div>
                 <div class="w-100"></div>
             </div>
+            <script>
+                function getUsernameCookie() {
+                    const cookies = document.cookie; // Get all cookies as a single string
+                    const cookiesArray = cookies.split('; '); // Split the cookies string into an array of "key=value" strings
+                
+                    // Loop through the array to find the "username" cookie
+                    for (let i = 0; i < cookiesArray.length; i++) {
+                        const cookiePair = cookiesArray[i].split('='); // Split each "key=value" string into [key, value]
+                        if (cookiePair[0] === 'username') {
+                            return cookiePair[1]; // Return the value of the "username" cookie
+                        }
+                    }
+                
+                    return null; // Return null if the "username" cookie is not found
+                }
+            </script>
             <ul class="navbar-nav d-flex d-sm-flex justify-content-center align-items-center flex-nowrap ms-auto align-items-sm-center">
                 <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
                     <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
@@ -54,14 +70,58 @@
                 </li>
                 <div class="d-none d-sm-block topbar-divider"></div>
                 <li class="nav-item dropdown no-arrow">
-                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Zander Cowan</span><img class="border rounded-circle img-profile" src="avatars/avatar1.jpeg" width="18" height="18"></a>
-                        <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="/user"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="/user/settings"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item" href="/"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span id="username" class="d-none d-lg-inline me-2 text-gray-600 small">{{username}}</span>
+                       </a>
+                        <button class="dropdown-menu shadow dropdown-menu-end animated--grow-in" style="border: none; background: none; padding: 0; margin: 0;">
+                            <a class="dropdown-item" href="/user"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Home</a>
+                            <a class="dropdown-item" href="/user/settings"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/" onclick="logout()"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                        </button>
+                        </button>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
+    <script>
+        var username = getUsernameCookie();  // Retrieve the username from cookies
+        var usernameElement = document.getElementById('username');
+        usernameElement.innerText = username;  // Set the text of the element
+    </script>
+    <script>
+        function logout() {
+            fetch('/user/logout', {
+                method: 'POST',
+                credentials: 'include'  // Necessary to include cookies with requests
+            })
+        
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } 
+                else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+
+            .then(data => {
+                // Redirect to the login page
+                window.location.href = '/';
+            })
+
+            .catch((error) => {
+                const errorMessage = JSON.parse(error.message);
+                console.log(errorMessage);
+        
+            });
+            
+           
+        }
+    </script>
+    
 </nav>
 {% endmacro %}

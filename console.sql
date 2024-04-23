@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE TABLE IF NOT EXISTS geo_user (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(255),
-    password VARCHAR(255),
+    password BYTEA,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     profile_picture VARCHAR(255),
@@ -21,18 +21,18 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,
     gem_type VARCHAR(50),
+    location GEOGRAPHY(POINT,4326),
     times_visited INT,
     user_created BOOLEAN,
-    website_link VARCHAR(255) DEFAULT ('/gems/'+gem_id)
-
+    avg_rat FLOAT DEFAULT 2.5
 );
 
 CREATE TABLE IF NOT EXISTS review (
-    review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
-    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
-    rating CHAR(1),
-    review VARCHAR(1023)
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE NOT NULL,
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE NOT NULL,
+    rating CHAR NOT NULL,
+    review VARCHAR(511),
+    date INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS accessibility (
@@ -52,6 +52,10 @@ CREATE TABLE IF NOT EXISTS gems_visited (
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
     date_visited date NOT NULL
 );
+
+
+
+
 
 CREATE TABLE IF NOT EXISTS gems_pinned (
     gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

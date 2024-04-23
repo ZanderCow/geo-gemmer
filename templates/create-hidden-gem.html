@@ -36,7 +36,7 @@
                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"></path>
                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"></path>
                     </svg></div>
-                <h5 class="fw-bold card-title">Name</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name" placeholder="A cool place!" name="username">
+                <h5 class="fw-bold card-title">Name</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name" placeholder="A cool place!">
                 <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> gem name  is not filled out please fill it out. </span></p>
             </div>
         </div>
@@ -45,8 +45,21 @@
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                         <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
                     </svg></div>
-                <h5 class="fw-bold card-title">Type</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-type" placeholder="A cool place!" name="username">
-                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> gem type  is not filled out please fill it out. </span></p>
+                <h5 class="fw-bold card-title">Type</h5><select class="selector p-3" type="text" data-bss-hover-animate="pulse" id="gem-type" list="gem_types" placeholder="- Select Type -" name="gem-type">
+                    <option value=""> - Select Type - </option>
+                    <option value="Aquarium">Aquarium</option>
+                    <option value="Beach">Beach</option>
+                    <option value="Gym">Gym</option>
+                    <option value="Hiking Trail">Hiking Trail</option>
+                    <option value="Movie Theater">Movie Theater</option>
+                    <option value="Museum">Museum</option>
+                    <option value="Park">Park</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Shopping Mall">Shopping Mall</option>
+                    <option value="Zoo">Zoo</option>
+                    <option value="Other">Other</option>
+                </select>
+                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> Gem type is not filled out. Please fill it out. </span></p>
             </div>
         </div>
         <div id="type-card-1" class="card shadow-sm">
@@ -57,18 +70,20 @@
                 <h5 class="fw-bold card-title" style="padding-bottom: 15px;">Location</h5>
                 <div class="row">
                     <div class="col-md-6">
-                        <h6 class="fw-bold">Latitude</h6><input id="latitude" class="form-control" type="text" placeholder="A cool place!" name="latitude" />
-                        <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> latitude  is not filled out please fill it out. </span></p>
+                        <h6 class="fw-bold">Latitude (Degrees North, Negative for South)</h6><input id="latitude" class="form-control" type="number" min="-90" max="90" placeholder="35.3058012" name="latitude" oninput="(!validity.rangeOverflow||(value=90)) && (!validity.rangeUnderflow||(value=-90));"/>
+                        <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);"> latitude is not filled out. Please fill it out. </span></p>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="fw-bold">Longitude</h6>
-                        <input id="longitude" class="form-control" type="text" placeholder="A cool place!" name="longitude" />
+                        <h6 class="fw-bold">Longitude (Degrees East, Negative for West)</h6>
+                        <input id="longitude" class="form-control" type="number" min="-180" max="180" placeholder="-80.7323799" name="longitude" oninput="(!validity.rangeOverflow||(value=180)) && (!validity.rangeUnderflow||(value=-180));"/>
                         <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">longitude is not filled out please fill it out.</span></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 d-xxl-flex justify-content-xxl-center" style="padding-top: 15px;"><button class="btn btn-primary shadow d-block
-                        " type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Get Coordinates</span></button></div>
+                    <div class="col-md-12 d-xxl-flex justify-content-xxl-center" style="padding-top: 15px;">
+                        <button id="get-location-button" class="btn btn-primary shadow d-block" type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Get Coordinates</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,20 +115,46 @@
                         <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"></path>
                     </svg></div>
                 <h5 class="fw-bold card-title">Images</h5>
-                <div class="row">
-                    <div class="col"><input class="form-control" type="file" accept="image/*" required=""></div>
-                    <div class="col-md-4"><input class="form-control" type="file" accept="image/*" required=""></div>
-                    <div class="col-md-4"><input class="form-control" type="file" accept="image/*" required=""></div>
+                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">Images are not supported.</span></p>
+                <div class="card mb-3">
+                    <div class="card-body" style="padding-top: 30px;">
+                        <div class="row nav-fill">
+                            <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
+                                <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img id="img-1" class="rounded d-md-flex flex-fill align-items-xxl-start w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="/static/img/gem-image-placeholder.png" width="727" height="646"></div>
+                            </div>
+                            <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mb-3"><img id="img-2" class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="/static/img/gem-image-placeholder.png" width="513" height="272"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
+                                        <div class="mb-3"><img id="img-3" class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="/static/img/gem-image-placeholder.png" width="300" height="450"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center">
+                                <input type="file" id="image-input" multiple style="display: none;">
+                                <button id="add-images-button" class="btn btn-primary text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-center align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;">
+                                    <span style="color: rgb(255, 255, 255);">Add Images</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
+        </form>
     </div>
     <div class="card shadow-sm" id="create-gem-button">
         <div class="card-body px-4 py-5 px-md-5">
             <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;">
-                <div class="mb-3"><button class="btn btn-primary shadow d-block w-100" id="create-gem-submit-button" type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Create Gem</span></button></div>
-
+                <button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" id="create-gem-submit-button" type="submit" style="width: auto;max-width: initial;min-width: auto;">
+                    <span style="color: rgb(255, 255, 255);">Create Gem</span>
+                </button>
             </div>
         </div>
     </div>
@@ -121,6 +162,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="../static/js/script.min.js"></script>
+    <script src="/static/js//add-3-images-for-gem.js"></script>
+    <script src="/static/js/create-gem-get-geolocation.js"></script>
     <script>
         function displayErrorMessages(missingFields) {
             // Directly reference each specific error message element by field ID
@@ -177,11 +220,22 @@
                 hearing_assistance: hearingAssistance
             };
 
+            // Get the CSRF token from the cookie
+            let csrf_token = document.cookie.split('; ')  
+            .find(row => row.startsWith("csrf_access_token" + '=')) 
+            ?.split('=')[1];  
+
             // Sending the data as JSON
             fetch('/user/create-gem', {
                 method: 'POST',
                 body: JSON.stringify(data), // Converting the JSON object to a JSON string
                 headers: { 'Content-Type': 'application/json' }, // Setting the Content-Type as application/json
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                    }, // Setting the Content-Type as application/json
+                credentials: 'include'  // Necessary to include cookies with requests
             })
         
             .then((response) => {
@@ -195,9 +249,7 @@
             })
             .then(data => {
                 console.log(data);
-                window.location.href = '/gem/success';
-
-                
+                window.location.href = '/gem/success/'+data.gem_id;
             })
             .catch((error) => {
                 // Check if the error message matches the expected format
@@ -213,8 +265,6 @@
                     // Handle unexpected error message format or take alternative action
                 }
             });
-            
-           
         }
     </script>
     

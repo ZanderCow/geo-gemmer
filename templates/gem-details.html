@@ -24,11 +24,15 @@
 
 <body id="page-top">
     {{ signed_in_navbar() }}
+
+    <script type="text/javascript">
+        var gemId = {{ gem_basic_info.gem_id | tojson }};
+    </script>
    
     <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Hidden Gem</p>
-            <h1 class="fw-bold">{{gem_basic_info.type}}</h1>
+            <h1 class="fw-bold">{{gem_basic_info.name}}</h1>
             <button id="pinGemButton" class="btn btn-success btn-sm" type="submit">
                 <span style="color: rgb(255, 255, 255);">Pin Gem</span>
             </button>
@@ -40,18 +44,18 @@
                 <div class="card-body" style="padding-top: 30px;">
                     <div class="row nav-fill">
                         <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
-                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_images.image_1}}" width="727" height="646"></div>
+                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_images.image_1}}" width="727" height="646" style="max-height:646px;"></div>
                         </div>
                         <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                             <div class="row">
                                 
                                 <div class="col-md-12">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="{{gem_images.image_2}}" width="513" height="272"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="{{gem_images.image_2}}" width="513" height="272" style="max-height:272px;"></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_images.image_3}}" width="300" height="450"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_images.image_3}}" width="300" height="450" style="max-height:450px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +63,7 @@
                 </div>
             </div>
         </div>
-        <div class="card shadow mb-5"></div>
+        <div class="card shadow mb-5"><h5 class="fw-bold card-title"></div>
     </div>
     <div class="container" id="description">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
@@ -75,7 +79,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email"><strong>{{gem_average_rating_in_float | string}}/ 5</strong></label></div>
+                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email"><strong>{{gem_basic_info.avg_rat | string}}/ 5</strong></label></div>
                                         <div class="row">
                                             <div class="col text-center d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center">
 
@@ -108,7 +112,7 @@
                 </div>
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
-                        <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;"><span style="color: rgb(255, 255, 255);">Get Directions</span></button></div>
+                        <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;" ><span style="color: rgb(255, 255, 255);" onclick="window.location.href='https://maps.google.com/?q={{gem_basic_info.latitude}},{{gem_basic_info.longitude}}'">Get Directions</span></button></div>
                     </div>
                 </div>
             </div>
@@ -119,7 +123,7 @@
                                 <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Type</h5>
-                        <p class="text-muted card-text mb-4">{{gem_basic_info.type}}</p>
+                        <p class="text-muted card-text mb-4">{{gem_basic_info.gem_type}}</p>
                     </div>
                 </div>
                 <div class="card shadow-sm" data-aos="fade">
@@ -127,8 +131,10 @@
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success">
                                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
                             </svg></div>
-                        <h5 class="fw-bold card-title">Distance</h5>
-                        <p class="text-muted card-text mb-4">{{gem_basic_info.distance_from_user}} mi away</p>
+                            <h5 class="fw-bold card-title">Distance</h5>
+                            <p class="text-muted card-text mb-4">{{gem_basic_info.distance}} km away</p>
+                        <h5 class="fw-bold card-title">Location</h5>
+                        <p class="text-muted card-text mb-0">Longitude: {{gem_basic_info.longitude}}, Latitude: {{gem_basic_info.latitude}}</p>
                     </div>
                 </div>
                 <div class="card shadow-sm" data-aos="fade">
@@ -146,7 +152,7 @@
     <div class="container py-4 py-xl-5">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             <div class="col">
-                {% if gem_accessibility_info.wheelchair_accessible  %}
+                {% if gem_basic_info.wheelchair_accessible  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-wheelchair text-success">
@@ -160,7 +166,7 @@
                 {% endif %}
             </div>
             <div class="col">
-                {% if gem_accessibility_info.service_animal_friendly  %}
+                {% if gem_basic_info.service_animal_friendly  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-dog text-success">
@@ -181,7 +187,7 @@
                 {% else %}
                 {% endif %}
             </div>
-            {% if gem_accessibility_info.multilingual_support  %}
+            {% if gem_basic_info.multilingual_support  %}
             <div class="col-md-12 col-lg-8">
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
@@ -196,7 +202,7 @@
         </div>
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center" style="padding-top: 25px;">
             <div class="col">
-                {% if gem_accessibility_info.braille_signage  %}
+                {% if gem_basic_info.braille_signage  %}
 
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
@@ -214,7 +220,7 @@
                 {% endif %}
             </div>
             <div class="col">
-                {% if gem_accessibility_info.hearing_assistance  %}
+                {% if gem_basic_info.hearing_assistance  %}
 
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
@@ -229,7 +235,7 @@
                 {% endif %}
             </div>
             <div class="col-md-12 col-lg-8">
-                {% if gem_accessibility_info.large_print_materials  %}
+                {% if gem_basic_info.large_print_materials  %}
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-newspaper text-success">

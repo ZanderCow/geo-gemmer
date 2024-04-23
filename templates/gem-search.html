@@ -26,7 +26,7 @@
     <div class="container-fluid">
         <div class="text-center" style="padding-top: 15px;">
             <p class="fw-bold text-success mb-2" data-aos="fade">Gem Search</p>
-            <h2 class="fw-bold" data-aos="fade">Searching For _________________</h2>
+            <h2 class="fw-bold" data-aos="fade">Searching For "{{user_query}}"</h2>
             <div style="padding-top: 15px;padding-bottom: 15px;">
                 <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
                     <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
@@ -35,19 +35,18 @@
                             <span id="selected-type" style="color: rgb(0, 0, 0);">Type</span>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" data-value="hiking-trail">Hiking Trail</a>
-                            <a class="dropdown-item" href="#" data-value="restaurant">Restaurant</a>
-                            <a class="dropdown-item" href="#" data-value="park">Park</a>
-                            <a class="dropdown-item" href="#" data-value="gym">Gym</a>
-                            <a class="dropdown-item" href="#" data-value="museum">Museum</a>
-                            <a class="dropdown-item" href="#" data-value="beach">Beach</a>
-                            <a class="dropdown-item" href="#" data-value="shopping-mall">Shopping Mall</a>
-                            <a class="dropdown-item" href="#" data-value="movie-theater">Movie Theater</a>
-                            <a class="dropdown-item" href="#" data-value="zoo">Zoo</a>
-                            <a class="dropdown-item" href="#" data-value="aquarium">Aquarium</a>
+                            <a class="dropdown-item" href="#" data-value="Hiking Trail">Hiking Trail</a>
+                            <a class="dropdown-item" href="#" data-value="Restaurant">Restaurant</a>
+                            <a class="dropdown-item" href="#" data-value="Park">Park</a>
+                            <a class="dropdown-item" href="#" data-value="Gym">Gym</a>
+                            <a class="dropdown-item" href="#" data-value="Museum">Museum</a>
+                            <a class="dropdown-item" href="#" data-value="Beach">Beach</a>
+                            <a class="dropdown-item" href="#" data-value="Shopping Mall">Shopping Mall</a>
+                            <a class="dropdown-item" href="#" data-value="Movie Theater">Movie Theater</a>
+                            <a class="dropdown-item" href="#" data-value="Zoo">Zoo</a>
+                            <a class="dropdown-item" href="#" data-value="Aquarium">Aquarium</a>
                         </div>
                     </div>
-          
                     
                     
                     <!-- Unique ID for each dropdown, using 'AccessibilityMenu1' as an example -->
@@ -78,10 +77,10 @@
                         </button>
                         <div class="dropdown-menu">
                             <label class="dropdown-item">
-                                <input id="distanceSlider" class="form-range" type="range" min="0" max="100" value="50" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
+                                <input id="distanceSlider" class="form-range" type="range" min="0" max="500" value="50" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
                             </label>
                             <label class="dropdown-item">
-                                <span class="text-center justify-content-md-center" id="distanceValue">50km</span> 
+                                <span class="text-center justify-content-md-center" id="distanceValue">50 km</span> 
                             </label>
                         </div>
                     </div>
@@ -89,15 +88,14 @@
                     
                     <div id="review-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
                         <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
-                            <span id="selected-review-option" style="color: rgb(0, 0, 0);">Type</span>
+                            <span id="selected-review-option" style="color: rgb(0, 0, 0);">Minimum Rating</span>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" data-value="1">1l</a>
-                            <a class="dropdown-item" href="#" data-value="2">2</a>
-                            <a class="dropdown-item" href="#" data-value="3">3</a>
-                            <a class="dropdown-item" href="#" data-value="4">4</a>
-                            <a class="dropdown-item" href="#" data-value="5">5</a>
-                            
+                            <a class="dropdown-item" href="#" data-value="1">1 Star</a>
+                            <a class="dropdown-item" href="#" data-value="2">2 Stars</a>
+                            <a class="dropdown-item" href="#" data-value="3">3 Stars</a>
+                            <a class="dropdown-item" href="#" data-value="4">4 Stars</a>
+                            <a class="dropdown-item" href="#" data-value="5">5 Stars</a>
                         </div>
                     </div>
            
