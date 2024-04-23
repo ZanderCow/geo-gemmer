@@ -42,14 +42,16 @@ def get_gems_pinned_by_user(user_id):
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute('''
                 SELECT
-                    gem_name,
-                    gem_type,
-                    date_pinned,
-                    gem_url
+                    hg.name AS gem_name,
+                    hg.gem_type,
+                    gp.date_pinned,
+                    hg.website_link AS gem_url
                 FROM
-                    gems_pinned
+                    gems_pinned gp
+                JOIN
+                    hidden_gem hg ON gp.gem_id = hg.gem_id
                 WHERE
-                    user_id = %s;
+                    gp.user_id = %s;
             ''', (user_id,))
             return cursor.fetchall()
         

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template,redirect,request,jsonify, session
 from repositories import user_repository
 from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 from repositories import user_repository, gem_repository as gem_repo
+from repositories import user_repository, gems_pinned_repository, gems_visited_repository
 
 user = Blueprint('user', __name__)
 
@@ -64,6 +65,11 @@ def dashboard():
                 'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"      
             }         
         ]
+    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
+
+    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
+    
+    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
     
     reviews_made =  [
             {
