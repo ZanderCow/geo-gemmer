@@ -44,8 +44,7 @@ def get_gems_pinned_by_user(user_id):
                 SELECT
                     hg.name AS gem_name,
                     hg.gem_type,
-                    gp.date_pinned,
-                    hg.website_link AS gem_url
+                    gp.date_pinned
                 FROM
                     gems_pinned gp
                 JOIN
