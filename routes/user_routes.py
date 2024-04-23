@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template,redirect,request,jsonify, session
-from repositories import user_repository
+from repositories import user_repository, gems_pinned_repository, gems_visited_repository
 
 user = Blueprint('user', __name__)
 
@@ -12,50 +12,11 @@ def dashboard():
     user_id = request.args.get('user_id')
     user_info = user_repository.get_user_by_id(user_id)
 
-    gem_visted_frequency = {
-        'January': 45,
-        'February': 6,
-        'March': 45,
-        'April': 2,
-        'May': 45,
-        'June': 1,
-        'July': 45,
-        'August': 1,
-        'September': 45,
-        'October': 1,
-        'November': 45,
-        'December': 1
-    }
+    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
 
-
-    gem_distribution = {
-            'Restaurant': 100,
-            'Park': 1,
-            'Museum': 1,
-            'Beach': 1,
-            'Trail': 1,
-        }  
+    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
     
-    gems_pinned = [
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"
-            }, 
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"        
-            },
-            {
-               'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"      
-            }         
-        ]
+    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
     
     reviews_made =  [
             {
