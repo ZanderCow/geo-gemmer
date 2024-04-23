@@ -1,0 +1,4 @@
+from repositories import gem_repository as gem_repo, user_repository as user_repo
+
+gem_repo.create_new_gem("University of North Carolina at Charlotte", "Zoo", -80.734436, 35.306274, False, 'https://bloximages.newyork1.vip.townnews.com/greensboro.com/content/tncms/assets/v3/editorial/2/aa/2aaa569b-c6f1-5364-bfc8-f0e6da2505e0/5c86c9854a46c.image.jpg', 'https://wpcdn.us-east-1.vip.tn-cloud.net/www.wccbcharlotte.com/content/uploads/2018/02/UNC-Charlotte.jpeg', 'https://cdn.discordapp.com/attachments/259523246272020481/1154916739633647746/IMG_5709.jpg?ex=66356e08&is=6622f908&hm=b7c8d2fca585de3a0efb0bdff2226a6d0dbac17d322a2c20b77b7c2fe242875e&')
+gem_repo.create_new_gem("northy north trail", "Hiking Trail", -80.834436, 35.206274, False, '/static/img/nature-image.png', '/static/img/grandma.png', '/static/img/neckbeard.png')

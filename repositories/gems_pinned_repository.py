@@ -1,6 +1,7 @@
 from repositories.db import get_pool
 from typing import Any
 from psycopg.rows import dict_row
+import datetime
 
 def get_gems_pinned_by_user(user_id):
     '''
@@ -35,6 +36,7 @@ def get_gems_pinned_by_user(user_id):
             }         
         ]
     '''
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -74,4 +76,43 @@ def delete_pinned_gem_user(user_id, gem_pinned_id):
                     user_id = %s
                     AND gem_id = %s;
             ''', (user_id, gem_pinned_id))
+            return True
+
+def add_pinned_gem(user_id,gem_id, date_pinned):
+    """
+    Adds a gem to the pinned gems list of a user
+
+    Parameters:
+        user_id (String): The ID of the user.
+        gem_id (String): The ID of the gem.
+
+    Returns:
+        True: If the gem was successfully added
+    """
+    current_date = datetime.date.today()
+
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            
+            # Check if the gem is already pinned
+            cursor.execute('''
+                    SELECT gem_pinned_id FROM gems_pinned
+                    WHERE user_id = %s AND gem_id = %s;
+                ''', (user_id, gem_id))
+            
+            existing_id = cursor.fetchone()
+            
+            if existing_id:
+                return "gem already pinned"  # Return the existing gem_pinned_id if already pinned
+            
+            cursor.execute('''
+                    INSERT INTO
+                        gems_pinned(user_id, gem_id, date_pinned)
+                    VALUES
+                        (%s, %s, %s)
+                    RETURNING gem_pinned_id;
+                ''', (user_id, gem_id, date_pinned))
+            return cursor.fetchone()
+        
 
