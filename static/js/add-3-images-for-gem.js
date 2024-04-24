@@ -26,3 +26,23 @@ document.getElementById('image-input').addEventListener('change', function() {
         }
     }
 });
+
+//img2 swop with primary
+document.getElementById('img-2').addEventListener('click', function() {
+    img2 = document.getElementById('img-2');
+    img1 = document.getElementById('img-1');
+    var src = img2.src;
+
+    img2.src = img1.src;
+    img1.src = src;
+});
+
+//img3 swop with primary
+document.getElementById('img-3').addEventListener('click', function() {
+    img3 = document.getElementById('img-3');
+    img1 = document.getElementById('img-1');
+    var src = img3.src;
+
+    img3.src = img1.src;
+    img1.src = src;
+});

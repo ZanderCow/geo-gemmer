@@ -9,6 +9,7 @@ function getUsernameCookie() {
             return cookiePair[1]; // Return the value of the "username" cookie
         }
     }
+}
 
 function setUsername() {
     var username = getCookie('username');  // Retrieve the username from cookies

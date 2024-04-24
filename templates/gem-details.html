@@ -8,7 +8,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Gem Details</title>
+    <title>Gem Details - {{gem_basic_info.name}}</title>
+    <link rel="icon" href="/static/img/geo-gemmer-icon.png">
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
@@ -44,18 +45,18 @@
                 <div class="card-body" style="padding-top: 30px;">
                     <div class="row nav-fill">
                         <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
-                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_images.image_1}}" width="727" height="646" style="max-height:646px;"></div>
+                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_basic_info.image_1 if gem_basic_info.image_1 is not none else '/static/img/gem-image-placeholder.png'}}" width="727" height="646" style="max-height:646px;"></div>
                         </div>
                         <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                             <div class="row">
                                 
                                 <div class="col-md-12">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:" src="{{gem_images.image_2}}" width="513" height="272" style="max-height:272px;"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:0px" src="{{gem_basic_info.image_2 if gem_basic_info.image_2 is not none else '/static/img/gem-image-placeholder.png'}}" width="513" height="272" style="max-height:272px;"></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_images.image_3}}" width="300" height="450" style="max-height:450px;"></div>
+                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_basic_info.image_1 if gem_basic_info.image_1 is not none else '/static/img/gem-image-placeholder.png'}}" width="300" height="450" style="max-height:450px;"></div>
                                 </div>
                             </div>
                         </div>
