@@ -47,3 +47,9 @@
 #img-3:hover + #bottomtext {
     visibility: visible;
 }
+
+/* funny outline for reviews in list */
+.listedreview {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius:20px;
+}
