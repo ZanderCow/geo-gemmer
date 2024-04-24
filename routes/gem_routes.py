@@ -16,6 +16,8 @@ def gem_search_page():
     if not search_query:
         # Handle the case where search_query is empty or not provided
         return redirect('/user')
+    elif (search_query.lower() == "can it run doom?"):
+        return redirect('/gem/Doom')
 
     #TODO:
     #auethenticate user (user must be logged in to search for gems)
@@ -85,6 +87,11 @@ def receive_location():
     print(f"Received location: Latitude = {latitude}, Longitude = {longitude}")
     # Process the data as needed
     return jsonify({'status': 'success'})
+
+@gem.get('/Doom')
+@jwt_required()
+def egg():
+    return render_template('gem-doomtails.html')
 
 @gem.get('/<gem_id>')
 @jwt_required()
