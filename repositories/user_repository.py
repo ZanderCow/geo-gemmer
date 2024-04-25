@@ -247,7 +247,7 @@ def get_user_settings_details(user_id) -> dict[str, Any]:
             ''', (user_id,))
             return cursor.fetchone()
 
-def change_user_settings(user_id, user_name, first_name, last_name, pfp):
+def change_user_settings(user_id, user_name, first_name, last_name):
     """
     Change the settings of a user.
 
@@ -274,8 +274,81 @@ def change_user_settings(user_id, user_name, first_name, last_name, pfp):
                     username = %s,
                     first_name = %s,
                     last_name = %s,
-                    profile_picture = %s
                 WHERE
                     user_id = %s;
-            ''', (user_name, first_name, last_name, pfp, user_id))
+            ''', (user_name, first_name, last_name, user_id))
+            return True
+        
+
+def change_username(user_id, user_name):
+    """
+    Change the username of a user.
+
+    Args:
+        user_id (str): The user_id of the user to change the username for.
+        user_name (str): The new username of the user.
+
+    Returns:
+        None
+    """
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                UPDATE
+                    geo_user
+                SET
+                    username = %s
+                WHERE
+                    user_id = %s;
+            ''', (user_name, user_id))
+            return True
+
+
+def change_first_name(user_id, first_name):
+    """
+    Change the first name of a user.
+
+    Args:
+        user_id (str): The user_id of the user to change the first name for.
+        first_name (str): The new first name of the user.
+
+    Returns:
+        None
+    """
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                UPDATE
+                    geo_user
+                SET
+                    first_name = %s
+                WHERE
+                    user_id = %s;
+            ''', (first_name, user_id))
+            return True
+
+def change_last_name(user_id, last_name):
+    """
+    Change the last name of a user.
+
+    Args:
+        user_id (str): The user_id of the user to change the last name for.
+        last_name (str): The new last name of the user.
+
+    Returns:
+        None
+    """
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                UPDATE
+                    geo_user
+                SET
+                    last_name = %s
+                WHERE
+                    user_id = %s;
+            ''', (last_name, user_id))
             return True

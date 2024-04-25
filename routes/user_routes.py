@@ -3,6 +3,9 @@ from repositories import user_repository
 from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 from repositories import user_repository, gem_repository as gem_repo
 from repositories import user_repository, gems_pinned_repository, gems_visited_repository
+from repositories import images_repository
+import base64
+import io
 
 user = Blueprint('user', __name__)
 
@@ -104,38 +107,82 @@ def render_settings_page():
     user_id = get_jwt_identity()  # Retrieves the identity from the JWT
     user_settings = user_repository.get_user_settings_details(user_id)
 
-    return render_template('user-settings.html', user_settings=user_settings)
+
+    current_pfp_url = images_repository.get_database_pfp(user_id)
+
+    # Check if the user has a profile picture
+    if current_pfp_url != None:
+        
+        #image_bytes = None
+        #image_bytes = images_repository.get_user_pfp(user_id)
+        #base64_encoded_data = base64.b64encode(image_bytes)
+        #base64_image = base64_encoded_data.decode('utf-8')
+        return render_template('user-settings.html', user_settings=user_settings)
+        #uncomment and delete the line above to make s3 work
+        #return render_template('user-settings.html', user_settings=user_settings,image_data=base64_image)
+    else:
+        return render_template('user-settings.html', user_settings=user_settings)
+
+
 
 @user.post('/settings')
 @jwt_required()
 def change_settings_page():
     user_id = get_jwt_identity()
-    data = request.get_json()
+    file = request.files.get('file')
+    user_name = request.form.get('username')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
 
-    user_name = data.get('username')
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    pfp_url = data.get('pfp')
     print(user_name)
-
     errors = {}
+    
+    #user filled out the username field
+    if user_name != '':
+        #check if the username is already taken
+        if user_repository.does_username_exist(user_name):
+            errors['username'] = 'Username already exists'
+        else:
+            user_repository.change_username(user_id, user_name)
 
-    if user_repository.does_username_exist(user_name):
-        errors['username'] = 'Username already exists'
+
+    #user filled out the first name field
+    if first_name != '':
+        user_repository.change_first_name(user_id, first_name)
+
+    if last_name != '':
+        user_repository.change_last_name(user_id, last_name)
+
+
+    # Check if the user uploaded a profile picture
+    if file:
+        current_pfp_url = images_repository.get_database_pfp(user_id)
+        
+        # Check if the user already has a profile picture
+        if current_pfp_url != None:
+            
+            #uncomment the line below to make s3 work 
+            # images_repository.update_user_pfp(user_id, file)
+            pass
+        
+        else:
+            #uncomment the line below to make s3 work 
+            # images_repository.create_user_pfp(user_id, file)
+            pass
 
     
-    if user_name == '':
-        errors['username'] = 'Username is required'
-
-    # if there are no errors, create the user
+   
     if errors == {}:
-        user_repository.change_user_settings(user_id, user_name, first_name, last_name, pfp_url)
-        return jsonify({'username': user_name}), 200
-    
+        return jsonify(
+            {
+            'message': 'Settings updated successfully',
+            'username': user_name,
+             }
+            ), 200
     else:
         return jsonify(errors), 400
 
-    user_repository.change_user_settings(user_id, first_name, last_name)
+
 
     
 
