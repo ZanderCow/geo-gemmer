@@ -308,6 +308,7 @@ def change_rating_for_a_review(review_id,rating):
     Returns:
         None
     '''
+    rating = _shrink_rating(rating)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:

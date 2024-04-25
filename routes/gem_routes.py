@@ -1,13 +1,14 @@
-from flask import Blueprint, render_template,redirect,request,jsonify
 import repositories.gem_repository as gem_repo
 import repositories.review_repository as review_repo
 import repositories.gems_pinned_repository as gem_pinned_repo
+
+import sys
+from flask import Blueprint, render_template, redirect, request, jsonify
 from math import ceil
 from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 import datetime
-
-#DEBUG LINE. DELETE LATER
-import sys
+import os
+import requests
 
 gem = Blueprint('gem', __name__)
 
@@ -201,3 +202,30 @@ def pin_gem(gem_id):
     return jsonify(
         {'message': 'gem pinned successfully'}), 200
 
+
+
+@gem.route('/map')
+@jwt_required()
+def proxy_maps_request():
+    latitude = request.args.get('lat', default='-34.397')
+    longitude = request.args.get('lng', default='150.644')
+    callback = request.args.get('callback', default='initMap')
+
+    google_maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+    maps_endpoint = 'https://maps.googleapis.com/maps/api/js'
+
+    # Fetch Google Maps JS API
+    response = requests.get(f"{maps_endpoint}?key={google_maps_api_key}&callback={callback}")
+
+    # Generate custom JS with proper map options and callback definition
+    custom_js = f"""
+    {response.text}
+    function {callback}() {{
+        var mapOptions = {{
+            center: new google.maps.LatLng({latitude}, {longitude}),
+            zoom: 13
+        }};
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    }}
+    """
+    return custom_js, 200, {'Content-Type': 'application/javascript'}
