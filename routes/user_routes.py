@@ -58,18 +58,25 @@ def render_settings_page():
     current_pfp_url = images_repository.get_database_pfp(user_id)
 
     # Check if the user has a profile picture
+    '''
     if current_pfp_url != None:
         
-        #image_bytes = None
-        #image_bytes = images_repository.get_user_pfp(user_id)
-        #base64_encoded_data = base64.b64encode(image_bytes)
-        #base64_image = base64_encoded_data.decode('utf-8')
-        return render_template('user-settings.html', user_settings=user_settings)
+        image_bytes = None
+        image_bytes = images_repository.get_user_pfp(user_id)
+        base64_encoded_data = base64.b64encode(image_bytes)
+        base64_image = base64_encoded_data.decode('utf-8')
         #uncomment and delete the line above to make s3 work
-        #return render_template('user-settings.html', user_settings=user_settings,image_data=base64_image)
+        return render_template('user-settings.html', user_settings=user_settings,image_data=base64_image)
+    else:
+        return render_template('user-settings.html', user_settings=user_settings)
+    '''
+    
+    if current_pfp_url != None: 
+        return render_template('user-settings.html', user_settings=user_settings)
     else:
         return render_template('user-settings.html', user_settings=user_settings)
 
+    
 
 
 @user.post('/settings')
@@ -93,6 +100,7 @@ def change_settings_page():
 
 
     #user filled out the first name field
+    '''
     if first_name != '':
         user_repository.change_first_name(user_id, first_name)
 
@@ -108,12 +116,12 @@ def change_settings_page():
         if current_pfp_url != None:
             
             #uncomment the line below to make s3 work 
-            # images_repository.update_user_pfp(user_id, file)
+            images_repository.update_user_pfp(user_id, file)
             pass
         
         else:
             #uncomment the line below to make s3 work 
-            # images_repository.create_user_pfp(user_id, file)
+            images_repository.create_user_pfp(user_id, file)
             pass
 
     
@@ -127,6 +135,21 @@ def change_settings_page():
             ), 200
     else:
         return jsonify(errors), 400
+    
+    '''
+    # Check if the user uploaded a profile picture
+
+    if errors == {}:
+        return jsonify(
+            {
+            'message': 'Settings updated successfully',
+            'username': user_name,
+             }
+            ), 200
+    else:
+        return jsonify(errors), 400
+    
+    
 
 
 
@@ -195,10 +218,6 @@ def create_gem():
     image_2 = request.files.get('image_2')
     image_3 = request.files.get('image_3')
 
-    print(image_1)
-    print(image_2)
-    print(image_3)
-    
     errors = {}
 
     if gem_name == '':
@@ -221,17 +240,17 @@ def create_gem():
 
     
     if errors == {}:
-        
-        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
-        gem_repo.change_accessibility(gem_url, acc)
-
+    
+        #gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
+        #gem_repo.change_accessibility(gem_url, acc)
         #uncomment the line below to make s3 work
-        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3)
+        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3)
         
         return jsonify(
     {
         'message': 'Gem created successfully',
-        'gem_id': gem_url
+        'gem_id': "alksdfjasl;dkfj" 
+        #replcea the string with the gem_url
     })
     else:
         return jsonify(errors), 400

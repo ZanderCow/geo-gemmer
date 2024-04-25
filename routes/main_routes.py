@@ -154,8 +154,6 @@ def login_user():
         
 
 
-
-
-
-
-
+@main.route('/we-need-your-location')
+def location():
+    return render_template('user-needs-to-allow-location.html')

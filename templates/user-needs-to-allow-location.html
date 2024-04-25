@@ -1,0 +1,86 @@
+{% from "components/footer.html" import footer %}
+{% from "components/signed-in-navbar.html" import signed_in_navbar %}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard</title>
+    <link rel="icon" href="/static/img/geo-icon.png">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alexandria&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+</head>
+
+<body id="page-top">
+    {{ signed_in_navbar() }}
+    
+    <section class="py-4 py-xl-5">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top: 200px;">
+                    <div>
+                        <img src="/static/img/geo-gemmer-logo.png" width="157" height="72" />
+                        <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
+                        <p class="mb-4">We need your geolocation so we can provide hidden gems<br />nearby you!</p>
+                        <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
+                            <span style="color: rgb(255, 255, 255);">Enable Location</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+      document.getElementById('enableLocationBtn').addEventListener('click', function() {
+        const geoStatusElement = document.getElementById('geoStatus');
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            // Handle position here
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            geoStatusElement.innerHTML = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+          }, function(error) {
+            // Handle errors here
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                geoStatusElement.innerHTML = "User denied the request for Geolocation.";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                geoStatusElement.innerHTML = "Location information is unavailable.";
+                break;
+              case error.TIMEOUT:
+                geoStatusElement.innerHTML = "The request to get user location timed out.";
+                break;
+              default:
+                geoStatusElement.innerHTML = "An unknown error occurred.";
+                break;
+            }
+          });
+        } else {
+          geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
+        }
+      });
+    </script>
+    {{ footer()}}
+
+    
+   
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script src="/static/js/user-dashboard-gem-chart-data-update.js"></script>
+    <script src="/static/js/script.min.js"></script>
+</body>
+
+</html>
