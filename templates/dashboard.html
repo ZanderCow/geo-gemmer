@@ -1,6 +1,5 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
-
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -266,15 +265,10 @@
                                                     </div>
                                                     <div class="col-md-6 col-xxl-3 text-start d-sm-flex d-xxl-flex justify-content-sm-center align-items-md-center align-items-lg-center justify-content-xxl-center align-items-xxl-center" style="padding-top: 10px;">
                                                         <div class="row">
-                                                            <div class="col d-flex d-sm-flex d-md-flex d-lg-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xxl-center">
-                                                                <button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit" style="background: rgb(131,178,113);">
-                                                                    <span style="color: rgb(255, 255, 255);">View Details</span>
-                                                                </button>
-                                                            </div>
                                                             <div class="col-md-12 d-flex d-sm-flex d-md-flex d-lg-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xxl-center" style="padding-top: 30px;">
-                                                                <button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit" style="background: rgb(29,124,211);">
-                                                                    <span style="color: rgb(255, 255, 255);">Edit Review&nbsp;</span>
-                                                                </button>
+                                                                <a class="btn btn-success btn-lg d-lg-flex align-items-lg-center" role="button" style="background: rgb(29,124,211);" href="/review/{{review.review_id}}/edit-review">
+                                                                    <span style="color: rgb(255, 255, 255);">Edit Review</span>
+                                                                </a>
                                                             </div>
                                                             <div class="col-md-12 d-flex d-sm-flex d-md-flex d-lg-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xxl-center" style="padding-top: 30px;">
                                                                 <button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit" style="background: rgb(211,40,29);">

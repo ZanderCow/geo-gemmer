@@ -6,6 +6,7 @@ from repositories import user_repository, gems_pinned_repository, gems_visited_r
 from repositories import images_repository
 import base64
 import io
+from repositories import review_repository
 
 user = Blueprint('user', __name__)
 
@@ -22,72 +23,17 @@ def dashboard():
 
     user_name = user_repository.get_username_by_id(user_id)["username"]
     
-    
 
-    gem_visted_frequency = {
-        'January': 1,
-        'February': 2,
-        'March': 3,
-        'April': 4,
-        'May': 2,
-        'June': 5,
-        'July': 7,
-        'August': 5,
-        'September': 3,
-        'October': 2,
-        'November': 1,
-        'December': 1
-    }
-
-
-    gem_distribution = {
-            'Restaurant': 7,
-            'Park': 3,
-            'Museum':2,
-            'Beach': 1,
-            'Trail': 1,
-        }  
-    
-    gems_pinned = [
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"
-            }, 
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"        
-            },
-            {
-               'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"      
-            }         
-        ]
     gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
 
     gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
     
     gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
     
-    reviews_made =  [
-            {
-                'gem_name': 'Rocky Mountian',
-                'rating': 1,
-                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
-                
-            }, 
-            {
-                'gem_name': 'Rocky Mountian',
-                'rating': 5,
-                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
-            }
-        
-        ]
+
+
+    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
+    print(reviews_made)
 
 
     return render_template('dashboard.html', 
@@ -255,4 +201,6 @@ def logout():
     response = jsonify({"msg": "Logout successful"})
     unset_jwt_cookies(response)
     return response 
+
+
 
