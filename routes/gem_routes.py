@@ -15,49 +15,19 @@ gem = Blueprint('gem', __name__)
 @jwt_required()
 def gem_search_page():
     user_id = get_jwt_identity()
+    location = (-80.734436, 35.306274)
     search_query = request.args.get('searchbar', '')
 
+    searched_gems = None
     if not search_query:
         # Handle the case where search_query is empty or not provided
-        return redirect('/user')
+        searched_gems = gem_repo.get_all_gems_within_a_certain_distance_from_the_user(location[0], location[1], 50)
     elif (search_query.lower() == "can it run doom?"):
         return redirect('/gem/Doom')
+    else:
+        searched_gems = gem_repo.search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
 
-    #TODO:
-    #auethenticate user (user must be logged in to search for gems)
-    #If user is not logged in, redirect to login page
-    #get search query 
-    #search for gems in database based on search query
-    location = (-80.734436, 35.306274)
-    searched_gems = gem_repo.search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50)
-    '''[
-        {
-            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8', 
-            'name': 'Lorem ipsum, dolor sit amet consectetur',
-            "image" : "/static/img/nature-image.png",
-            'distance_from_user': 20.3346,
-            'type': 'hiking Trail'
-            
-        },
-        {
-            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
-            'name': 'Rocky Mountian',
-            "distance_from_user" : 20.3346,
-            'type': 'hiking Trail'
-        },
-        {
-            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
-            'name': 'Rocky Mountian',
-            "distance_from_user" : 20.3346,
-            'type': 'hiking Trail'
-        },
-        {
-            'gem_id': '67e55044-10b1-426f-9247-bb680e5fe0c8',
-            'name': 'Rocky Mountian',
-            "distance_from_user" : 20.3346,
-            'type': 'hiking Trail'
-        }           
-    ]'''
+    
     return render_template('gem-search.html',gem_data=searched_gems, user_query=search_query)
 
 @gem.post('/search/')
