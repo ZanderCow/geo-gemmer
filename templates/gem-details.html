@@ -321,37 +321,27 @@
                                 <div class="card mb-3">
                                     <div class="card-body listedreview">
                                         <div class="row">
-                                            <div class="col"><img class="border rounded-circle img-profile" src="{{review.pfp if review.pfp is not none else '/static/img/pfp-placeholder.png'}}" width="65" height="61"></div>
-                                            <div class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xl-end justify-content-xxl-end align-items-xxl-center"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;"></svg>
+                                            <div class="col" style="height:82px;"><img class="border rounded-circle img-profile" src="{{review.pfp if review.pfp is not none else '/static/img/pfp-placeholder.png'}}" width="65" height="61" style="position:absolute">
+                                                <div style="margin-left:30px;position:absolute;margin-top:-10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;"></svg>
                                                     {% for i in range(5) %}
                                                         {% if i < review.rating %}
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
                                                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                                                             </svg>
                                                         {% else %}
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
                                                                 <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
                                                             </svg>
                                                         {% endif %}
                                                     {% endfor %}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.user_name}}</h5>
-                                            </div>
-                                            <div class="col d-xxl-flex justify-content-xxl-end">
-                                                <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">{{review.rating}}/5</h5>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
-                                                <div>
-                                                    <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
+                                                </div>
+                                                <div style="margin-left:75px;margin-top:24px;">
+                                                    <h5 class="fw-bold" style="margin-bottom:0px;">{{review.user_name}}</h5>
+                                                    <p>{{review.date}}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mb-3"></div>
+                                        <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
                                     </div>
                                 </div>
                                 {% endfor %}
