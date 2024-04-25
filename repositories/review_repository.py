@@ -35,13 +35,17 @@ def get_all_reviews_for_a_hidden_gem(gem_id:str) -> list[dict[str, Any]]:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
                 SELECT
-                    user_id,
+                    r.user_id,
+                    username AS user_name,
+                    profile_picture AS pfp,
                     gem_id,
                     rating,
                     review,
                     date
                 FROM
                     review r
+                JOIN geo_user u
+                ON u.user_id = r.user_id
                 WHERE gem_id = '{gem_id}'
                 ORDER BY date DESC;''')
             return _convert_reviews_to_proper_form(cursor.fetchall())

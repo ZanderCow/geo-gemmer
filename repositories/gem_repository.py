@@ -1,6 +1,7 @@
 from repositories.db import get_pool, inflate_string
 from psycopg.rows import dict_row
 from typing import Any
+from uuid import UUID
 
 class accessibility_class:
     def __init__(self, wheelchair:bool=False, service_animal:bool=False, multilingual:bool=False, braille:bool=False, hearing_assistance:bool=False, large_print:bool=False, restrooms:bool=False):
@@ -152,6 +153,28 @@ def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> d
             'accessible_restrooms': false
         }
     '''
+    default_dummy_data = {
+        'gem_id':'.',
+        'name': 'Get out of here. This is for DNS.',
+        'latitude': '0',
+        'longitude': '0',
+        'gem_type': '.',
+        'times_visited': 0,
+        'user_created': False,
+        'avg_rat': 0,
+        'wheelchair_accessible': False,
+        'service_animal_friendly': False,
+        'multilingual_support': False,
+        'braille_signage': False,
+        'hearing_assistance': False,
+        'large_print_materials': False,
+        'accessible_restrooms': False,
+        'image_1' : '',
+        'image_2' : '',
+        'image_3' : ''}
+    if (gem_id is None or gem_id == "None" or is_not_uuid(gem_id)):
+        return default_dummy_data
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -186,8 +209,19 @@ def get_hidden_gem_by_id(gem_id, longitude:float=None, latitude:float=None) -> d
             g.gem_id='{gem_id}';''')
             list = _format_gem(cursor.fetchall())
             if (len(list) == 0):
-                return None
+                #dummy data for DNS redirects. i have no idea how to search how to prevent rendering during DNS redirects.
+                # All I know is what I've learned in Intro to Operating Systems and Networks and how the fuck do I stop the
+                # server from rendering the whole ass page when said page is completely inaccessible
+                    return default_dummy_data
             return list[0]
+
+
+def is_not_uuid(input:str) -> bool:
+    try:
+        UUID(input)
+    except ValueError:
+        return True
+    return False
 
 def get_all_hidden_gems_with_a_specific_type(longitude:float, latitude:float, gem_type, offset:int=0):
     '''

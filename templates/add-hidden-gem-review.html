@@ -38,8 +38,8 @@
                             <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"></path>
                             <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"></path>
                         </svg></div>
-                    <h5 class="fw-bold card-title">Rating</h5><input class="form-control" type="number" min="1" max="5" data-bss-hover-animate="pulse" id="username-1" placeholder="1-5" oninput="(!validity.rangeOverflow||(value=5)) && (!validity.rangeUnderflow||(value=1));">
-                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">Make sure review is between 1-5&nbsp;</span></p>
+                    <h5 class="fw-bold card-title">Rating</h5><input class="form-control" type="number" min="1" max="5" data-bss-hover-animate="pulse" id="rating" placeholder="1-5" oninput="(!validity.rangeOverflow||(value=5)) && (!validity.rangeUnderflow||(value=1));">
+                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">Make sure review is a whole number between 1-5&nbsp;</span></p>
                 </div>
             </div>
             <div class="card shadow-sm" id="type-card">
@@ -47,21 +47,110 @@
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                             <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
                         </svg></div>
-                    <h5 class="fw-bold card-title">Review</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="username-1" placeholder="This place was great" name="username">
-                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">Type is invalid&nbsp;</span></p>
+                    <h5 class="fw-bold card-title">Review</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="review" placeholder="This place was great" name="username">
+                    <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">Type is invalid&nbsp;</span></p>
                 </div>
             </div>
         </form>
     </div>
     <div class="card shadow-sm" id="create-gem-button">
         <div class="card-body px-4 py-5 px-md-5">
-            <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;"><span style="color: rgb(255, 255, 255);">Submit Review</span></button></div>
+            <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;" id="submit"><span style="color: rgb(255, 255, 255);">Submit Review</span></button></div>
         </div>
     </div>
     {{ footer()}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="/static/js/script.min.js"></script>
+
+    <script>
+        function displayErrorMessages(missingFields) {
+            // Directly reference each specific error message element by field ID
+            const errorMessages = {
+                'rating': document.querySelector('#rating').nextElementSibling,
+                'review': document.querySelector('#review').nextElementSibling,
+            };
+
+            // Show error message near the button
+            let button_msg = document.getElementById('submit_error_msg');
+            if (button_msg.classList.contains('d-none')) {
+                button_msg.classList.remove('d-none');
+            }
+        
+            // Hide all other error messages initially
+            Object.values(errorMessages).forEach(msg => msg.classList.add('d-none'));
+
+            // Show only the error messages for fields that are missing
+            missingFields.forEach(field => {
+                if (errorMessages[field]) {
+                    errorMessages[field].classList.remove('d-none');
+                }
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('submit').addEventListener('click', submitReviewForm);
+        });
+    </script>
+    <script>
+        function submitReviewForm() {
+            const rating = document.getElementById('rating').value;
+            const review = document.getElementById('review').value;
+
+            // Prepare data to send, using FormData or a JSON object
+            const data = {
+                rating: rating,
+                review: review
+            };
+
+            // Get the CSRF token from the cookie
+            let csrf_token = document.cookie.split('; ')  
+            .find(row => row.startsWith("csrf_access_token" + '=')) 
+            ?.split('=')[1];  
+
+            // Sending the data as JSON
+            fetch('/gem/{{gem_id}}/create-review', {
+                method: 'POST',
+                body: JSON.stringify(data), // Converting the JSON object to a JSON string
+                headers: { 'Content-Type': 'application/json' }, // Setting the Content-Type as application/json
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                    }, // Setting the Content-Type as application/json
+                credentials: 'include'  // Necessary to include cookies with requests
+            })
+        
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(data => {
+                console.log(data);
+                window.location.href = '/gem/{{gem_id}}';
+            })
+            .catch((error) => {
+                // Check if the error message matches the expected format
+                const match = error.message.match(/required and were not provided: (.*)/);
+                if (match && match[1]) {
+                    // Split the fields, trim whitespace, and remove any extraneous quotes
+                    const missingFields = match[1].split(',').map(field => 
+                        field.trim().replace(/^"|"$/g, '') // Remove leading and trailing quotes
+                    );
+                    displayErrorMessages(missingFields);
+                } else {
+                    console.error("Error message format unexpected:", error.message);
+                    // Handle unexpected error message format or take alternative action
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
