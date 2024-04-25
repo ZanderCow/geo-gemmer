@@ -27,7 +27,7 @@
     <div class="container-fluid">
         <div class="text-center" style="padding-top: 15px;">
             <p class="fw-bold text-success mb-2" data-aos="fade">Gem Search</p>
-            <h2 class="fw-bold" data-aos="fade">Searching For {{"\"user_query\"" if user_query != "" else "Nearest"}}</h2>
+            <h2 class="fw-bold" data-aos="fade">Searching For {{'"'+user_query+'"' if user_query != "" else "Nearest"}}</h2>
             <div style="padding-top: 15px;padding-bottom: 15px;">
                 <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
                     <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
