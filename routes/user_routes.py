@@ -80,7 +80,6 @@ def change_settings_page():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
 
-    print(user_name)
     errors = {}
     
     #user filled out the username field
@@ -155,13 +154,7 @@ def create_gem():
 
     if missing_fields:
         return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
-
-
-    #get the images into a list
-    images = list()
-    if ('image_1' in data): images.append(images['image_1'])
-    if ('image_2' in data): images.append(images['image_2'])
-    if ('image_3' in data): images.append(images['image_3'])
+   
 
     #TODO : something with the images T_T
     #actually create the gem
@@ -193,7 +186,56 @@ def create_gem():
     }
 )
 
+@user.post('/create-gem')
+@jwt_required()
+def create_gem():
+    """
+    Create a new gem in the database based on the incoming JSON data.
 
+    Returns:
+        A JSON response containing a success message and the URL of the created gem.
+    """
+    user_id = get_jwt_identity()
+    gem_name = request.files.get('gem_name')
+    gem_type = request.files.get('gem_type')
+    latitude = request.files.get('latitude')
+    longitude = request.files.get('longitude')
+    wheelchair_accessible = request.files.get('wheelchair_accessible')
+    service_animal_friendly = request.files.get('service_animal_friendly')
+    multilingual_support = request.files.get('multilingual_support')
+    braille_signage = request.files.get('braille_signage')
+    large_print_materials = request.files.get('large_print_materials')
+    accessible_restrooms = request.files.get('accessible_restrooms')
+    hearing_assistance = request.files.get('hearing_assistance')
+    image_1 = request.files.get('image_1')
+    image_2 = request.files.get('image_2')
+    image_3 = request.files.get('image_3')
+    
+    errors = {}
+
+    if gem_name == '':
+        errors['gem_name'] = 'Gem name is required'
+
+    if gem_type == '':
+        errors['gem_type'] = 'Gem type is required'
+
+    if latitude == '':
+        errors['latitude'] = 'Latitude is required'
+    
+    if longitude == '':
+        errors['longitude'] = 'Longitude is required'
+    
+    #if the user doesnt provide any images, we will use the default image
+
+    if image_1:
+        if image_2:
+            if image_3:
+                pass
+    else:
+        errors['images'] = 'At least one image is required'
+
+
+    gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
 
 
 @user.post("/logout")

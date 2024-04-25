@@ -5,29 +5,6 @@ import uuid
 from psycopg.rows import dict_row
 
 
-def get_images_for_a_hidden_gem(gem_id):
-    '''
-    Retrieve the images associated with a hidden gem from an Amazon S3 server.
-
-    Parameters:
-        gem_id (int): The ID of the hidden gem.
-
-    Returns:
-        str: The file location of the images on the Amazon S3 server.
-    '''
-    pass
-
-def get_primary_image_for_a_hidden_gem(gem_id):
-    '''
-    Retrieve the primary image associated with a hidden gem from an Amazon S3 server.
-
-    Parameters:
-        gem_id (int): The ID of the hidden gem.
-
-    Returns:
-        str: The file location of the primary image on the Amazon S3 server.
-    '''
-    pass
 
 def create_user_pfp(user_id,file_path):
     '''
@@ -44,11 +21,7 @@ def create_user_pfp(user_id,file_path):
     unique_id = uuid.uuid4()
     full_file_key = f"profile-pictures/pfp_{unique_id}.png"
     with get_s3_client() as s3:
-        s3.upload_fileobj(
-            Fileobj=file_path,
-            Bucket='geo-gemmer-images',
-            Key=full_file_key
-            )
+        s3.upload_fileobj( Fileobj=file_path, Bucket='geo-gemmer-images', Key=full_file_key)
         
 
     pool = get_pool()
@@ -148,3 +121,68 @@ def get_database_pfp(user_id):
             ''', (user_id,))
             result = cursor.fetchone()
             return result['profile_picture']
+        
+def create_hidden_gem_images(gem_id,file_path1, file_path2,file_path3):
+    '''
+    Upload images to an Amazon S3 server for a hidden gem.
+
+    Parameters:
+        gem_id (int): The ID of the hidden gem.
+        file_path1 (str): The file path of the first image to upload.
+        file_path2 (str): The file path of the second image to upload.
+        file_path3 (str): The file path of the third image to upload.
+    '''
+    file_key_1 = f"gem-images/pfp_{uuid.uuid4()}.png"
+    file_key_2 = f"gem-images/pfp_{uuid.uuid4()}.png"
+    file_key_3 = f"gem-images/pfp_{uuid.uuid4()}.png"
+
+    with get_s3_client() as s3:
+        s3.upload_fileobj(Fileobj=file_path1, Bucket='geo-gemmer-images', Key=file_key_1)
+        s3.upload_fileobj(Fileobj=file_path2, Bucket='geo-gemmer-images', Key=file_key_2)
+        s3.upload_fileobj(Fileobj=file_path3, Bucket='geo-gemmer-images', Key=file_key_3)
+
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                INSERT INTO
+                    image_group (gem_id, image_1, image_2, image_3)
+                VALUES
+                    (%s, %s, %s, %s);
+            ''', (gem_id, file_key_1, file_key_2, file_key_3))
+    return True
+
+
+
+
+def get_hidden_gem_images(gem_id):
+    '''
+    Retrieve images of a hidden gem from an Amazon S3 server.
+
+    Parameters:
+        gem_id (int): The ID of the hidden gem.
+
+    Returns:
+        list: A list of file locations of the images on the Amazon S3 server.
+    '''
+    image_keys = None
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                SELECT
+                    image_1, image_2, image_3
+                FROM
+                    image_group
+                WHERE
+                    gem_id = %s;
+            ''', (gem_id,))
+            result = cursor.fetchone()
+            image_keys = [str(result['image_1']), str(result['image_2']), str(result['image_3'])]
+
+    image_data = []
+    with get_s3_client() as s3:
+        for key in image_keys:
+            response = s3.get_object( Bucket="geo-gemmer-images", Key=key)
+            image_data.append(response['Body'].read())
+    return image_data
