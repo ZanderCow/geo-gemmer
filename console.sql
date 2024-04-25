@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
 );
 
 CREATE TABLE IF NOT EXISTS review (
+    review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE NOT NULL,
     gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE NOT NULL,
     rating CHAR NOT NULL,

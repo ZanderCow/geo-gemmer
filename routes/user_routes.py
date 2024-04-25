@@ -5,7 +5,9 @@ from repositories import user_repository, gem_repository as gem_repo
 from repositories import user_repository, gems_pinned_repository, gems_visited_repository
 from repositories import images_repository
 import base64
-import io
+
+
+from repositories import review_repository
 
 user = Blueprint('user', __name__)
 
@@ -22,72 +24,17 @@ def dashboard():
 
     user_name = user_repository.get_username_by_id(user_id)["username"]
     
-    
 
-    gem_visted_frequency = {
-        'January': 1,
-        'February': 2,
-        'March': 3,
-        'April': 4,
-        'May': 2,
-        'June': 5,
-        'July': 7,
-        'August': 5,
-        'September': 3,
-        'October': 2,
-        'November': 1,
-        'December': 1
-    }
-
-
-    gem_distribution = {
-            'Restaurant': 7,
-            'Park': 3,
-            'Museum':2,
-            'Beach': 1,
-            'Trail': 1,
-        }  
-    
-    gems_pinned = [
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"
-            }, 
-            {
-                'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"        
-            },
-            {
-               'gem_name': 'Rocky Mountian',
-                'gem_type': 'Park',
-                'date_pinned': "2022-07-15",
-                'gem_url': "/gem/67e55044-10b1-426f-9247-bb680e5fe0c8"      
-            }         
-        ]
     gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
 
     gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
     
     gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
     
-    reviews_made =  [
-            {
-                'gem_name': 'Rocky Mountian',
-                'rating': 1,
-                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
-                
-            }, 
-            {
-                'gem_name': 'Rocky Mountian',
-                'rating': 5,
-                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
-            }
-        
-        ]
+
+
+    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
+    print(reviews_made)
 
 
     return render_template('dashboard.html', 
@@ -134,7 +81,6 @@ def change_settings_page():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
 
-    print(user_name)
     errors = {}
     
     #user filled out the username field
@@ -191,6 +137,8 @@ def change_settings_page():
 def render_create_gem_page():
     return render_template('create-hidden-gem.html')
 
+
+
 @user.post('/create-gem')
 @jwt_required()
 def create_gem():
@@ -200,59 +148,101 @@ def create_gem():
     Returns:
         A JSON response containing a success message and the URL of the created gem.
     """
-    data = request.get_json()  # get the incoming JSON data
+    user_id = get_jwt_identity()
+    gem_name = request.form.get('gem_name')
+    gem_type = request.form.get('gem_type')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
 
-    # list of fields that should not be empty
-    required_fields = ['gem_name', 'gem_type', 'latitude', 'longitude']
+    wheelchair_accessible = request.form.get('wheelchair_accessible')
+    service_animal_friendly = request.form.get('service_animal_friendly')
+    multilingual_support = request.form.get('multilingual_support')
+    braille_signage = request.form.get('braille_signage')
+    large_print_materials = request.form.get('large_print_materials')
+    accessible_restrooms = request.form.get('accessible_restrooms')
+    hearing_assistance = request.form.get('hearing_assistance')
 
-    missing_fields = [field for field in required_fields if not data.get(field)]
-
-    if missing_fields:
-        return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
-
-
-    #get the images into a list
-    images = list()
-    if ('image_1' in data): images.append(images['image_1'])
-    if ('image_2' in data): images.append(images['image_2'])
-    if ('image_3' in data): images.append(images['image_3'])
-
-    #TODO : something with the images T_T
-    #actually create the gem
-    gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
-
-    #set the accesssibility
-    acc = gem_repo.accessibility_class()
-    if ('wheelchair_accessible' in data and data['wheelchair_accessible'] == True):
-        acc.wheelchair_accessible = True
-    if ('service_animal_friendly' in data and data['service_animal_friendly'] == True):
-        acc.service_animal_friendly = True
-    if ('multilingual_support' in data and data['multilingual_support'] == True):
-        acc.multilingual_support = True
-    if ('braille_signage' in data and data['braille_signage'] == True):
-        acc.braille_signage = True
-    if ('large_print_materials' in data and data['large_print_materials'] == True):
-        acc.large_print_materials = True
-    if ('accessible_restrooms' in data and data['accessible_restrooms'] == True):
-        acc.accessible_restrooms = True
-    if ('hearing_assistance' in data and data['hearing_assistance'] == True):
-        acc.hearing_assistance = True
-    gem_repo.change_accessibility(gem_url, acc)
+    image_1 = request.files.get('image_1')
+    image_2 = request.files.get('image_2')
+    image_3 = request.files.get('image_3')
     
+    
+    acc = gem_repo.accessibility_class()
 
-    return jsonify(
+    if wheelchair_accessible == True:
+        acc.wheelchair_accessible = True
+    if service_animal_friendly == True:
+        acc.service_animal_friendly = True
+    if multilingual_support == True:
+        acc.multilingual_support = True
+    if braille_signage == True:
+        acc.braille_signage = True
+    if large_print_materials == True:
+        acc.large_print_materials = True
+    if accessible_restrooms == True:
+        acc.accessible_restrooms = True
+    if hearing_assistance == True:
+        acc.hearing_assistance = True
+   
+
+
+
+
+    print(wheelchair_accessible)
+
+    
+    image_1 = request.files.get('image_1')
+    image_2 = request.files.get('image_2')
+    image_3 = request.files.get('image_3')
+
+    print(image_1)
+    print(image_2)
+    print(image_3)
+    
+    errors = {}
+
+    if gem_name == '':
+        errors['gem_name'] = 'Gem name is required'
+
+    if gem_type == '':
+        errors['gem_type'] = 'Gem type is required'
+
+    if latitude == '':
+        errors['latitude'] = 'Latitude is required'
+    
+    if longitude == '':
+        errors['longitude'] = 'Longitude is required'
+    
+    #if the user doesnt provide any images, we will force them too
+    if image_1 and image_2 and image_3:
+        pass
+    else:
+        errors['images'] = 'Please provide 3 images'
+
+    
+    if errors == {}:
+        
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
+        gem_repo.change_accessibility(gem_url, acc)
+
+        #uncomment the line below to make s3 work
+        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3)
+        
+        return jsonify(
     {
         'message': 'Gem created successfully',
         'gem_id': gem_url
-    }
-)
-
-
-
+    })
+    else:
+        return jsonify(errors), 400
+    
+    
 
 @user.post("/logout")
 def logout():
     response = jsonify({"msg": "Logout successful"})
     unset_jwt_cookies(response)
     return response 
+
+
 

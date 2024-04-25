@@ -63,9 +63,9 @@ function submitChangeSettingsForm() {
 
         }
 
-        setTimeout(() => {
+     
             window.location.href = '/user/settings'; // Redirect to the settings page
-        }, 3000);
+       
        
     })
 

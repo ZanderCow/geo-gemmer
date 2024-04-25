@@ -209,6 +209,7 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
                 SELECT
+                    review_id,
                     user_id,
                     gem_id,
                     rating,
@@ -263,3 +264,105 @@ def _convert_to_proper_form(review:dict[str,Any]):
         if ('date' in review):
             review['date'] = _date_int_to_string(review['date'])
     return review
+
+
+def get_review_by_review_id(review_id):
+    '''
+    Retrieve a review by its ID.
+
+    Parameters:
+        review_id (str): The ID of the review.
+
+    Returns:
+        dict[str, Any]: A dictionary representing the review.
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("""
+                SELECT
+                    h.gem_id,
+                    h.name AS gem_name,
+                    h.gem_type,
+                    r.rating,
+                    r.review,
+                    r.review_id 
+                FROM
+                    review r
+                JOIN
+                    hidden_gem h ON  r.gem_id = h.gem_id
+                WHERE
+                    r.review_id = %s
+                """, (review_id,))
+            return _convert_reviews_to_proper_form(cursor.fetchall())
+        
+
+def change_rating_for_a_review(review_id,rating):
+    '''
+    Change the rating for a review.
+
+    Parameters:
+        review_id (str): The ID of the review.
+        rating (int): The new rating for the review.
+
+    Returns:
+        None
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("""
+                UPDATE
+                    review
+                SET
+                    rating = %s
+                WHERE
+                    review_id = %s
+                """, (rating,review_id))
+            return True
+        
+def change_review_for_a_review(review_id,review):
+    '''
+    Change the review for a review.
+
+    Parameters:
+        review_id (str): The ID of the review.
+        review (str): The new review for the review.
+
+    Returns:
+        None
+    '''
+    review = inflate_string(review, 511)
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("""
+                UPDATE
+                    review
+                SET
+                    review = %s
+                WHERE
+                    review_id = %s
+                """, (review,review_id))
+            return True
+   
+def delete_review(review_id):
+    '''
+    Delete a review.
+
+    Parameters:
+        review_id (str): The ID of the review.
+
+    Returns:
+        None
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute("""
+                DELETE FROM
+                    review
+                WHERE
+                    review_id = %s
+                """, (review_id,))
+            return True        
