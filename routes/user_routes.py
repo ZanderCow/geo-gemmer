@@ -5,7 +5,8 @@ from repositories import user_repository, gem_repository as gem_repo
 from repositories import user_repository, gems_pinned_repository, gems_visited_repository
 from repositories import images_repository
 import base64
-import io
+
+
 from repositories import review_repository
 
 user = Blueprint('user', __name__)
@@ -136,55 +137,7 @@ def change_settings_page():
 def render_create_gem_page():
     return render_template('create-hidden-gem.html')
 
-@user.post('/create-gem')
-@jwt_required()
-def create_gem():
-    """
-    Create a new gem in the database based on the incoming JSON data.
 
-    Returns:
-        A JSON response containing a success message and the URL of the created gem.
-    """
-    data = request.get_json()  # get the incoming JSON data
-
-    # list of fields that should not be empty
-    required_fields = ['gem_name', 'gem_type', 'latitude', 'longitude']
-
-    missing_fields = [field for field in required_fields if not data.get(field)]
-
-    if missing_fields:
-        return jsonify({'error': f'The following fields are required and were not provided: {", ".join(missing_fields)}'}), 400  # 400 is the status code for "Bad Request"
-   
-
-    #TODO : something with the images T_T
-    #actually create the gem
-    gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
-
-    #set the accesssibility
-    acc = gem_repo.accessibility_class()
-    if ('wheelchair_accessible' in data and data['wheelchair_accessible'] == True):
-        acc.wheelchair_accessible = True
-    if ('service_animal_friendly' in data and data['service_animal_friendly'] == True):
-        acc.service_animal_friendly = True
-    if ('multilingual_support' in data and data['multilingual_support'] == True):
-        acc.multilingual_support = True
-    if ('braille_signage' in data and data['braille_signage'] == True):
-        acc.braille_signage = True
-    if ('large_print_materials' in data and data['large_print_materials'] == True):
-        acc.large_print_materials = True
-    if ('accessible_restrooms' in data and data['accessible_restrooms'] == True):
-        acc.accessible_restrooms = True
-    if ('hearing_assistance' in data and data['hearing_assistance'] == True):
-        acc.hearing_assistance = True
-    gem_repo.change_accessibility(gem_url, acc)
-    
-
-    return jsonify(
-    {
-        'message': 'Gem created successfully',
-        'gem_id': gem_url
-    }
-)
 
 @user.post('/create-gem')
 @jwt_required()
@@ -196,20 +149,55 @@ def create_gem():
         A JSON response containing a success message and the URL of the created gem.
     """
     user_id = get_jwt_identity()
-    gem_name = request.files.get('gem_name')
-    gem_type = request.files.get('gem_type')
-    latitude = request.files.get('latitude')
-    longitude = request.files.get('longitude')
-    wheelchair_accessible = request.files.get('wheelchair_accessible')
-    service_animal_friendly = request.files.get('service_animal_friendly')
-    multilingual_support = request.files.get('multilingual_support')
-    braille_signage = request.files.get('braille_signage')
-    large_print_materials = request.files.get('large_print_materials')
-    accessible_restrooms = request.files.get('accessible_restrooms')
-    hearing_assistance = request.files.get('hearing_assistance')
+    gem_name = request.form.get('gem_name')
+    gem_type = request.form.get('gem_type')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
+
+    wheelchair_accessible = request.form.get('wheelchair_accessible')
+    service_animal_friendly = request.form.get('service_animal_friendly')
+    multilingual_support = request.form.get('multilingual_support')
+    braille_signage = request.form.get('braille_signage')
+    large_print_materials = request.form.get('large_print_materials')
+    accessible_restrooms = request.form.get('accessible_restrooms')
+    hearing_assistance = request.form.get('hearing_assistance')
+
     image_1 = request.files.get('image_1')
     image_2 = request.files.get('image_2')
     image_3 = request.files.get('image_3')
+    
+    
+    acc = gem_repo.accessibility_class()
+
+    if wheelchair_accessible == True:
+        acc.wheelchair_accessible = True
+    if service_animal_friendly == True:
+        acc.service_animal_friendly = True
+    if multilingual_support == True:
+        acc.multilingual_support = True
+    if braille_signage == True:
+        acc.braille_signage = True
+    if large_print_materials == True:
+        acc.large_print_materials = True
+    if accessible_restrooms == True:
+        acc.accessible_restrooms = True
+    if hearing_assistance == True:
+        acc.hearing_assistance = True
+   
+
+
+
+
+    print(wheelchair_accessible)
+
+    
+    image_1 = request.files.get('image_1')
+    image_2 = request.files.get('image_2')
+    image_3 = request.files.get('image_3')
+
+    print(image_1)
+    print(image_2)
+    print(image_3)
     
     errors = {}
 
@@ -225,18 +213,30 @@ def create_gem():
     if longitude == '':
         errors['longitude'] = 'Longitude is required'
     
-    #if the user doesnt provide any images, we will use the default image
-
-    if image_1:
-        if image_2:
-            if image_3:
-                pass
+    #if the user doesnt provide any images, we will force them too
+    if image_1 and image_2 and image_3:
+        pass
     else:
-        errors['images'] = 'At least one image is required'
+        errors['images'] = 'Please provide 3 images'
 
+    
+    if errors == {}:
+        
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
+        gem_repo.change_accessibility(gem_url, acc)
 
-    gem_url = gem_repo.create_new_gem(data['gem_name'], data['gem_type'], data['longitude'], data['latitude'], True)
-
+        #uncomment the line below to make s3 work
+        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3)
+        
+        return jsonify(
+    {
+        'message': 'Gem created successfully',
+        'gem_id': gem_url
+    })
+    else:
+        return jsonify(errors), 400
+    
+    
 
 @user.post("/logout")
 def logout():

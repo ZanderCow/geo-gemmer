@@ -18,9 +18,8 @@ function createHiddenGem() {
     const hearingAssistance = document.getElementById('hearing_assistance').checked;
     const img1 = document.getElementById('image-input').files[0];
     const img2 = document.getElementById('image-input').files[1];
-    const img3 = document.getElementById('image-input').files[3];
+    const img3 = document.getElementById('image-input').files[2];
 
-    console.log(img1, img2, img3);
 
     var formData = new FormData();
     formData.append('gem_name', gemName);
@@ -39,7 +38,6 @@ function createHiddenGem() {
     formData.append('image_3', img3);
 
     
-    /*
     // Get the CSRF token from the cookie
     let csrf_token = document.cookie.split('; ')  
     .find(row => row.startsWith("csrf_access_token" + '=')) 
@@ -71,7 +69,7 @@ function createHiddenGem() {
     .then(data => { 
         console.log(data);
      
-            window.location.href = '/user/settings'; // Redirect to the settings page
+        window.location.href = '/user';
        
        
     })
@@ -87,6 +85,6 @@ function createHiddenGem() {
        
         
     });
-    */
+    
    
 }

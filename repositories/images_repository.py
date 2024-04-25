@@ -122,24 +122,24 @@ def get_database_pfp(user_id):
             result = cursor.fetchone()
             return result['profile_picture']
         
-def create_hidden_gem_images(gem_id,file_path1, file_path2,file_path3):
+def create_hidden_gem_images(gem_id, image_1, image_2, image_3):
     '''
     Upload images to an Amazon S3 server for a hidden gem.
 
     Parameters:
         gem_id (int): The ID of the hidden gem.
-        file_path1 (str): The file path of the first image to upload.
-        file_path2 (str): The file path of the second image to upload.
-        file_path3 (str): The file path of the third image to upload.
+        image_1 (FileStorage): The first image file to upload.
+        image_2 (FileStorage): The second image file to upload.
+        image_3 (FileStorage): The third image file to upload.
     '''
-    file_key_1 = f"gem-images/pfp_{uuid.uuid4()}.png"
-    file_key_2 = f"gem-images/pfp_{uuid.uuid4()}.png"
-    file_key_3 = f"gem-images/pfp_{uuid.uuid4()}.png"
+    file_key_1 = f"gem-images/{uuid.uuid4()}.png"
+    file_key_2 = f"gem-images/{uuid.uuid4()}.png"
+    file_key_3 = f"gem-images/{uuid.uuid4()}.png"
 
     with get_s3_client() as s3:
-        s3.upload_fileobj(Fileobj=file_path1, Bucket='geo-gemmer-images', Key=file_key_1)
-        s3.upload_fileobj(Fileobj=file_path2, Bucket='geo-gemmer-images', Key=file_key_2)
-        s3.upload_fileobj(Fileobj=file_path3, Bucket='geo-gemmer-images', Key=file_key_3)
+        s3.upload_fileobj(Fileobj=image_1.stream, Bucket='geo-gemmer-images', Key=file_key_1)
+        s3.upload_fileobj(Fileobj=image_2.stream, Bucket='geo-gemmer-images', Key=file_key_2)
+        s3.upload_fileobj(Fileobj=image_3.stream, Bucket='geo-gemmer-images', Key=file_key_3)
 
     pool = get_pool()
     with pool.connection() as conn:
@@ -150,8 +150,8 @@ def create_hidden_gem_images(gem_id,file_path1, file_path2,file_path3):
                 VALUES
                     (%s, %s, %s, %s);
             ''', (gem_id, file_key_1, file_key_2, file_key_3))
-    return True
 
+    return True
 
 
 
