@@ -21,6 +21,7 @@
         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
         <path d="M5 12l5 5l10 -10"></path>
     </svg>
+    ç
     <div class="container py-4 py-xl-5" style="padding-bottom: 0;">
         <div class="row gy-4 gy-md-0">
             <div class="col-md-6">
@@ -49,34 +50,38 @@
             let posY = Math.random() * window.innerHeight;
             let dirX = (Math.random() - 0.5) * 2;
             let dirY = (Math.random() - 0.5) * 2;
-            const speed = 40;
-            let scale = 1;
+            const speed = 500;
+            let scale = 10;
             let angle = 0;
     
             function updatePosition() {
                 const screenWidth = window.innerWidth - elem.clientWidth;
                 const screenHeight = window.innerHeight - elem.clientHeight;
-    
+            
                 // Update position
                 posX += dirX * speed;
                 posY += dirY * speed;
                 scale = 1 + Math.random();
                 angle += (Math.random() - 0.5) * 20;
-    
+            
                 // Check boundaries and reverse direction if needed
                 if (posX > screenWidth || posX < 0) {
                     dirX *= -1; // Reverse direction X
                     posX = Math.max(0, Math.min(posX, screenWidth)); // Correct position to be within the bounds
+                    scale = Math.random() * 2 + 1; // Random scale between 1 and 3
+                    elem.style.stroke = `hsl(${Math.random() * 360}, 100%, 50%)`; // Change color randomly
                 }
                 if (posY > screenHeight || posY < 0) {
                     dirY *= -1; // Reverse direction Y
                     posY = Math.max(0, Math.min(posY, screenHeight)); // Correct position to be within the bounds
+                    scale = Math.random() * 2 + 1; // Random scale between 1 and 3
+                    elem.style.stroke = `hsl(${Math.random() * 360}, 100%, 50%)`; // Change color randomly
                 }
-    
+            
                 // Apply new position and transformations
                 elem.style.transform = `translate(${posX}px, ${posY}px) scale(${scale}) rotate(${angle}deg)`;
-                elem.style.stroke = `hsl(${Math.random() * 360}, 100%, 50%)`; // Change color randomly
             }
+            
     
             setInterval(updatePosition, 20);
     
