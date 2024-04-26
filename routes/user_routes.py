@@ -240,17 +240,20 @@ def create_gem():
 
     
     if errors == {}:
-    
-        #gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
-        #gem_repo.change_accessibility(gem_url, acc)
+        
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, latitude, longitude, True)
+        gem_repo.change_accessibility(gem_url, acc)
+
+        '''
         #uncomment the line below to make s3 work
-        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3)
+        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
+        '''
+       
         
         return jsonify(
     {
         'message': 'Gem created successfully',
-        'gem_id': "alksdfjasl;dkfj" 
-        #replcea the string with the gem_url
+        'gem_id': gem_url 
     })
     else:
         return jsonify(errors), 400

@@ -67,9 +67,11 @@ function createHiddenGem() {
    
 
     .then(data => { 
-        console.log(data);
-     
-        window.location.href = '/user';
+        console.log(data.gem_id);
+        
+            
+        window.location.href = `/gem/success/${data.gem_id}`; 
+        
        
        
     })
