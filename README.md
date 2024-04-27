@@ -4,6 +4,19 @@
 Geo Gemmer is a social media-based web application that allows users to discover hidden gems in their vicinity. It provides a platform for users to share and explore unique and lesser-known places, such as local attractions, restaurants, parks, and more. By leveraging geolocation data, Geo Gemmer helps users uncover hidden gems that may not be widely known or easily discoverable through traditional means. With Geo Gemmer, users can connect with like-minded individuals, discover new places, and contribute to a vibrant community of explorers.
 
 
+### Table of Contents
+Introduction
+  [Getting Started](#getting-started)
+  [Prerequisites](#prerequisites)
+
+Setup
+  [Setting Up the PostGIS Extension](#setting-up-the-postgis-extension)
+  [Setting Up a Development Environment](#setting-up-a-development-environment)
+
+Usage
+  [Running the Application](#running-the-application)
+  [Exiting the Virtual Environment](#exiting-the-virtual-environment)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -15,7 +28,22 @@ Before you begin, ensure you have met the following requirements:
 - You have installed the latest version of Python (at the time of writing, Python 3.8 or newer is recommended).
 - You have a Windows/Linux/Mac machine capable of running Python.
 - Make sure PostgreSQL is installed on your system, as psycopg2 requires PostgreSQL client libraries to run. 
-  
+
+
+### Setting Up the PostGIS Extension
+   The database uses the PostGIS extension for PostgreSQL. If you don't have it already, here is how you install it.
+
+1. **Open Application Stack Builder**
+   To install the PostGIS extension for PostgreSQL, first open the Application Stack Builder that installs with PostgreSQL
+   ![shortcut found in my computer under C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PostgreSQL 16](https://github.com/ZanderCow/geo-gemmer/blob/main/readme_instruction_images/stack_builder1.png)
+
+2. **Select Your PostgreSQL server**
+   Make sure to select your PostgreSQL server, and click "Next >"
+   ![shortcut found in my computer under C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PostgreSQL 16](https://github.com/ZanderCow/geo-gemmer/blob/main/readme_instruction_images/stack_builder2.png)
+
+3. **Install PostGIS**
+   Under Categories -> Spatial Extensions, you will find the option for the PostGIS extension. Click that and click "Next ->" and continue to finish the installation
+   ![shortcut found in my computer under C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PostgreSQL 16](https://github.com/ZanderCow/geo-gemmer/blob/main/readme_instruction_images/stack_builder3.png)
 
 ### Setting Up a Development Environment
 
@@ -84,7 +112,7 @@ Before you begin, ensure you have met the following requirements:
 
 ### Running the Application
 
-Go to the `app.py` file and either 
+Go to the main folder with the `app.py` file and either 
 
 Run in the terminal with
 ```
