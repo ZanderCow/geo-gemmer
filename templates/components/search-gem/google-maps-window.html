@@ -1,0 +1,45 @@
+{% macro google_maps_window() %}
+<div id="google-maps-container" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="height: 500px;">
+    <div id="map" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center d-none" style="height: 500px;">
+        <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+    </div>
+    
+</div>
+<script>
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            fetch(`/gem/map?lat=${latitude}&lng=${longitude}&callback=initMap`)
+            .then(response => response.text())
+            .then(data => {
+                const scriptElement = document.createElement('script');
+                scriptElement.textContent = data;
+                document.body.appendChild(scriptElement);
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        }), function(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                default:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        };
+    } 
+    
+</script>
+{% endmacro %}

@@ -1,0 +1,125 @@
+{# This card displays the piechart of the user's gems #}
+{% macro gems_details() %}
+
+<div class="card border-start-primary py-2 shadow-sm" id="gem-details-card">
+    <div class="card-body">
+        <div class="row align-items-center no-gutters">
+            <div class="col-xxl-12 me-2">
+                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                    <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gem Details</h5>
+                </div>
+                <div id="pie-chart-container" class="text-dark fw-bold h5 mb-0">
+                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);">
+                        <canvas id="gem-pie-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+    function interpolateColors(startColor, endColor, n) {
+        if (n === 1) {
+            return `rgb(${[131,178,113]})`;
+        }
+        const lerp = (start, end, t) => start + (end - start) * t;
+        let colors = [];
+        for (let i = 0; i < n; i++) {
+            const t = i / (n - 1);
+            const interpolatedColor = `rgb(${
+                Math.round(lerp(startColor[0], endColor[0], t))
+            },${
+                Math.round(lerp(startColor[1], endColor[1], t))
+            },${
+                Math.round(lerp(startColor[2], endColor[2], t))
+            })`;
+            colors.push(interpolatedColor);
+        }
+        return colors;
+    }
+</script>
+<script>
+    // this script fetches the gems overview information from the server
+    
+    // make fetch to server
+    fetch('/user/get-gems-details', {
+        method: 'GET',
+        credentials: 'include'  // Necessary to include cookies with requests
+    })
+
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } 
+        else {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+    })
+
+    .then(data => { 
+
+        if (Object.keys(data).length === 0){
+            document.getElementById("pie-chart-container").innerHTML = `
+            <h5 class="fw-bold text-center">No activity yet</h5>
+            <p class="text-center text-muted" style="font-size: 16px;">Do something with hidden gems<br />to start having your stats appear!</p>
+            `;
+            
+        }
+        else{
+            
+            // make the pie chart
+            const ctx = document.getElementById('gem-pie-chart').getContext('2d');
+            
+            
+            const chartLabels = Object.keys(data);
+            const chartData = Object.values(data);
+            const startColor = [77, 111, 63];
+            const endColor = [163, 230, 134];
+            const backgroundColors = interpolateColors(startColor, endColor, chartLabels.length);
+
+            const myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Gem Variety',
+                        data: chartData,
+                        backgroundColor: backgroundColors,
+                        borderColor: 'rgba(0,0,0,0.1)',
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontStyle: 'normal'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gem Details',
+                        fontStyle: 'bold'
+                    }
+                }
+            });
+            
+            
+           
+        }
+       
+
+       
+       
+    })
+
+
+
+    
+
+
+</script>
+{% endmacro %}

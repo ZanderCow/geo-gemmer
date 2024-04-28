@@ -1,0 +1,125 @@
+{% macro filter_bar() %}
+<div style="padding-top: 15px;padding-bottom: 15px;">
+    <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
+        <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center">
+        <div id="type-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+            <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                <span id="selected-type" style="color: rgb(0, 0, 0);">Type</span>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-value="Hiking Trail">Hiking Trail</a>
+                <a class="dropdown-item" href="#" data-value="Restaurant">Restaurant</a>
+                <a class="dropdown-item" href="#" data-value="Park">Park</a>
+                <a class="dropdown-item" href="#" data-value="Gym">Gym</a>
+                <a class="dropdown-item" href="#" data-value="Museum">Museum</a>
+                <a class="dropdown-item" href="#" data-value="Beach">Beach</a>
+                <a class="dropdown-item" href="#" data-value="Shopping Mall">Shopping Mall</a>
+                <a class="dropdown-item" href="#" data-value="Movie Theater">Movie Theater</a>
+                <a class="dropdown-item" href="#" data-value="Zoo">Zoo</a>
+                <a class="dropdown-item" href="#" data-value="Aquarium">Aquarium</a>
+            </div>
+        </div>
+
+        <!-- Unique ID for each dropdown, using 'AccessibilityMenu1' as an example -->
+        <div id="accessibility-dropdown" class="dropdown" style="padding: 15px;">
+            <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: black;">
+                <span id="selected-accesibility" style="color: black;">Accessibility</span>
+            </button>
+            <div class="dropdown-menu">
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="wheelchair_accessible"> Wheelchair Accessible</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="service_animal_friendly"> Service Animal Friendly</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="multilingual_support"> Multilingual Support</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="braille_signage"> Braille Signage</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="hearing_assistance"> Hearing Assistance</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="large_print_materials"> Large Print Materials</label>
+                <label class="dropdown-item"><input type="checkbox" name="accessibility" value="accessible_restrooms"> Accessible Restrooms</label>
+            </div>
+        </div>
+
+        <div id="distance-dropdown" class="dropdown" style="padding-left: 15px; padding-right: 15px;">
+            <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: rgb(0,0,0);">
+                <span id="selected-distance" style="color: rgb(0, 0, 0);">Distance</span>
+            </button>
+            <div class="dropdown-menu">
+                <label class="dropdown-item">
+                    <input id="distanceSlider" class="form-range" type="range" min="0" max="500" value="50" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
+                </label>
+                <label class="dropdown-item">
+                    <span class="text-center justify-content-md-center" id="distanceValue">50 km</span> 
+                </label>
+            </div>
+        </div>
+ 
+        <div id="review-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+            <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                <span id="selected-review-option" style="color: rgb(0, 0, 0);">Minimum Rating</span>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" data-value="1">1 Star</a>
+                <a class="dropdown-item" href="#" data-value="2">2 Stars</a>
+                <a class="dropdown-item" href="#" data-value="3">3 Stars</a>
+                <a class="dropdown-item" href="#" data-value="4">4 Stars</a>
+                <a class="dropdown-item" href="#" data-value="5">5 Stars</a>
+            </div>
+        </div>
+
+        
+        <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Listen for changes or clicks within any dropdown menu
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target.tagName === 'A' || target.tagName === 'INPUT') {
+                    updateDropdownText(target);
+                }
+            });
+        });
+    
+        // Function to update the text of the dropdown button based on the selection
+        function updateDropdownText(target) {
+            const parentDropdown = target.closest('.dropdown');
+            const dropdownId = parentDropdown.id;
+            const dropdownButtonSpan = parentDropdown.querySelector('.btn.dropdown-toggle span');
+    
+            if (dropdownId === 'accessibility-dropdown' && target.type === 'checkbox') {
+                // Handle checkbox selections for accessibility options
+                updateAccessibilityText(parentDropdown, dropdownButtonSpan);
+            } else if (target.type === 'range') {
+                // Handle slider for distance
+                dropdownButtonSpan.textContent = target.value + 'km';
+            } else if (target.tagName === 'A') {
+                // Handle selections from dropdown links
+                dropdownButtonSpan.textContent = target.textContent.trim();
+            }
+        }
+    
+        // Function to compile and display selected accessibility options
+        function updateAccessibilityText(dropdown, button) {
+            let selectedOptions = [];
+            dropdown.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedOptions.push(checkbox.parentNode.textContent.trim());
+            });
+            button.textContent = selectedOptions.join(', ');
+        }
+    
+        // Function to update the display of the distance as the slider is moved
+        const distanceSlider = document.getElementById('distanceSlider');
+        if (distanceSlider) {
+            distanceSlider.oninput = function() {
+                document.getElementById('distanceValue').textContent = this.value + 'km';
+            };
+        }
+    });
+</script>
+
+<script>
+    function filterSearch(){
+        
+    }
+
+</script>
+{% endmacro %}

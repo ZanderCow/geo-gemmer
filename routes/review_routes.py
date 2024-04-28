@@ -23,6 +23,7 @@ def edit_review(review_id):
 @review.post('/<review_id>/edit-review')
 @jwt_required()
 def sumbit_edit_review(review_id):
+    
 
     user_id = get_jwt_identity()
     data = request.get_json()
@@ -76,3 +77,13 @@ def sumbit_edit_review(review_id):
 
     # if the user is the same, render the edit review page with the review data
     return render_template('gem-details.html', review_id=review_id)
+
+
+@review.delete('/<review_id>/delete-review')
+@jwt_required()
+def delete_review(review_id):
+    user_id = get_jwt_identity()
+    review_repository.delete_review(review_id)
+    return jsonify({
+        'success': 'Review deleted successfully'
+        })

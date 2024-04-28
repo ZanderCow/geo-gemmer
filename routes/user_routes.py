@@ -20,30 +20,8 @@ def dashboard():
     # get user data from database
     # get user hidden gems from database
     user_id = get_jwt_identity()  # Retrieves the identity from the JWT
-    user_info = user_repository.get_user_by_id(user_id)
 
-    user_name = user_repository.get_username_by_id(user_id)["username"]
-    
-
-    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
-
-    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
-    
-    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
-    
-
-
-    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
-    print(reviews_made)
-
-
-    return render_template('dashboard.html', 
-        user_info=user_info,
-        gem_visted_frequency=gem_visted_frequency,
-        gem_distribution=gem_distribution,
-        gems_pinned=gems_pinned,
-        reviews_made=reviews_made,username=user_name
-        )
+    return render_template('dashboard.html')
 
 
 
@@ -211,7 +189,7 @@ def create_gem():
 
 
 
-    print(wheelchair_accessible)
+    
 
     
     image_1 = request.files.get('image_1')
@@ -268,3 +246,84 @@ def logout():
 
 
 
+@user.get("/get-basic-user-info")
+@jwt_required()
+def get_basic_user_info():
+    '''
+    Get the basic information of the user
+
+    their name
+    # of gems explored, 
+    # of reviews made, 
+    # of gems created, 
+    and gems pinned
+    '''
+    user_id = get_jwt_identity()
+    user_info = user_repository.get_user_by_id(user_id)
+
+    return jsonify(user_info), 200
+
+
+@user.get("/get-gems-overview")
+@jwt_required()
+def get_gems_overview():
+    '''
+    Get the gems overview of the user stuff
+
+    their name
+    # of gems explored, 
+    # of reviews made, 
+    # of gems created, 
+    and gems pinned
+    '''
+    user_id = get_jwt_identity()
+    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
+   
+
+    return jsonify(gem_visted_frequency), 200
+
+
+@user.get("/get-gems-details")
+@jwt_required()
+def get_gems_details():
+    user_id = get_jwt_identity()
+    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
+    return jsonify(gem_distribution), 200
+
+
+@user.get("/get-gems-pinned")
+@jwt_required()
+def get_gems_pinned():
+    user_id = get_jwt_identity()
+    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
+    return jsonify(gems_pinned), 200
+
+@user.get("/get-reviews-made")
+@jwt_required()
+def get_reviews_made():
+    user_id = get_jwt_identity()
+    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
+    return jsonify(reviews_made), 200
+
+
+@user.get("/get-gems-created")
+@jwt_required()
+def get_gems_created():
+    user_id = get_jwt_identity()
+    gems_created = []
+    return jsonify(gems_created), 200
+
+@user.delete("/delete-gem/<gem_id>")
+@jwt_required()
+def delete_gem(gem_id):
+    user_id = get_jwt_identity()
+    gems_pinned_repository.delete_pinned_gem_user(user_id, gem_id)
+    return jsonify({'message': 'Gem deleted successfully'}), 200
+
+
+@user.get("/navbar-get-username")
+@jwt_required()
+def get_username():
+    user_id = get_jwt_identity()
+    username = user_repository.get_username_by_id(user_id)
+    return jsonify(username), 200

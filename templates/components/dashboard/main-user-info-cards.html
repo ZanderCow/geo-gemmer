@@ -1,0 +1,161 @@
+{# This is information card that shows the Gems Explored, Reviews Made, Gems Created, and Gems Saved information#}
+{# pretty much all the same why don't we just combine the one code? that's why I did this #}
+
+{% macro main_user_info_cards() %}
+<header data-aos="fade" id="greeting" class="bg-primary-gradient pt-5" style="background: #ffffff;">
+    <div class="text-center">
+        <p class="fw-bold text-success mb-2">Main Menu</p>
+        <h1 id="users-name" class="fw-bold">Welcome Back PLACEHOLDER!</h1>
+    </div>
+</header>
+<div class="container py-4 py-xl-5 border-start-primary shadow-sm py-2" data-aos="fade" id="gemdetais">
+    <div id="user-info-container-thing" class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+        <!-- code will be injected here-->
+    </div>
+   
+</div>
+<script>
+    // this script fetches the user information from the server
+    
+    // make fetch to server
+
+    fetch('/user/get-basic-user-info', {
+        method: 'GET',
+        credentials: 'include'  // Necessary to include cookies with requests
+    })
+
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } 
+        else {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+    })
+
+    .then(data => { 
+        data = data[0]
+        const username = data.username;
+        const gems_explored = data.gems_explored;
+        const reviews_made = data.reviews_made;
+        const gems_created = data.gems_created;
+        const gems_saved = data.gems_saved;
+
+
+
+        //if the user has not done anything yet
+        if (gems_explored == 0 && reviews_made == 0 && gems_created == 0 && gems_saved == 0) {
+            document.getElementById("user-info-container-thing").innerHTML = `
+            <div class=" card border-start-primary py-2" data-aos="fade-down" id="gems-explored-card">
+                <div class="card-body">
+                    <div class="col">
+                        <h5 class="fw-bold text-center">No activity yet</h5>
+                        <p class="text-center text-muted">Do something with hidden gems, to start having your stats appear!</p>
+                    </div>
+
+
+                </div>
+            </div>
+           
+            `;
+           
+        }
+        else{
+            document.getElementById("user-info-container-thing").innerHTML = `
+            <div class="col-md-12 col-lg-8 col-xxl-3">
+                <div class="shadow-sm card border-start-primary py-2" data-aos="fade-down" id="gems-explored-card">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold">Gems Explored</h5>
+                                </div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>${gems_explored}</span></div>
+                            </div>
+                            <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pin-map-fill fa-2x text-gray-300" style="border-color: var(--bs-primary-text-emphasis);">
+                                    <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"></path>
+                                    <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"></path>
+                                </svg></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8 col-xxl-3">
+                <div class="card border-start-primary py-2" data-aos="fade-up" id="reviews-left-card">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold">Reviews Made</h5>
+                                </div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>${reviews_made}</span></div>
+                            </div>
+                            <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fa-2x text-gray-300">
+                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                </svg></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8 col-xxl-3" data-aos="fade-down">
+                <div class="card border-start-primary py-2" id="gems-created-card">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold">Gems Created</h5>
+                                </div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>${gems_created}</span></div>
+                            </div>
+                            <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tools fa-2x text-gray-300">
+                                    <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
+                                </svg></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8 col-xxl-3">
+                <div class="card border-start-primary py-2" data-aos="fade-up" id="gems-saved-card">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold">Gems Saved</h5>
+                                </div>
+                                <div class="text-dark fw-bold h5 mb-0"><span>${gems_saved}</span></div>
+                            </div>
+                            <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-down-circle-fill fa-2x text-gray-300">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            `;
+           
+
+
+        }
+        document.getElementById("users-name").innerText = "Welcome Back " + data.username + "!";
+        
+
+
+
+       
+       
+    })
+
+
+    // update the placeholders with the data from the server
+
+    
+
+
+</script>
+
+{% endmacro %}
+

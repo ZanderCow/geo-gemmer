@@ -44,7 +44,7 @@ function changeReview() {
 
     .then(data => { 
         
-            window.location.href = '/user/settings'; // Redirect to the settings page
+            window.location.href = '/user'; // Redirect to the settings page
        
        
     })

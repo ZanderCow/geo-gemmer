@@ -207,19 +207,20 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute(f'''
+            cursor.execute('''
                 SELECT
-                    review_id,
-                    user_id,
-                    gem_id,
-                    rating,
-                    review,
-                    date
+                    hg.name AS gem_name,
+                    r.rating,
+                    r.review,
+                    r.review_id
                 FROM
                     review r
-                WHERE user_id = '{user_id}'
+                INNER JOIN
+                    hidden_gem hg ON r.gem_id = hg.gem_id
+                WHERE r.user_id = %s
                 ORDER BY
-                    date DESC;''')
+                    r.date DESC;
+            ''', (user_id,))
             return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def _shrink_rating(num:int) -> chr:
