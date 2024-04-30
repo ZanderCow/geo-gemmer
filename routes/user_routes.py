@@ -4,10 +4,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 from repositories import user_repository, gem_repository as gem_repo
 from repositories import user_repository, gems_pinned_repository, gems_visited_repository
 from repositories import images_repository
+from repositories import gem_accessibility_repository
 import base64
 
 
 from repositories import review_repository
+import datetime
 
 user = Blueprint('user', __name__)
 
@@ -30,108 +32,12 @@ def dashboard():
 @jwt_required()
 def render_settings_page():
     user_id = get_jwt_identity()  # Retrieves the identity from the JWT
-    user_settings = user_repository.get_user_settings_details(user_id)
-
-
-    current_pfp_url = images_repository.get_database_pfp(user_id)
-
-    # Check if the user has a profile picture
-    '''
-    if current_pfp_url != None:
-        
-        image_bytes = None
-        image_bytes = images_repository.get_user_pfp(user_id)
-        base64_encoded_data = base64.b64encode(image_bytes)
-        base64_image = base64_encoded_data.decode('utf-8')
-        #uncomment and delete the line above to make s3 work
-        return render_template('user-settings.html', user_settings=user_settings,image_data=base64_image)
-    else:
-        return render_template('user-settings.html', user_settings=user_settings)
-    '''
-    
-    if current_pfp_url != None: 
-        return render_template('user-settings.html', user_settings=user_settings)
-    else:
-        return render_template('user-settings.html', user_settings=user_settings)
-
-    
-
-
-@user.post('/settings')
-@jwt_required()
-def change_settings_page():
-    user_id = get_jwt_identity()
-    file = request.files.get('file')
-    user_name = request.form.get('username')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-
-    errors = {}
-    
-    #user filled out the username field
-    if user_name != '':
-        #check if the username is already taken
-        if user_repository.does_username_exist(user_name):
-            errors['username'] = 'Username already exists'
-        else:
-            user_repository.change_username(user_id, user_name)
-
-
-    #user filled out the first name field
-    '''
-    if first_name != '':
-        user_repository.change_first_name(user_id, first_name)
-
-    if last_name != '':
-        user_repository.change_last_name(user_id, last_name)
-
-
-    # Check if the user uploaded a profile picture
-    if file:
-        current_pfp_url = images_repository.get_database_pfp(user_id)
-        
-        # Check if the user already has a profile picture
-        if current_pfp_url != None:
-            
-            #uncomment the line below to make s3 work 
-            images_repository.update_user_pfp(user_id, file)
-            pass
-        
-        else:
-            #uncomment the line below to make s3 work 
-            images_repository.create_user_pfp(user_id, file)
-            pass
-
-    
-   
-    if errors == {}:
-        return jsonify(
-            {
-            'message': 'Settings updated successfully',
-            'username': user_name,
-             }
-            ), 200
-    else:
-        return jsonify(errors), 400
-    
-    '''
-    # Check if the user uploaded a profile picture
-
-    if errors == {}:
-        return jsonify(
-            {
-            'message': 'Settings updated successfully',
-            'username': user_name,
-             }
-            ), 200
-    else:
-        return jsonify(errors), 400
-    
-    
 
 
 
     
+    return render_template('user-settings.html')
+
 
 @user.get('/create-gem')
 @jwt_required()
@@ -167,31 +73,31 @@ def create_gem():
     image_2 = request.files.get('image_2')
     image_3 = request.files.get('image_3')
     
-    
-    acc = gem_repo.accessibility_class()
 
-    if wheelchair_accessible == True:
-        acc.wheelchair_accessible = True
-    if service_animal_friendly == True:
-        acc.service_animal_friendly = True
-    if multilingual_support == True:
-        acc.multilingual_support = True
-    if braille_signage == True:
-        acc.braille_signage = True
-    if large_print_materials == True:
-        acc.large_print_materials = True
-    if accessible_restrooms == True:
-        acc.accessible_restrooms = True
-    if hearing_assistance == True:
-        acc.hearing_assistance = True
+    Wheelchair_accessible = False
+    Service_animal_friendly = False
+    Multilingual_support = False
+    Braille_signage = False
+    Hearing_assistance = False
+    Large_print_materials = False
+    Accessible_restrooms = False
+
+    if wheelchair_accessible == "true":
+        Wheelchair_accessible = True
+    if service_animal_friendly == "true":
+        Service_animal_friendly = True
+    if multilingual_support == "true":
+        Multilingual_support = True
+    if braille_signage == "true":
+        Braille_signage = True
+    if large_print_materials == "true":
+        Large_print_materials = True
+    if accessible_restrooms == "true":
+        Accessible_restrooms = True
+    if hearing_assistance == "true":
+        Hearing_assistance = True
    
 
-
-
-
-    
-
-    
     image_1 = request.files.get('image_1')
     image_2 = request.files.get('image_2')
     image_3 = request.files.get('image_3')
@@ -219,13 +125,10 @@ def create_gem():
     
     if errors == {}:
         
-        gem_url = gem_repo.create_new_gem(gem_name, gem_type, latitude, longitude, True)
-        gem_repo.change_accessibility(gem_url, acc)
-
-        '''
-        #uncomment the line below to make s3 work
-        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
-        '''
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, user_id)
+        gem_accessibility_repository.create_accesibility_for_hidden_gem(gem_url, Wheelchair_accessible, Service_animal_friendly, Multilingual_support, Braille_signage, Hearing_assistance, Large_print_materials, Accessible_restrooms)
+        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
+        
        
         
         return jsonify(
@@ -236,6 +139,7 @@ def create_gem():
     else:
         return jsonify(errors), 400
     
+
     
 
 @user.post("/logout")
@@ -310,7 +214,7 @@ def get_reviews_made():
 @jwt_required()
 def get_gems_created():
     user_id = get_jwt_identity()
-    gems_created = []
+    gems_created = gem_repo.get_gems_created_by_user(user_id)
     return jsonify(gems_created), 200
 
 @user.delete("/delete-gem/<gem_id>")
@@ -327,3 +231,89 @@ def get_username():
     user_id = get_jwt_identity()
     username = user_repository.get_username_by_id(user_id)
     return jsonify(username), 200
+
+@user.get("/get-pfp")
+@jwt_required()
+def get_user_pfp():
+    user_id = get_jwt_identity()
+    try:
+
+        image_bytes = None
+        image_bytes = images_repository.get_user_pfp(user_id)
+        base64_encoded_data = base64.b64encode(image_bytes)
+        base64_image = base64_encoded_data.decode('utf-8')
+        return jsonify(base64_image), 200
+    except:
+        return jsonify({'error': 'No profile picture found'}), 404
+    
+@user.get("/get-user-settings-info")
+@jwt_required()
+def get_user_settings_info():
+    user_id = get_jwt_identity()
+    user_settings = user_repository.get_user_settings_details(user_id)
+    return jsonify(user_settings), 200
+
+@user.post("/update-user-settings")
+@jwt_required()
+def update_user_settings():
+    user_id = get_jwt_identity()
+    file = request.files.get('file')
+    user_name = request.form.get('username')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+
+    errors = {}
+    
+    #user filled out the username field
+    if user_name != '':
+        #check if the username is already taken
+        if user_repository.does_username_exist(user_name):
+            errors['username'] = 'Username already exists'
+        else:
+            user_repository.change_username(user_id, user_name)
+
+    if first_name != '':
+        user_repository.change_first_name(user_id, first_name)
+
+    if last_name != '':
+        user_repository.change_last_name(user_id, last_name)
+
+
+    # Check if the user uploaded a profile picture
+    if file:
+        current_pfp_url = images_repository.get_database_pfp(user_id)
+        
+        # Check if the user already has a profile picture
+        if current_pfp_url != None:
+            
+            #uncomment the line below to make s3 work 
+            images_repository.update_user_pfp(user_id, file)
+            pass
+        
+        else:
+            #uncomment the line below to make s3 work 
+            images_repository.create_user_pfp(user_id, file)
+            pass
+
+    
+   
+    if errors == {}:
+        return jsonify(
+            {
+            'message': 'Settings updated successfully',
+            'username': user_name,
+             }
+            ), 200
+    else:
+        return jsonify(errors), 400
+    
+
+
+@user.post("/add-visited-gem")
+@jwt_required()
+def gem_visited():
+    user_id = get_jwt_identity()
+    gem_id = request.form.get('gem_id')
+    date_visited = datetime.datetime.now().strftime('%Y-%m-%d')
+    gems_visited_repository.add_gem_to_visited_list(user_id, gem_id, date_visited)
+    return jsonify({'message': 'Gem added to visited list'}), 200

@@ -1,10 +1,11 @@
-    create DATABASE geogemmer;
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    CREATE EXTENSION IF NOT EXISTS postgis;
-    CREATE EXTENSION IF NOT EXISTS pg_trgm;
+from psycopg.rows import dict_row
+from repositories.db import get_pool
 
-
-    CREATE TABLE IF NOT EXISTS geo_user (
+pool = get_pool()
+with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+   CREATE TABLE IF NOT EXISTS geo_user (
         user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         username VARCHAR(255),
         password BYTEA,
@@ -24,7 +25,7 @@
         location GEOGRAPHY(POINT,4326),
         times_visited INT,
         user_created BOOLEAN,
-        avg_rat FLOAT DEFAULT 0.0,
+        avg_rat FLOAT DEFAULT 2.5,
         user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE
     );
 
@@ -69,7 +70,9 @@
         image_2 VARCHAR(255),
         image_3 VARCHAR(255)
     );
+                
+
+            ''')
 
 
-
-
+print("Dropped table hidden_gem")

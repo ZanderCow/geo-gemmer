@@ -1,11 +1,6 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
-{% from "components/dashboard/main-user-info-cards.html" import main_user_info_cards %}
-{% from "components/dashboard/gems-overview.html" import gems_overview %}
-{% from "components/dashboard/gems-details.html" import gems_details %}
-{% from "components/dashboard/gems-pinned.html" import gems_pinned %}
-{% from "components/dashboard/reviews-made.html" import reviews_made %}
-{% from "components/dashboard/gems-created.html" import gems_created %}
+
 
 {% set title = "Dashboard" %}
 <html data-bs-theme="light" lang="en">
@@ -24,34 +19,126 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="/static/css/styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 
 <body id="page-top">
     {{ signed_in_navbar() }}
-    {{ main_user_info_cards() }}
-    
-
-    <div class="container py-4 py-xl-5" data-aos="fade" id="gemdetais-1">
+    <header data-aos="fade" id="greeting" class="bg-primary-gradient pt-5" style="background: #ffffff;">
+        <div class="text-center">
+            <p class="fw-bold text-success mb-2">Main Menu</p>
+            <h1 id="users-name" class="fw-bold">Welcome Back PLACEHOLDER!</h1>
+        </div>
+    </header>
+    <div class="container py-4 py-xl-5 " data-aos="fade" id="gemdetais">
+        <div id="user-info-container-thing" class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+            <!-- code will be injected here-->
+        </div>
+       
+    </div>
+    <div class="container py-4 py-xl-5 " data-aos="fade" id="gemdetais-1">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             <div class="col-lg-8 col-xxl-3 flex-fill">
-                {{ gems_overview() }}
+                <div  id="gems-overview-card" class="card ">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-xxl-12 me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gems Overview</h5>
+                                </div>
+                                <div id="graph-plot-container" class="text-dark fw-bold h5 mb-0">
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);">
+                                        <canvas id="gem-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12 col-lg-8 col-xxl-3 flex-fill">
-                {{ gems_details() }}
+                <div class="card  py-2 " id="gem-details-card">
+                    <div class="card-body">
+                        <div class="row align-items-center no-gutters">
+                            <div class="col-xxl-12 me-2">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gem Details</h5>
+                                </div>
+                                <div id="pie-chart-container" class="text-dark fw-bold h5 mb-0">
+                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);">
+                                        <canvas id="gem-pie-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
             </div>
         </div>
     </div>
- 
-    {{gems_pinned()}}
-
-    {{reviews_made()}}
-   
-    {{gems_created()}} 
-
-
+    <div class="container py-4 py-xl-5 " data-aos="fade" id="gemdetais-1">
+        <div class="container scstyle-1 sc-overflow " data-aos="fade" id="gems-pinned">
+            <div class="row row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+                <div id="gems-pinned-outer-container" class="col-md-12 flex-fill scstyle-1 sc-overflow">
+                    <!-- inject here-->
+                    <div class="card " style="height:500px;">
+                        <div class="card-body px-4 py-5 px-md-5">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gems Pinned</h5>
+                            </div>
+                            <section id="gems-pinned-container"class="overflow-auto" style="height:300px;">
+                                <!-- inject here-->
+                                
+                                <!-- inject here-->
+                            </section>
+                        </div>
+                    </div>
+                    <!-- end inject-->
+                </div>
+            </div>
+        </div>
+        <div id="reviews-made" class="container scstyle-1 sc-overflow " data-aos="fade">
+            <div class="row row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+                <div id="reviews-made-outer-container"class="col-md-12 flex-fill scstyle-1 sc-overflow">
+                    <!-- inject here-->
+                    <div class="card shadow-sm" style="height:500px;">
+                        <div class="card-body px-4 py-5 px-md-5">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Reviews Made</h5>
+                            </div>
+                            <section id="reviews-made-container"class="overflow-auto" style="height:300px;">
+                                <!-- inject here-->
+                                
+                                <!-- inject here-->
+                            </section>
+                        </div>
+                    </div>
+                    <!-- end inject-->
+                </div>
+            </div>
+        </div>
+        <div id="gems-created"class="container scstyle-1 sc-overflow">
+            <div class="row row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
+                <div id="gems-created-outer-container"class="col-md-12 flex-fill scstyle-1 sc-overflow">
+                    <!-- inject here-->
+                    <div class="card " style="height:500px;">
+                        <div class="card-body px-4 py-5 px-md-5">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gems Created</h5>
+                            </div>
+                            <section id="gems-created-container" class="overflow-auto" style="height:300px;">
+                                <!-- inject here-->
+                                
+                                <!-- inject here-->
+                                
+                            </section>
+                        </div>
+                    </div>
+                    <!-- end inject-->
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="create-gem" class="container py-5">
         <div class="row mb-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
@@ -63,17 +150,469 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>    
     </div>
-    
     {{ footer()}}
-
-    
-    
-    
+  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
     <script src="/static/js/script.min.js"></script>
+    <script>
+        // this script fetches the user information from the server
+        
+        // make fetch to server
+    
+        fetch('/user/get-basic-user-info', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            data = data[0]
+            const username = data.username;
+            const gems_explored = data.gems_explored;
+            const reviews_made = data.reviews_made;
+            const gems_created = data.gems_created;
+            const gems_saved = data.gems_saved;
+    
+            
+            
+            //if the user has not done anything yet
+            if (gems_explored == 0 && reviews_made == 0 && gems_created == 0 && gems_saved == 0) {
+                document.getElementById("user-info-container-thing").innerHTML = `
+                <div class=" card border-start-primary py-2" data-aos="fade-down" id="gems-explored-card">
+                    <div class="card-body">
+                        <div class="col">
+                            <h5 class="fw-bold text-center">No activity yet</h5>
+                            <p class="text-center text-muted">Do something with hidden gems, to start having your stats appear!</p>
+                        </div>
+    
+    
+                    </div>
+                </div>
+               
+                `;
+               
+            }
+            else{
+                document.getElementById("user-info-container-thing").innerHTML = `
+                <div class="col-md-12 col-lg-8 col-xxl-3">
+                    <div class="shadow-sm card border-start-primary py-2" data-aos="fade-down" id="gems-explored-card">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <h5 class="text-capitalize fw-bold">Gems Explored</h5>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0"><span>${gems_explored}</span></div>
+                                </div>
+                                <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pin-map-fill fa-2x text-gray-300" style="border-color: var(--bs-primary-text-emphasis);">
+                                        <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"></path>
+                                        <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"></path>
+                                    </svg></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8 col-xxl-3">
+                    <div class="card border-start-primary py-2" data-aos="fade-up" id="reviews-left-card">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <h5 class="text-capitalize fw-bold">Reviews Made</h5>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0"><span>${reviews_made}</span></div>
+                                </div>
+                                <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fa-2x text-gray-300">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                    </svg></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8 col-xxl-3" data-aos="fade-down">
+                    <div class="card border-start-primary py-2" id="gems-created-card">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <h5 class="text-capitalize fw-bold">Gems Created</h5>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0"><span>${gems_created}</span></div>
+                                </div>
+                                <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tools fa-2x text-gray-300">
+                                        <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
+                                    </svg></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8 col-xxl-3">
+                    <div class="card border-start-primary py-2" data-aos="fade-up" id="gems-saved-card">
+                        <div class="card-body">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <h5 class="text-capitalize fw-bold">Gems Saved</h5>
+                                    </div>
+                                    <div class="text-dark fw-bold h5 mb-0"><span>${gems_saved}</span></div>
+                                </div>
+                                <div class="col-auto"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-down-circle-fill fa-2x text-gray-300">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                `;
+               
+    
+    
+            }
+            document.getElementById("users-name").innerText = "Welcome Back " + data.username + "!";
+ 
+        })
+
+    </script>
+    <script>
+        // this script fetches the gems overview information from the server
+        
+        // make fetch to server
+        fetch('/user/get-gems-overview', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            if (Object.keys(data).length === 0){
+                document.getElementById("graph-plot-container").innerHTML = `
+                <h5 class="fw-bold text-center">No activity yet</h5>
+                <p class="text-center text-muted" style="font-size: 16px;">Do something with hidden gems<br />to start having your stats appear!</p>
+                `;
+                
+            }
+            else{
+                // make the chart
+                const ctx = document.getElementById('gem-chart').getContext('2d');
+                const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                const sortedKeys = monthOrder.filter(month => Object.keys(data).includes(month));
+                const chartLabels = sortedKeys;
+                const chartData = sortedKeys.map(key => data[key]);
+                
+            
+    
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Gem Visit Frequency',
+                            data: chartData,
+                            backgroundColor: 'rgb(127,179,105)',
+                            borderColor: 'rgba(0,0,0,0.1)',
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: true,
+                        legend: { display: false },
+                        scales: {
+                            xAxes: [{ ticks: { fontStyle: 'normal' } }],
+                            yAxes: [{ ticks: { beginAtZero: true, fontStyle: 'normal' } }]
+                        }
+                    }
+                });
+                
+               
+            }
+           
+    
+           
+           
+        })
+    
+    
+    
+        
+    
+    
+    </script>
+    <script type="module">
+        import { gemPinned } from '/static/components/gemPinnedCard.js';
+        fetch('/user/get-gems-pinned', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            
+            
+            if (data.length === 0){
+                document.getElementById("gems-pinned-outer-container").innerHTML = `
+                <div id="gem-4" class="card">
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                            <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 0px;padding-top: 40px;">Gems Pinned</h5>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                <h2 class="fw-bold">No Gems Pinned</h2>
+                                <p class="text-muted">Go and search up some gems and pin some!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+    
+            }
+            else{
+                const container = document.getElementById('gems-pinned-container');
+                data.forEach(item => {
+                    const card = gemPinned(item);
+                    container.appendChild(card);
+                });
+    
+            }
+        })
+    </script>
+    <script type="module">
+    import { reviewMade } from '/static/components/reviewMadeCard.js';
+    fetch('/user/get-reviews-made', {
+        method: 'GET',
+        credentials: 'include'  // Necessary to include cookies with requests
+    })
+
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } 
+        else {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+    })
+
+    .then(data => { 
+
+        
+        if (data.length === 0){
+            document.getElementById("reviews-made-outer-container").innerHTML = `
+            <div id="gem-4" class="card ">
+                <div class="card-body px-4 py-5 px-md-5">
+                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                        <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 0px;padding-top: 40px;">Reviews Made</h5>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-8 col-xl-6 text-center mx-auto">
+                            <h2 class="fw-bold">No Reviews Made</h2>
+                            <p class="text-muted">Go and make some reviews on some hidden gems!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            `;
+
+        }
+        else{
+            const container = document.getElementById('reviews-made-container');
+            data.forEach(item => {
+                const card = reviewMade(item);
+                container.appendChild(card);
+            });
+
+        }
+    })
+    </script>
+    <script type="module">
+        import { gemCreated } from '/static/components/gemCreatedCard.js';
+        fetch('/user/get-gems-created', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+
+        .then(data => { 
+            
+            if (data.length === 0){
+                document.getElementById("gems-created-outer-container").innerHTML = `
+                <div id="gem-6" class="card ">
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                            <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;"><strong>Gems Created</strong></h5>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                <h2 class="fw-bold">No Gems Created</h2>
+                                <p class="text-muted">Go and create some hidden gems!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+
+            }
+            else{
+                const container = document.getElementById('gems-created-container');
+                data.forEach(item => {
+                    const card = gemCreated(item);
+                    container.appendChild(card);
+                });
+
+            }
+        })
+    </script>
+    <script>
+        function interpolateColors(startColor, endColor, n) {
+            if (n === 1) {
+                return `rgb(${[131,178,113]})`;
+            }
+            const lerp = (start, end, t) => start + (end - start) * t;
+            let colors = [];
+            for (let i = 0; i < n; i++) {
+                const t = i / (n - 1);
+                const interpolatedColor = `rgb(${
+                    Math.round(lerp(startColor[0], endColor[0], t))
+                },${
+                    Math.round(lerp(startColor[1], endColor[1], t))
+                },${
+                    Math.round(lerp(startColor[2], endColor[2], t))
+                })`;
+                colors.push(interpolatedColor);
+            }
+            return colors;
+        }
+    </script>
+    <script>
+        // this script fetches the gems overview information from the server
+        
+        // make fetch to server
+        fetch('/user/get-gems-details', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+
+        .then(data => { 
+
+            if (Object.keys(data).length === 0){
+                document.getElementById("pie-chart-container").innerHTML = `
+                <h5 class="fw-bold text-center">No activity yet</h5>
+                <p class="text-center text-muted" style="font-size: 16px;">Do something with hidden gems<br />to start having your stats appear!</p>
+                `;
+                
+            }
+            else{
+                
+                // make the pie chart
+                const ctx = document.getElementById('gem-pie-chart').getContext('2d');
+                
+                
+                const chartLabels = Object.keys(data);
+                const chartData = Object.values(data);
+                const startColor = [77, 111, 63];
+                const endColor = [163, 230, 134];
+                const backgroundColors = interpolateColors(startColor, endColor, chartLabels.length);
+
+                const myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Gem Variety',
+                            data: chartData,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(0,0,0,0.1)',
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: true,
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontStyle: 'normal'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Gem Details',
+                            fontStyle: 'bold'
+                        }
+                    }
+                });
+                
+                
+                
+            }
+            
+
+            
+            
+        })
+
+
+
+        
+
+
+    </script>
+
 </body>
 </html>

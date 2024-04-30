@@ -178,11 +178,36 @@ def get_hidden_gem_images(gem_id):
                     gem_id = %s;
             ''', (gem_id,))
             result = cursor.fetchone()
-            image_keys = [str(result['image_1']), str(result['image_2']), str(result['image_3'])]
-
+            image_keys = [result['image_1'], result['image_2'], result['image_3']]
     image_data = []
     with get_s3_client() as s3:
         for key in image_keys:
             response = s3.get_object( Bucket="geo-gemmer-images", Key=key)
             image_data.append(response['Body'].read())
     return image_data
+
+
+
+def get_primary_image_for_hidden_gem(gem_id):
+    '''
+    gets the primary images for a hidden gem. Used for search
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                SELECT
+                    image_1
+                FROM
+                    image_group
+                WHERE
+                    gem_id = %s;
+            ''', (gem_id,))
+            result = cursor.fetchone()
+            img = result['image_1']
+            with get_s3_client() as s3:
+                response = s3.get_object( Bucket="geo-gemmer-images", Key=img)
+                image_data = response['Body'].read()
+                return image_data
+
+            

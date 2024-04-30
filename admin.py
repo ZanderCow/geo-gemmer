@@ -1,6 +1,10 @@
 from psycopg.rows import dict_row
 from repositories.db import get_pool
+from repositories.s3 import get_s3_client
+import boto3
+import os
 import pprint
+from dotenv import load_dotenv
 
 '''
 These are pretty much Admin Commands that manage the database it's just easier for me to do this.
@@ -132,6 +136,27 @@ def print_all_gems_pinned():
             print()
             return
 
+def delete_all_folder_contents():
+    bucket_name = 'geo-gemmer-images'
+    with get_s3_client() as s3:
+        # Use a paginator to list all objects in the bucket by folders
+        paginator = s3.get_paginator('list_objects_v2')
+        result = paginator.paginate(Bucket=bucket_name, Delimiter='/')
+
+        for prefix in result.search('CommonPrefixes'):
+            if prefix:
+                folder_name = prefix['Prefix']
+                print(f"Deleting contents of folder: {folder_name}")
+                # List all objects in the specified folder
+                response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+                while response.get('Contents'):
+                    # Delete the objects found
+                    delete_keys = {'Objects': [{'Key': obj['Key']} for obj in response['Contents']]}
+                    s3.delete_objects(Bucket=bucket_name, Delete=delete_keys)
+                    if response['IsTruncated']:  # Check if there are more files to list
+                        response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name, ContinuationToken=response['NextContinuationToken'])
+                    else:
+                        break
 
 def print_all_images_for_all_gems():
     '''
@@ -154,16 +179,54 @@ def print_all_images_for_all_gems():
 
 def wipe_database():
     '''
-    keeps the tables, but wipes all the data
+    Keeps the tables, but wipes all the data
     '''
-    pass
+    print("Fetching connection pool...")
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            print("Executing TRUNCATE on all tables...")
+            cursor.execute('''
+                DO
+                $$
+                DECLARE
+                    r RECORD;
+                BEGIN
+                    -- Loop through all tables in the 'geogemmer' schema
+                    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'geogemmer')
+                    LOOP
+                        -- Execute a TRUNCATE statement for each table
+                        EXECUTE 'TRUNCATE TABLE geogemmer.' || quote_ident(r.tablename) || ' RESTART IDENTITY CASCADE';
+                        RAISE NOTICE 'Truncated table: %', r.tablename;
+                    END LOOP;
+                END;
+                $$;
+            ''')
+            print("Truncate operations completed.")
+            
+            return
 
-add_new_stuff()
-print_all_users()
-print_all_hidden_gems()
-print_all_reviews()
-print_all_accesibility_stuff()
-print_all_gems_visited()
-print_all_gems_pinned()
-print_all_images_for_all_gems()
+
+def print_everything():
+    '''
+    Prints everything in the database
+    '''
+    print_all_users()
+    print_all_hidden_gems()
+    print_all_reviews()
+    print_all_accesibility_stuff()
+    print_all_gems_visited()
+    print_all_gems_pinned()
+    print_all_images_for_all_gems()
+    return
+# Call the function to test
+
+'''
+dotenv_path = os.path.join(os.getcwd(), '.env')
+load_dotenv(dotenv_path)
+
+print(os.getenv('AWS_ACCESS_KEY_ID'))
+'''
+
+
 

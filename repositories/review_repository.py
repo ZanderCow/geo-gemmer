@@ -1,5 +1,5 @@
 from psycopg.rows import dict_row
-from repositories.db import get_pool, inflate_string
+from repositories.db import get_pool
 from datetime import datetime
 from typing import Any
 
@@ -48,7 +48,7 @@ def get_all_reviews_for_a_hidden_gem(gem_id:str) -> list[dict[str, Any]]:
                 ON u.user_id = r.user_id
                 WHERE gem_id = '{gem_id}'
                 ORDER BY date DESC;''')
-            return _convert_reviews_to_proper_form(cursor.fetchall())
+            return (cursor.fetchall())
 
 def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     '''
@@ -71,12 +71,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
             'This hidden gem was amazing! I would definitely recommend it to others.'
             )
     '''
-    #convert rating to smaller form for postgres
-    rating = _shrink_rating(rating)
-
-    #inflate review, in case of apostrophe catastrophe
-    review = inflate_string(review, 511)
-
+ 
     #DAY
     day = _date_to_int()
 
@@ -98,80 +93,97 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
                     review r
                 WHERE gem_id = '{gem_id}'
                 ORDER BY date DESC;''')
+           
             
-            #calculate new average
-            reviews = _convert_reviews_to_proper_form(cursor.fetchall())
-            newAvg = 0.0
-            for review in reviews:
-                newAvg+=review['rating']
-            newAvg /= len(reviews)
+            cursor.execute('''
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM review
+            WHERE gem_id = %s;
+                           
+        ''', (gem_id,))
+            avg_rating = cursor.fetchone()['avg']
+            cursor.execute('''
+            UPDATE hidden_gem
+            SET avg_rat = %s
+            WHERE gem_id = %s;
+        ''', (avg_rating, gem_id))
+            
+            return True
 
-            #give the updated average to the hidden gem
-            cursor.execute(f'''
-                UPDATE hidden_gem
-                SET
-                    avg_rat={newAvg};''')
 
-
-
-def get_review_distribution_of_a_hidden_gems_visited_by_a_user(user_id:str) -> list:
+def get_gem_review_distribution(gem_id):
     '''
-    Get the distribution of hidden gem ratings visited by a user.
-    
+    Retrieves the review distribution for a given gem.
+
     Parameters:
-        user_id (str): The ID of the user.
-    
+        gem_id (int): The ID of the gem.
+
     Returns:
-        list(int): A list with the distribution of hidden gems visited by a user. Index 0 is 1 star, index 4 is 5 stars
-    
-    Example:
-        >>> get_review_distribution_of_a_hidden_gem_visited_by_a_user('67e55044-10b1-426f-9247-bb680e5fe0c8')
-        { #rating    1, 2, 3, 4, 5
-                    23, 5, 0, 1, 2
+        dict: A dictionary containing the review distribution, with keys 'total', 'one', 'two', 'three', 'four', and 'five'.
     '''
-    distro = [0,0,0,0,0]
+    review_distribution = {'total': 0, 'one': 0, 'two': 0, 'three': 0, 'four': 0, 'five': 0}
+
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
-            cursor.execute(f'''
-                SELECT
-                    user_id,
-                    gem_id,
-                    rating,
-                    review,
-                    date
-                FROM
-                    review r
-                WHERE user_id = '{user_id}';''')
-            reviews = _convert_reviews_to_proper_form(cursor.fetchall())
-            for review in reviews:
-                distro[review['rating']-1]+=1
-            return distro
-
-
-
-def get_average_rating_for_a_hidden_gem(gem_id:str) -> float:
-    '''
-    Get the average rating for a hidden gem.
+            cursor.execute('''
+                SELECT 
+                    rating, 
+                    COUNT(*) AS count
+                FROM review
+                WHERE gem_id = %s
+                GROUP BY rating;
+            ''', (gem_id,))
+            results = cursor.fetchall()
     
-    Parameters:
-        gem_id (str): The ID of the hidden gem.
     
-    Returns:
-        float: The average rating of the hidden gem.
+    review_distribution = {
+        'total': 0, 
+        'one': 0, 
+        'two': 0, 
+        'three': 0, 
+        'four': 0, 
+        'five': 0
+        }
+    
+    for rating in results:
+        if int(rating['rating']) == 1:
+            review_distribution['one'] = int(rating['count'])
+            review_distribution['total'] += int(rating['count'])
+        elif int(rating['rating']) == 2:
+            review_distribution['two'] = int(rating['count'])
+            review_distribution['total'] += int(rating['count'])
+        elif int(rating['rating']) == 3:
+            review_distribution['three'] = int(rating['count'])
+            review_distribution['total'] += int(rating['count'])
+        elif int(rating['rating']) == 4:
+            review_distribution['four'] = int(rating['count'])
+            review_distribution['total'] += int(rating['count'])
+        elif int(rating['rating']) == 5:
+            review_distribution['five'] = int(rating['count'])
+            review_distribution['total'] += int(rating['count'])
+    return review_distribution
 
-    Example:
-        >>> get_average_rating_for_a_hidden_gem(67e55044-10b1-426f-9247-bb680e5fe0c8)
-        4.5
+def refresh_avg_rating_for_gem(gem_id):
     '''
-    #this is probably gonna lag like crazy on the server since its not particularly fast and this is the .
-    total:float = 0
-    list = get_all_reviews_for_a_hidden_gem(gem_id)
-    for review in list:
-        total+=review['rating']
-    total /= len(list)
-    return total
-
+    refreshes the average rating for a gem. 
+    updates when user creates a new review or deletes one
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM review
+            WHERE gem_id = %s;
+        ''', (gem_id,))
+            avg_rating = cursor.fetchone()['avg']
+            cursor.execute('''
+            UPDATE hidden_gem
+            SET avg_rat = %s
+            WHERE gem_id = %s;
+        ''', (avg_rating, gem_id))
+        return True
 
 
 def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
@@ -221,15 +233,9 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
                 ORDER BY
                     r.date DESC;
             ''', (user_id,))
-            return _convert_reviews_to_proper_form(cursor.fetchall())
+            return (cursor.fetchall())
 
-def _shrink_rating(num:int) -> chr:
-    
-    num = max(0, min(5, num))
-    return chr(num+30)
 
-def _expand_rating(rating:chr) -> int:
-    return ord(rating)-30
 
 def _date_to_int() -> int:
     day = str(datetime.today().date())
@@ -241,30 +247,7 @@ def _date_int_to_string(date:int) -> str:
     day = day[4:6]+'/'+day[6:]+'/'+day[:4]
     return day
 
-def _convert_reviews_to_proper_form(the_reviews:list[dict[str,Any]]):
-    if (the_reviews != None):
-        for review in the_reviews:
-            if ('rating' in review):
-                review['rating'] = _expand_rating(review['rating'])
-            if ('user_id' in review):
-                review['user_id'] = str(review['user_id'])
-            if ('gem_id' in review):
-                review['gem_id'] = str(review['gem_id'])
-            if ('date' in review):
-                review['date'] = _date_int_to_string(review['date'])
-    return the_reviews
 
-def _convert_to_proper_form(review:dict[str,Any]):
-    if (review != None):
-        if ('rating' in review):
-            review['rating'] = _expand_rating(review['rating'])
-        if ('user_id' in review):
-            review['user_id'] = str(review['user_id'])
-        if ('gem_id' in review):
-            review['gem_id'] = str(review['gem_id'])
-        if ('date' in review):
-            review['date'] = _date_int_to_string(review['date'])
-    return review
 
 
 def get_review_by_review_id(review_id):
@@ -295,7 +278,7 @@ def get_review_by_review_id(review_id):
                 WHERE
                     r.review_id = %s
                 """, (review_id,))
-            return _convert_reviews_to_proper_form(cursor.fetchall())
+            return (cursor.fetchall())
         
 
 def change_rating_for_a_review(review_id,rating):
@@ -309,7 +292,6 @@ def change_rating_for_a_review(review_id,rating):
     Returns:
         None
     '''
-    rating = _shrink_rating(rating)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -321,6 +303,25 @@ def change_rating_for_a_review(review_id,rating):
                 WHERE
                     review_id = %s
                 """, (rating,review_id))
+            
+            cursor.execute('''              
+            SELECT gem_id
+            FROM review
+            WHERE review_id = %s;
+            ''', (review_id,))
+            gem_id = cursor.fetchone()['gem_id']
+            cursor.execute('''
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM review
+            WHERE gem_id = %s;
+                           
+        ''', (gem_id,))
+            avg_rating = cursor.fetchone()['avg']
+            cursor.execute('''
+            UPDATE hidden_gem
+            SET avg_rat = %s
+            WHERE gem_id = %s;
+        ''', (avg_rating, gem_id))
             return True
         
 def change_review_for_a_review(review_id,review):
@@ -334,7 +335,6 @@ def change_review_for_a_review(review_id,review):
     Returns:
         None
     '''
-    review = inflate_string(review, 511)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -361,10 +361,29 @@ def delete_review(review_id):
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''              
+            SELECT gem_id
+            FROM review
+            WHERE review_id = %s;
+            ''', (review_id,))
+            gem_id = cursor.fetchone()['gem_id']
             cursor.execute("""
                 DELETE FROM
                     review
                 WHERE
                     review_id = %s
                 """, (review_id,))
+            
+            cursor.execute('''
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM review
+            WHERE gem_id = %s;
+                           
+        ''', (gem_id,))
+            avg_rating = cursor.fetchone()['avg']
+            cursor.execute('''
+            UPDATE hidden_gem
+            SET avg_rat = %s
+            WHERE gem_id = %s;
+        ''', (avg_rating, gem_id))
             return True        

@@ -12,7 +12,6 @@ def edit_review(review_id):
     # grab the review from the database
     review_data = review_repository.get_review_by_review_id(review_id)
 
-    print(review_data)
     # see if the user for the review is the same as the user that is logged in
     # if not, redirect to the dashboard
 
@@ -44,6 +43,7 @@ def sumbit_edit_review(review_id):
                 errors['rating'] = 'Rating must be between 1 and 5'
             else:
                 review_repository.change_rating_for_a_review(review_id, inted_rating)
+                
 
 
 
@@ -67,16 +67,6 @@ def sumbit_edit_review(review_id):
 
     
 
-
-    #grab the post data from the form
-
-    #make sure the user is the same as the user that is logged in
-    
-    #update the review in the database
-    
-
-    # if the user is the same, render the edit review page with the review data
-    return render_template('gem-details.html', review_id=review_id)
 
 
 @review.delete('/<review_id>/delete-review')

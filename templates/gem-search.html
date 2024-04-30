@@ -1,11 +1,80 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
-{% from "components/search-gem/filter-bar.html" import filter_bar %}
-{% from "components/search-gem/gem-search-window.html" import gem_search_window %}
-{% from "components/search-gem/google-maps-window.html" import google_maps_window %}
 
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
+<script>
+    let paginationOffset = 0;
+    let out_of_gems = false;
+    let distance_slider_changed = false;
+    let latitude = 0;
+    let longitude = 0;
+</script>
+<script>
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+            
+
+            
+            
+        }, function(error) {  // Error callback correctly positioned
+            document.getElementById('gem-search').innerHTML = `
+            <section class="card py-4 py-xl-5">
+                <div class="container h-100">
+                    <div class="row h-100">
+                        <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top:100px; padding-bottom: 100px;">
+                            <div>
+                                <img src="/static/img/geo-gemmer-logo.png" width="157" height="72" />
+                                <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
+                                <p class="mb-4">We need your geolocation so we can provide hidden gems<br />nearby you!</p>
+                                <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
+                                    <span style="color: rgb(255, 255, 255);">Enable Location</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            `;  
+            var viewButton = document.querySelector(`#enableLocationBtn`);
+            viewButton.addEventListener('click', () => {
+                const geoStatusElement = document.getElementById('geoStatus');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                    // Handle position here
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    window.location.href = '/gem/search';
+                    }, function(error) {
+                    // Handle errors here
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                        geoStatusElement.innerHTML = "User denied the request for Geolocation.";
+                        break;
+                        case error.POSITION_UNAVAILABLE:
+                        geoStatusElement.innerHTML = "Location information is unavailable.";
+                        break;
+                        case error.TIMEOUT:
+                        geoStatusElement.innerHTML = "The request to get user location timed out.";
+                        break;
+                        default:
+                        geoStatusElement.innerHTML = "An unknown error occurred.";
+                        break;
+                    }
+                    });
+                } else {
+                    geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
+                } 
+            });
+        });
+    } else {
+        console.log('Geolocation is not available');
+    }
+
+</script>
+
 
 <head>
     <meta charset="utf-8">
@@ -21,8 +90,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     <link rel="stylesheet" href="/static/css/styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 </head>
 
 <body id="page-top">
@@ -31,91 +100,410 @@
     <div class="container-fluid">
         <div class="text-center" style="padding-top: 15px;">
             <p class="fw-bold text-success mb-2" data-aos="fade">Gem Search</p>
-            <h2 class="fw-bold" data-aos="fade">Searching For {{search_query}}</h2>
+            <h2 id="search-text" class="fw-bold" data-aos="fade">Searching For Default </h2>
+            <script>
+                const searchBarValue = new URLSearchParams(window.location.search).get('searchbar') || '';
+                document.getElementById('search-text').innerHTML = `Searching For ${searchBarValue}`;
+            </script>
         </div>
     </div>
     
     <div id="gem-search" class="container-fluid scstyle-1 sc-overflow" data-aos="fade" id="gem-search">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
-            {{gem_search_window()}}
+            <div class="col-1 col-md-12 col-xl-7 col-xxl-7 flex-grow-1 flex-fill scstyle-1 sc-overflow">
+                <div class="row scstyle-1 sc-overflow" style="overflow: scroll;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center text-center" style="padding-top: 15px;">
+                                    <div id="type-dropdown" class="dropdown" style="padding-left: 15px;padding-right: 15px;">
+                                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px;color: rgb(0,0,0);">
+                                            <span id="selected-type" style="color: rgb(0, 0, 0);">Type</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#" data-value="Hiking Trail">Hiking Trail</a>
+                                            <a class="dropdown-item" href="#" data-value="Restaurant">Restaurant</a>
+                                            <a class="dropdown-item" href="#" data-value="Park">Park</a>
+                                            <a class="dropdown-item" href="#" data-value="Gym">Gym</a>
+                                            <a class="dropdown-item" href="#" data-value="Museum">Museum</a>
+                                            <a class="dropdown-item" href="#" data-value="Beach">Beach</a>
+                                            <a class="dropdown-item" href="#" data-value="Shopping Mall">Shopping Mall</a>
+                                            <a class="dropdown-item" href="#" data-value="Movie Theater">Movie Theater</a>
+                                            <a class="dropdown-item" href="#" data-value="Zoo">Zoo</a>
+                                            <a class="dropdown-item" href="#" data-value="Aquarium">Aquarium</a>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Unique ID for each dropdown, using 'AccessibilityMenu1' as an example -->
+                                    <div id="accessibility-dropdown" class="dropdown" style="padding: 15px;">
+                                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: black;">
+                                            <span id="selected-accesibility" style="color: black;">Accessibility</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="wheelchair_accessible"> Wheelchair Accessible</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="service_animal_friendly"> Service Animal Friendly</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="multilingual_support"> Multilingual Support</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="braille_signage"> Braille Signage</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="hearing_assistance"> Hearing Assistance</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="large_print_materials"> Large Print Materials</label>
+                                            <label class="dropdown-item"><input type="checkbox" name="accessibility" value="accessible_restrooms"> Accessible Restrooms</label>
+                                        </div>
+                                    </div>
+                            
+                                    <div id="distance-dropdown" class="dropdown" style="padding-left: 15px; padding-right: 15px;">
+                                        <button class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 0px; color: rgb(0,0,0);">
+                                            <span id="selected-distance" style="color: rgb(0, 0, 0);">Distance</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <label class="dropdown-item">
+                                                <input id="distanceSlider" class="form-range" type="range" min="0" max="500" value="" oninput="updateDistanceValue(this.value)"> <!-- Added min, max, and value attributes for demonstration -->
+                                            </label>
+                                            <label class="dropdown-item">
+                                                <span class="text-center justify-content-md-center" id="distanceValue">250 mi</span>
+                                            
+                                            </label>
+                                        </div>
+                                    </div>                         
+                                    <button id="sumbit-filters"class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    // Listen for changes or clicks within any dropdown menu
+                                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                                        menu.addEventListener('click', function(e) {
+                                            const target = e.target;
+                                            if (target.tagName === 'A' || target.tagName === 'INPUT') {
+                                                updateDropdownText(target);
+                                            }
+                                        });
+                                    });
+                                
+                                    // Function to update the text of the dropdown button based on the selection
+                                    function updateDropdownText(target) {
+                                        const parentDropdown = target.closest('.dropdown');
+                                        const dropdownId = parentDropdown.id;
+                                        const dropdownButtonSpan = parentDropdown.querySelector('.btn.dropdown-toggle span');
+                                
+                                        if (dropdownId === 'accessibility-dropdown' && target.type === 'checkbox') {
+                                            // Handle checkbox selections for accessibility options
+                                            updateAccessibilityText(parentDropdown, dropdownButtonSpan);
+                                        } else if (target.type === 'range') {
+                                            // Handle slider for distance
+                                            dropdownButtonSpan.textContent = target.value + 'mi';
+                                        } else if (target.tagName === 'A') {
+                                            // Handle selections from dropdown links
+                                            dropdownButtonSpan.textContent = target.textContent.trim();
+                                        }
+                                    }
+                                
+                                    // Function to compile and display selected accessibility options
+                                    function updateAccessibilityText(dropdown, button) {
+                                        let selectedOptions = [];
+                                        dropdown.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                                            selectedOptions.push(checkbox.parentNode.textContent.trim());
+                                        });
+                                        button.textContent = selectedOptions.join(', ');
+                                    }
+                                
+                                    // Function to update the display of the distance as the slider is moved
+                                    const distanceSlider = document.getElementById('distanceSlider');
+                                    if (distanceSlider) {
+                                        distanceSlider.oninput = function() {
+                                            document.getElementById('distanceValue').textContent = this.value + 'mi';
+                                            distance_slider_changed = true;
+                                        };
+                                    }
+                                });
+                            </script>
+                            <script>
+                                document.getElementById('sumbit-filters').addEventListener('click', function() {
+                                    out_of_gems = false;
+                                    paginationOffset = 0;
+                                    document.getElementById('gem-search-container').innerHTML =`
+                                    <div id="loading-bottom-thing"class="card d-xxl-flex justify-content-xxl-center mb-5 h-100 w-100">
+                                        <div class="card-body d-flex flex-column justify-content-center align-items-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center w-100 h-100"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+                                    </div>
+                                    `;
+                                    search();
+                                });
+                                
+                            </script>
+                        </div>
+                        <div class="row">
+                            <div id="gem-search-outer-container"class="col">
 
+                                <section id="gem-search-container" class="overflow-auto" style="height: 600px;">
+                                    <!-- inject data -->
+                                    <div id="loading-bottom-thing"class="card d-xxl-flex justify-content-xxl-center mb-5 h-100 w-100">
+                                        <div class="card-body d-flex flex-column justify-content-center align-items-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center w-100 h-100"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+                                    </div>
+                                <!-- inject data -->
+                
+                                </section>
+                    
+            
+                            </div>
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const section = document.getElementById('gem-search-container');
+                                let timeout; // To hold the timeout ID for debouncing
+                            
+                                section.addEventListener('scroll', function() {
+                                    // Clear the previous timeout if it exists
+                                    clearTimeout(timeout);
+                            
+                                    // Set a new timeout to check the scroll position after 500 milliseconds
+                                    timeout = setTimeout(function() {
+                                        // Check if the user has scrolled to the bottom
+                                        if (section.scrollTop + section.clientHeight >= section.scrollHeight - 400) {
+                                            search();
+                                        }
+                                        
+                                    }, 100); // Delay of 500 milliseconds
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
 
             <div class="col flex-grow-1 flex-fill" style="height: 600px;">
                 <div class="card " style="height: 600px;">
-                    {{google_maps_window()}}
+                    <div id="google-maps-container" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="height: 500px;">
+                        <div id="map" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center d-none" style="height: 500px;">
+                            <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
+            <script>
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        
+                        fetch(`/gem/map?lat=${latitude}&lng=${longitude}&callback=initMap`)
+                        .then(response => response.text())
+                        .then(data => {
+                            const scriptElement = document.createElement('script');
+                            scriptElement.textContent = data;
+                            document.body.appendChild(scriptElement);
+                            
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+            
+                    }), function(error) {
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                alert("User denied the request for Geolocation.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                alert("Location information is unavailable.");
+                                break;
+                            case error.TIMEOUT:
+                                alert("The request to get user location timed out.");
+                                break;
+                            default:
+                                alert("An unknown error occurred.");
+                                break;
+                        }
+                    };
+                } 
+                
+            </script>
         </div>
     </div>
-
-    
-    
     {{ footer() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
+    <script type="module"> 
+        import { searchGem } from '/static/components/gemSearchCard.js';
+        function search(){
+            if (out_of_gems == true){
+                return;
+            }
+            var distance = 0;
+            const searchBarValue = new URLSearchParams(window.location.search).get('searchbar') || '';
+            const accessibilityOptions = Array.from(document.querySelectorAll('input[name="accessibility"]:checked')).map(el => el.value);
+    
+            if (distance_slider_changed == true){
+                distance = parseInt(document.getElementById('distanceSlider').value);
+            }
+            else{
+                distance = 100000000000000;
+    
+    
+            }
+            
+            const pagination_offset = paginationOffset;
+    
+            // Log the selected values
+            
+    
+    
     
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     
+                    const searchBarValue = new URLSearchParams(window.location.search).get('searchbar') || '';
+                    const search = searchBarValue;
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const type = document.getElementById('selected-type').textContent.trim();
+                    const accessibilityOptions = Array.from(document.querySelectorAll('input[name="accessibility"]:checked')).map(el => el.value);
+                 
+                    let search_query = `/gem/search-for-gems/?searchbar=${encodeURIComponent(searchBarValue)}&latitude=${latitude}&longitude=${longitude}&new_page=false&offset=${pagination_offset}`;
     
+                    if (type !== 'Type') search_query += `&type=${encodeURIComponent(type)}`;
+                    accessibilityOptions.forEach(opt => {
+                        search_query += `&${opt}=true`;
+                    });
+                    if (distance > 0) search_query += `&distance=${distance}`;
                     
-                   
-                }, function(error) {  // Error callback correctly positioned
-                    document.getElementById('gem-search').innerHTML = `
-                    <section class="card py-4 py-xl-5">
-                        <div class="container h-100">
-                            <div class="row h-100">
-                                <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top:100px; padding-bottom: 100px;">
-                                    <div>
-                                        <img src="/static/img/geo-gemmer-logo.png" width="157" height="72" />
-                                        <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
-                                        <p class="mb-4">We need your geolocation so we can provide hidden gems<br />nearby you!</p>
-                                        <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
-                                            <span style="color: rgb(255, 255, 255);">Enable Location</span>
-                                        </button>
+                    
+                    const container = document.getElementById('gem-search-container');
+                    
+                    fetch(search_query, {
+                        method: 'GET',
+                        credentials: 'include'
+                    })
+        
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } 
+                        else {
+                            return response.text().then(text => {
+                                throw new Error(text);
+                            });
+                        }
+                    })
+        
+                    .then(data => { 
+        
+                        if (data.length === 0 && paginationOffset === 0){
+                            document.getElementById("gem-search-container").innerHTML = `
+                            <div id="gem-4" class="card">
+                                <div class="card-body px-4 py-5 px-md-5">
+                                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;"></h5>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 text-center mx-auto">
+                                            <h2 class="fw-bold">No Gems Found</h2>
+                                            <p class="text-muted">Try searching up something else <br />or search with nothing and find <br />gems nearby!</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                    `;  
-                    var viewButton = document.querySelector(`#enableLocationBtn`);
-                    viewButton.addEventListener('click', () => {
-                        const geoStatusElement = document.getElementById('geoStatus');
-                        if (navigator.geolocation) {
-                          navigator.geolocation.getCurrentPosition(function(position) {
-                            // Handle position here
-                            const latitude = position.coords.latitude;
-                            const longitude = position.coords.longitude;
-                            window.location.href = '/gem/search';
-                          }, function(error) {
-                            // Handle errors here
-                            switch(error.code) {
-                              case error.PERMISSION_DENIED:
-                                geoStatusElement.innerHTML = "User denied the request for Geolocation.";
-                                break;
-                              case error.POSITION_UNAVAILABLE:
-                                geoStatusElement.innerHTML = "Location information is unavailable.";
-                                break;
-                              case error.TIMEOUT:
-                                geoStatusElement.innerHTML = "The request to get user location timed out.";
-                                break;
-                              default:
-                                geoStatusElement.innerHTML = "An unknown error occurred.";
-                                break;
-                            }
-                          });
-                        } else {
-                          geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
-                        } 
-                    });
-                });
-            } else {
-                console.log('Geolocation is not available');
-            }
+                            `;
         
+                        }
+                        if (data.length === 0 && paginationOffset !== 0){
+                            
+                            const outOfGemsCard = document.createElement('div');
+                            outOfGemsCard.className = 'card ';
+                            outOfGemsCard.innerHTML = `
+                            <div class="card-body px-4 py-5 px-md-5" style="background: #ffffff;">
+                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                    <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 0px;padding-top: 40px;">Gem Search</h5>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                        <h2 class="fw-bold">No More Gems</h2>
+                                        <p class="text-muted">You searched the available gems. Refresh the page to restart.</p>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            `;
+                            document.querySelector('#loading-bottom-thing').remove();
+                            document.getElementById('gem-search-container').appendChild(outOfGemsCard);
+                            out_of_gems = true;
+                        }
+                        
+                        else{
+                            const container = document.getElementById('gem-search-container');
+    
+                            paginationOffset = paginationOffset + 20;
+                            document.querySelector('#loading-bottom-thing').remove();
+                            
+        
+                            data.forEach(item => {
+                                const card = searchGem(item);
+                                
+                                container.appendChild(card);
+                                container.append
+                            });
+                            
+                            const scroll_thing = createLoadingBottomThing()
+                            container.appendChild(scroll_thing);
+                            container.append
+        
+                        }
+                    
+                    })  
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });    
+                        
+                        
+        
+                }), function(error) {
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert("User denied the request for Geolocation.");
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            alert("Location information is unavailable.");
+                            break;
+                        case error.TIMEOUT:
+                            alert("The request to get user location timed out.");
+                            break;
+                        default:
+                            alert("An unknown error occurred.");
+                            break;
+                    }
+                };
+            } 
+    
+    
+    
+            return;
+
+        }
+        window.search = search;
+    </script> 
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            search();
+        });
     </script>
+    
+    <script>
+        function createLoadingBottomThing(){
+            var card = document.createElement('div');
+            card.className = 'card d-xxl-flex justify-content-xxl-center mb-5 h-100 w-100';
+            card.id = 'loading-bottom-thing';
+            card.innerHTML = `
+            <div id="loading-bottom-thing"class="card d-xxl-flex justify-content-xxl-center mb-5 h-100 w-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center w-100 h-100"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
+            </div>
+            `;
+            
+            return card;
+            
+        }
+    </script>
+    
+
+
+   
 
 
     
