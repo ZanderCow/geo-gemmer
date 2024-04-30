@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/static/css/styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    
 </head>
 
 <body id="page-top">
@@ -99,8 +100,6 @@
                             <a class="dropdown-item" href="#" data-value="5">5 Stars</a>
                         </div>
                     </div>
-           
-                    
                     <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Apply Filters</span></button>
                 </div>
             </div>
@@ -109,17 +108,16 @@
     <div class="container-fluid scstyle-1 sc-overflow" data-aos="fade" id="gem-search">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             {{ gem_searcher(gem_data) }}
-
             <div class="col flex-grow-1 flex-fill" style="height: 600px;">
                 <div class="card shadow-sm" style="height: 600px;">
-                    <div id="google-maps-container" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="height: 500px;">
+                    <div id="google-maps-container" class="card-body skeleton-loader" style="height: 500px;display: flex; align-items: center; justify-content: center;">
+                        <img src="https://cdn.freebiesupply.com/logos/large/2x/google-icon-logo-png-transparent.png" id="loader" style="scale:0.8;max-height:40%;position:absolute; filter: saturate(0.6) brightness(0.6);z-index:10">
                         <div id="map" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center d-none" style="height: 500px;">
-                            <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
+            <button onclick="mapLoaded();" class="btn">Simulate that its loaded</button>
         </div>
     </div>
 
@@ -169,6 +167,55 @@
     
     <script src="/static/js/gem-search-filter-selection.js"></script>
     <script src="/static/js/script.min.js"></script>
+    <script>
+        let i = 0;
+        let eee = 0; let ecceler = 1;
+        var end=false;
+        let img = document.getElementById("loader");
+        let currAngle = 0;
+        function rotate() {
+            console.log(end)
+            if (end) {
+                currAngle += eee;
+                eee+=1*ecceler;
+                ecceler+=0.001;
+                img.style.transform = `rotate(${currAngle}deg)`;
+                img.style.scale=0.8+currAngle*0.0002;
+                img.style.opacity=1-currAngle*0.0005;
+                if (currAngle < 2000) {
+                    requestAnimationFrame(rotate);
+                } else {
+                    img.parentNode.removeChild(img);
+                }
+            } else {
+                // Get the image element
+                currAngle = 25 * Math.sin(i / 180);
+                img.style.transform = `rotate(${currAngle}deg)`;
+                i = (i+15)%1120;
+                // Call the rotate function again on the next frame
+                requestAnimationFrame(rotate);
+            }
+        }
+        // Start the rotation
+        rotate();
+        //delett skeleton loader
+        function mapLoaded() {
+            var map = document.getElementById('google-maps-container')
+            if (map != null)
+                console.log("has map");
+            else
+                console.("no has map");
+            
+            // Add a listener for the 'tilesloaded' event to remove the skeleton loader
+            google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+                map.classList.remove('skeleton-loader');
+                end = true;
+            });
+        }
+        
+        // Load the map
+        //mapLoaded();
+    </script>
 </body>
 
 </html>

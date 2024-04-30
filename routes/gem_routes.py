@@ -1,6 +1,7 @@
 import repositories.gem_repository as gem_repo
 import repositories.review_repository as review_repo
 import repositories.gems_pinned_repository as gem_pinned_repo
+import repositories.gems_visited_repository as visited_repo
 
 import sys
 from flask import Blueprint, render_template, redirect, request, jsonify
@@ -49,7 +50,52 @@ def filtered_gem_search_page():
     location = (-80.734436, 35.306274)
     searched_gems = gem_repo.filtered_search_all_gems_within_a_certain_distance_from_the_user(search_query, location[0], location[1], 50, None, acc, 0, 0)
     return render_template('gem-search.html',gem_data=searched_gems, user_query=search_query)
+'''
+@gem.get('/search/')
+@jwt_required()
+def gem_search_page():
 
+    user_id = get_jwt_identity()
+
+    # Retrieve string and numerical query parameters with defaults
+    search_query = request.args.get('searchbar', default="", type=str)
+    gem_type = request.args.get('type', default="", type=str)
+    distance = request.args.get('distance', default=0, type=int)
+    minimum_rating = request.args.get('minimum_rating', default=0, type=int)  # Corrected the typo here
+    latitude = request.args.get('latitude', default=0.0, type=float)
+    longitude = request.args.get('longitude', default=0.0, type=float)
+    offset = request.args.get('offset', default=0, type=int)
+
+    # Retrieve boolean query parameters with inline conversion
+    wheelchair_accessible = request.args.get('wheelchair_accessible', 'false').lower() in ['true', '1', 't', 'yes']
+    service_animal_friendly = request.args.get('service_animal_friendly', 'false').lower() in ['true', '1', 't', 'yes']
+    multilingual_support = request.args.get('multilingual_support', 'false').lower() in ['true', '1', 't', 'yes']
+    braille_signage = request.args.get('braille_signage', 'false').lower() in ['true', '1', 't', 'yes']
+    hearing_assistance = request.args.get('hearing_assistance', 'false').lower() in ['true', '1', 't', 'yes']
+    large_print_materials = request.args.get('large_print_materials', 'false').lower() in ['true', '1', 't', 'yes']
+    accessible_restrooms = request.args.get('accessible_restrooms', 'false').lower() in ['true', '1', 't', 'yes']
+
+    new_page = request.args.get('new_page', 'true').lower() in ['true', '1', 't'] # will be false 
+
+    print(new_page)
+    # if the user came from another page (they searched for a gem on the dashboard)
+    if new_page == True:
+        #return the search page ()
+        return render_template("gem-search.html",search_query=search_query)
+        
+    # else the request is made from async js
+    else:
+        # if the request was made because the user reached the bottom of the page
+        if offset != 0:
+    
+            # return new gems to the user using all the filters
+            return jsonify({'status': 'success'}), 200 # placeholder, change this to be the gems search results from the database
+            
+        # else the user just loaded the page, or filtered the gems
+        else:
+            # do a clean search with all the filters
+            return jsonify({'status': 'success'}), 200 # placeholder, change this to be the gems search results from the database
+'''
 
 @gem.post('/send-location')
 @jwt_required()
@@ -229,3 +275,10 @@ def proxy_maps_request():
     }}
     """
     return custom_js, 200, {'Content-Type': 'application/javascript'}
+
+@gem.post('/<gem_id>/visit')
+@jwt_required()
+def visiting(gem_id):
+    user_id = get_jwt_identity()
+    current_date = datetime.date.today()
+    visited_repo.add_gem_to_visited_list(user_id, gem_id, current_date)

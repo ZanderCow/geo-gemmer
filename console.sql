@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     location GEOGRAPHY(POINT,4326),
     times_visited INT,
     user_created BOOLEAN,
-    avg_rat FLOAT DEFAULT 2.5
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
+    avg_rat FLOAT DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS review (

@@ -108,9 +108,35 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    function Visit() {
+                        fetch('/gem/{{gem_id}}/visit', {
+                            method: 'POST',
+                            body: '',
+                            
+                            headers: { 'Content-Type': 'application/json' }, // Setting the Content-Type as application/json
+            
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                                }, // Setting the Content-Type as application/json
+                            credentials: 'include'  // Necessary to include cookies with requests
+                        })
+                        .then((response) => {
+                            if (response.ok) {
+                                window.location.href='https://maps.google.com/?q={{gem_basic_info.latitude}},{{gem_basic_info.longitude}}';
+                            } else {
+                                return response.text().then(text => {
+                                    throw new Error(text);
+                                });
+                            }
+                        })
+            
+                    }
+                </script>
                 <div class="card shadow-sm" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
-                        <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;" ><span style="color: rgb(255, 255, 255);" onclick="window.location.href='https://maps.google.com/?q={{gem_basic_info.latitude}},{{gem_basic_info.longitude}}'">Get Directions</span></button></div>
+                        <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;"><button class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;" ><span style="color: rgb(255, 255, 255);" onclick="Visit()">Get Directions</span></button></div>
                     </div>
                 </div>
             </div>
