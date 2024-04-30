@@ -206,10 +206,6 @@ def create_gem():
         acc.accessible_restrooms = True
     if hearing_assistance == True:
         acc.hearing_assistance = True
-   
-
-
-
 
     print(wheelchair_accessible)
 
@@ -233,10 +229,11 @@ def create_gem():
         errors['longitude'] = 'Longitude is required'
     
     #if the user doesnt provide any images, we will force them too
-    if image_1 and image_2 and image_3:
-        pass
-    else:
-        errors['images'] = 'Please provide 3 images'
+    #wtf why
+    #if image_1 and image_2 and image_3:
+    #    pass
+    #else:
+    #    errors['images'] = 'Please provide 3 images'
 
     
     if errors == {}:
@@ -268,3 +265,23 @@ def logout():
 
 
 
+@user.get('/<user_id>')
+@jwt_required()
+def profile(user_id):
+    user_id = get_jwt_identity()  # Retrieves the identity from the JWT
+    # get user data from database
+    user_info = user_repository.get_user_by_id(user_id)
+    
+    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
+    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
+    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
+    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
+    
+    return render_template('user-profile.html', 
+        user_info=user_info,
+        username="username",
+        gem_visted_frequency=gem_visted_frequency,
+        gem_distribution=gem_distribution,
+        gems_pinned=gems_pinned,
+        reviews_made=reviews_made
+    )
