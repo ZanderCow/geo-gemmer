@@ -48,7 +48,7 @@ def get_all_reviews_for_a_hidden_gem(gem_id:str) -> list[dict[str, Any]]:
                 ON u.user_id = r.user_id
                 WHERE gem_id = '{gem_id}'
                 ORDER BY date DESC;''')
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     '''
@@ -71,6 +71,8 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
             'This hidden gem was amazing! I would definitely recommend it to others.'
             )
     '''
+    review = inflate_string(review, 511)
+    shrunk_rating = _shrink_rating(rating)
  
     #DAY
     day = _date_to_int()
@@ -82,7 +84,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
                 INSERT INTO review (user_id, gem_id, rating, review, date) VALUES (
                     '{user_id}',
                     '{gem_id}',
-                    '{rating}',
+                    '{shrunk_rating}',
                     '{review}',
                     '{day}'
                 );''')
@@ -231,12 +233,12 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
                 FROM
                     review r
                 INNER JOIN
-                    hidden_gem hg ON r.gem_id = hg.gem_id
+                    hidden_gem g ON r.gem_id = g.gem_id
                 WHERE r.user_id = %s
                 ORDER BY
                     r.date DESC;
             ''', (user_id,))
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
     '''
@@ -293,10 +295,10 @@ def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
 def _shrink_rating(num:int) -> chr:
     
     num = max(0, min(5, num))
-    return chr(num+30)
+    return chr(num+49)
 
 def _expand_rating(rating:chr) -> int:
-    return ord(rating)-30
+    return ord(rating)-49
 
 def _date_to_int() -> int:
     day = str(datetime.today().date())
@@ -362,7 +364,7 @@ def get_review_by_review_id(review_id):
                 WHERE
                     r.review_id = %s
                 """, (review_id,))
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
         
 
 def change_rating_for_a_review(review_id,rating):

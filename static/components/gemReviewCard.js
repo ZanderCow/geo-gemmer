@@ -3,53 +3,34 @@ const gemReview = (review) => {
     card.class = "card mb-3";
     card.innerHTML = `
     <div class="card mb-3">
-        <div class="card-body">
+        <div class="card-body listedreview">
             <div class="row">
-                <div class="col">
-                
-                </div>
-                <div id="review-stars" class="col d-flex d-sm-flex d-xxl-flex justify-content-center align-items-center align-items-sm-center justify-content-xl-end justify-content-xxl-end align-items-xxl-center">
-                    
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">${review.user_name}</h5>
-                </div>
-                <div class="col d-xxl-flex justify-content-xxl-end">
-                    <h5 class="fw-bold" style="padding: initial;padding-top: 10px;padding-right: 10px;">${review.rating}/5</h5>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col d-md-flex align-items-md-end align-items-lg-center mb-5">
-                    <div>
-                        <p class="text-muted mb-4 text-wrap text-break">${review.review}</p>
+                <div class="col" style="height:82px;"><a class="hidden-link" href="/user/${review.user_id}"><img class="border rounded-circle img-profile" src="${(review.pfp != null) ? review.pfp : '/static/img/pfp-placeholder.png'}" width="65" height="61" style="position:absolute">
+                    <div id="review-stars" style="margin-left:70px;position:absolute;margin-top:0px;">
                     </div>
-                </div>
+                    <div style="margin-left:75px;margin-top:24px;">
+                        <h5 class="fw-bold" style="margin-bottom:0px;">${review.user_name}</h5>
+                        <p>${review.date}</p>
+                    </div>
+                </a></div>
             </div>
-            <div class="mb-3"></div>
+            <p class="text-muted mb-4 text-wrap text-break">${review.review}</p>
         </div>
     </div>
 
     `;
-    const fullStar = '<svg class="bi bi-star-fill fs-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path></svg>';
-    const halfStar = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half fs-2"><path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"></path></svg>';
-    const emptyStar = '<svg class="bi bi-star fs-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path></svg>';
+    const fullStar = '<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path></svg>';
+    const emptyStar = '<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path></svg>';
 
     
     const fullStarsCount = Math.floor(review['rating']);
-    const halfStarCount = review["rating"] % 1 !== 0 ? 1 : 0;
-    const emptyStarsCount = 5 - fullStarsCount - halfStarCount;
 
     let html = '';
-    for (let i = 0; i < fullStarsCount; i++) {
-        html += fullStar;
-    }
-    for (let i = 0; i < halfStarCount; i++) {
-        html += halfStar;
-    }
-    for (let i = 0; i < emptyStarsCount; i++) {
-        html += emptyStar;
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStarsCount)
+            html += fullStar;
+        else
+            html += emptyStar;
     }
     
 

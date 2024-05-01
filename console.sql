@@ -1,21 +1,21 @@
-    create DATABASE geogemmer;
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    CREATE EXTENSION IF NOT EXISTS postgis;
-    CREATE EXTENSION IF NOT EXISTS pg_trgm;
+create DATABASE geogemmer;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 
-    CREATE TABLE IF NOT EXISTS geo_user (
-        user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        username VARCHAR(255),
-        password BYTEA,
-        first_name VARCHAR(255),
-        last_name VARCHAR(255),
-        profile_picture VARCHAR(255),
-        gems_explored INT,
-        reviews_made INT,
-        gems_created INT,
-        gems_saved INT
-    );
+CREATE TABLE IF NOT EXISTS geo_user (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(255),
+    password BYTEA,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    profile_picture VARCHAR(255),
+    gems_explored INT,
+    reviews_made INT,
+    gems_created INT,
+    gems_saved INT
+);
 
 CREATE TABLE IF NOT EXISTS geo_user_bio (
     user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,

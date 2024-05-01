@@ -3,6 +3,7 @@ write test code
 """
 import pytest
 from repositories import gem_repository as repo
+from repositories import gem_accessibility_repository as accessirepo
 from repositories.db import get_pool, inflate_string
 from repositories.gem_repository import accessibility_class
 from repositories import review_repository as reviewpo
@@ -148,7 +149,7 @@ def test_accessibility():
     access.braille_signage = True
     access.accessible_restrooms = True
 
-    repo.change_accessibility(newgemid, access)
+    accessirepo.set_accesibility_for_hidden_gem(newgemid, access)
     newgem = repo.get_hidden_gem_by_id(newgemid)
 
     assert newgem['wheelchair_accessible'] == False

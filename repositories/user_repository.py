@@ -42,7 +42,7 @@ def create_new_user(username, password):
             #make the bio
             cursor.execute('''
                 INSERT INTO geo_user_bio (user_id, text)
-                VALUES (%s, %s);''', user_id, "");
+                VALUES (%s, %s);''', (user_id, ""))
 
             return user_id
 
