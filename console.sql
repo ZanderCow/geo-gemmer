@@ -33,48 +33,44 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
     avg_rat FLOAT DEFAULT 1
 );
 
-    CREATE TABLE IF NOT EXISTS review (
-        review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE NOT NULL,
-        gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE NOT NULL,
-        rating CHAR NOT NULL,
-        review VARCHAR(511),
-        date INT NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS review (
+    review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE NOT NULL,
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE NOT NULL,
+    rating CHAR NOT NULL,
+    review VARCHAR(511),
+    date INT NOT NULL
+);
 
-    CREATE TABLE IF NOT EXISTS accessibility (
-        gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
-        wheelchair_accessible BOOLEAN,
-        service_animal_friendly BOOLEAN,
-        multilingual_support BOOLEAN,
-        braille_signage BOOLEAN,
-        hearing_assistance BOOLEAN,
-        large_print_materials BOOLEAN,
-        accessible_restrooms BOOLEAN
-    );
+CREATE TABLE IF NOT EXISTS accessibility (
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
+    wheelchair_accessible BOOLEAN,
+    service_animal_friendly BOOLEAN,
+    multilingual_support BOOLEAN,
+    braille_signage BOOLEAN,
+    hearing_assistance BOOLEAN,
+    large_print_materials BOOLEAN,
+    accessible_restrooms BOOLEAN
+);
 
-    CREATE TABLE IF NOT EXISTS gems_visited (
-        gem_visited_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
-        gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
-        date_visited date NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS gems_visited (
+    gem_visited_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
+    date_visited date NOT NULL
+);
 
-    CREATE TABLE IF NOT EXISTS gems_pinned (
-        gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
-        gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
-        date_pinned date NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS gems_pinned (
+    gem_pinned_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
+    date_pinned date NOT NULL
+);
 
-    CREATE TABLE IF NOT EXISTS image_group (
-        image_group_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
-        image_1 VARCHAR(255),
-        image_2 VARCHAR(255),
-        image_3 VARCHAR(255)
-    );
-
-
-
-
+CREATE TABLE IF NOT EXISTS image_group (
+    image_group_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    gem_id UUID REFERENCES hidden_gem(gem_id) ON DELETE CASCADE,
+    image_1 VARCHAR(255),
+    image_2 VARCHAR(255),
+    image_3 VARCHAR(255)
+);
