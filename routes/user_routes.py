@@ -317,3 +317,5 @@ def gem_visited():
     date_visited = datetime.datetime.now().strftime('%Y-%m-%d')
     gems_visited_repository.add_gem_to_visited_list(user_id, gem_id, date_visited)
     return jsonify({'message': 'Gem added to visited list'}), 200
+
+

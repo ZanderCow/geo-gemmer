@@ -234,3 +234,31 @@ def edit_gem(gem_id):
     return render_template("edit-hidden-gem.html")
 
 
+@gem.post("/<gem_id>/edit-gem")
+@jwt_required()
+def update_edit_gem(gem_id):
+    pass
+
+
+@gem.post("/<gem_id>/delete-gem")
+@jwt_required()
+def delete_gem(gem_id):
+    user_id = get_jwt_identity()
+    gem_creator = gem_repo.get_gem_creator(gem_id)
+    if gem_creator == user_id:
+        gem_repo.delete_hidden_gem(gem_id)
+        return jsonify({'message': 'Gem deleted successfully'}), 200
+    return jsonify({'error': 'You are not the creator of this gem'}), 403
+
+
+
+@gem.route("/<gem_id>/get-distance-from-user")
+@jwt_required()
+def get_distance_from_user(gem_id):
+    latitude = request.args.get('lat', default='-34.397')
+    longitude = request.args.get('lng', default='150.644')
+
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    distance = gem_repo.get_distance_from_user(gem_id, latitude, longitude)
+    return jsonify(distance), 200

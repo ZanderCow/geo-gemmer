@@ -330,6 +330,7 @@ def change_first_name(user_id, first_name):
             return True
 
 def change_last_name(user_id, last_name):
+    
     """
     Change the last name of a user.
 
@@ -352,3 +353,7 @@ def change_last_name(user_id, last_name):
                     user_id = %s;
             ''', (last_name, user_id))
             return True
+
+
+def increment_gems_visted(user_id):
+    pass
