@@ -32,11 +32,10 @@ def dashboard():
 @jwt_required()
 def render_settings_page():
     user_id = get_jwt_identity()  # Retrieves the identity from the JWT
-
-
-
+    user = user_repository.get_user_by_id(user_id)
+    bio = user_repository.get_user_bio(user_id)
     
-    return render_template('user-settings.html')
+    return render_template('user-settings.html', user=user, bio=bio)
 
 
 @user.get('/create-gem')
@@ -74,30 +73,23 @@ def create_gem():
     image_3 = request.files.get('image_3')
     
 
-    Wheelchair_accessible = False
-    Service_animal_friendly = False
-    Multilingual_support = False
-    Braille_signage = False
-    Hearing_assistance = False
-    Large_print_materials = False
-    Accessible_restrooms = False
+    acc = gem_accessibility_repository.accessibility_class()
 
-    if wheelchair_accessible == "true":
-        Wheelchair_accessible = True
-    if service_animal_friendly == "true":
-        Service_animal_friendly = True
-    if multilingual_support == "true":
-        Multilingual_support = True
-    if braille_signage == "true":
-        Braille_signage = True
-    if large_print_materials == "true":
-        Large_print_materials = True
-    if accessible_restrooms == "true":
-        Accessible_restrooms = True
-    if hearing_assistance == "true":
-        Hearing_assistance = True
-   
-
+    if wheelchair_accessible == 'true':
+        acc.wheelchair_accessible = True
+    if service_animal_friendly == 'true':
+        acc.service_animal_friendly = True
+    if multilingual_support == 'true':
+        acc.multilingual_support = True
+    if braille_signage == 'true':
+        acc.braille_signage = True
+    if large_print_materials == 'true':
+        acc.large_print_materials = True
+    if accessible_restrooms == 'true':
+        acc.accessible_restrooms = True
+    if hearing_assistance == 'true':
+        acc.hearing_assistance = True
+    
     image_1 = request.files.get('image_1')
     image_2 = request.files.get('image_2')
     image_3 = request.files.get('image_3')
@@ -117,18 +109,23 @@ def create_gem():
         errors['longitude'] = 'Longitude is required'
     
     #if the user doesnt provide any images, we will force them too
-    if image_1 and image_2 and image_3:
-        pass
-    else:
-        errors['images'] = 'Please provide 3 images'
+    #wtf why
+    #if image_1 and image_2 and image_3:
+    #    pass
+    #else:
+    #    errors['images'] = 'Please provide 3 images'
 
-    
+    print(acc.update_string())
+    print('newy\nnewy\nnewy')
     if errors == {}:
         
         gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, user_id)
-        gem_accessibility_repository.create_accesibility_for_hidden_gem(gem_url, Wheelchair_accessible, Service_animal_friendly, Multilingual_support, Braille_signage, Hearing_assistance, Large_print_materials, Accessible_restrooms)
-        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
-        
+        gem_accessibility_repository.set_accesibility_for_hidden_gem(gem_url, acc)
+
+        '''
+        #uncomment the line below to make s3 work
+        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
+        '''
        
         
         return jsonify(
@@ -147,6 +144,9 @@ def logout():
     response = jsonify({"msg": "Logout successful"})
     unset_jwt_cookies(response)
     return response 
+
+
+
 
 
 
@@ -261,6 +261,7 @@ def update_user_settings():
     user_name = request.form.get('username')
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
+    bio = request.form.get('bio')
 
     errors = {}
     
@@ -295,7 +296,8 @@ def update_user_settings():
             images_repository.create_user_pfp(user_id, file)
             pass
 
-    
+    if (bio != None):
+        user_repository.change_user_bio(user_id, bio)
    
     if errors == {}:
         return jsonify(
@@ -319,3 +321,32 @@ def gem_visited():
     return jsonify({'message': 'Gem added to visited list'}), 200
 
 
+@user.get('/<user_id>')
+@jwt_required()
+def profile(user_id):
+    ur_user_id = get_jwt_identity()  # Retrieves the identity from the JWT
+    if ur_user_id is None:
+        return redirect('/')
+
+    # get user data from database
+    if (gem_repo.is_not_uuid(user_id)):
+        return redirect('/user')
+    user_info = user_repository.get_user_by_id(user_id)
+    if (user_info is None or len(user_info) == 0):
+        return redirect('/user')
+
+    gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
+    gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
+    gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
+    reviews_made = review_repository.get_recent_reviews_user_has_made(user_id)
+    bio = user_repository.get_user_bio(user_id)
+    
+    return render_template('user-profile.html', 
+        user_info=user_info,
+        username="username",
+        bio=bio,
+        gem_visted_frequency=gem_visted_frequency,
+        gem_distribution=gem_distribution,
+        gems_pinned=gems_pinned,
+        reviews_made=reviews_made
+    )

@@ -82,7 +82,7 @@ def set_accesibility_for_hidden_gem(gem_id, accessibility_info):
 
     Args:
         gem_id (Any): The ID of the hidden gem.
-        accessibility_info (dict[str, Any]): A dictionary containing the accessibility information for the hidden gem.
+        accessibility_info (accessibility_class): A dictionary containing the accessibility information for the hidden gem.
 
     Returns:
         None
@@ -98,22 +98,66 @@ def set_accesibility_for_hidden_gem(gem_id, accessibility_info):
             'accessible_restrooms': True
         })
     """
+    strin = accessibility_info.update_string()
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cursor:
-            cursor.execute('''UPDATE accessibility 
-                           SET wheelchair_accessible = %s, 
-                           service_animal_friendly = %s,
-                            multilingual_support = %s, 
-                            braille_signage = %s, 
-                           hearing_assistance = %s, 
-                           large_print_materials = %s, 
-                           accessible_restrooms = %s 
-                            
-                           WHERE gem_id = %s;'''
-            , (accessibility_info['wheelchair_accessible'], accessibility_info['service_animal_friendly'], accessibility_info['multilingual_support'], accessibility_info['braille_signage'], accessibility_info['hearing_assistance'], accessibility_info['large_print_materials'], accessibility_info['accessible_restrooms'], gem_id))
-
-    # Add your code here
-
+            cursor.execute(f'''UPDATE accessibility 
+                           SET {strin}
+                           WHERE gem_id = '{gem_id}';''')
 
     
+class accessibility_class:
+    def __init__(self, wheelchair:bool=False, service_animal:bool=False, multilingual:bool=False, braille:bool=False, hearing_assistance:bool=False, large_print:bool=False, restrooms:bool=False):
+        self.wheelchair_accessible = wheelchair
+        self.service_animal_friendly = service_animal
+        self.multilingual_support = multilingual
+        self.braille_signage = braille
+        self.hearing_assistance = hearing_assistance
+        self.large_print_materials = large_print
+        self.accessible_restrooms = restrooms
+    
+    def has_a_true(self):
+        return self.wheelchair_accessible or self.service_animal_friendly or self.multilingual_support or self.braille_signage or self.hearing_assistance or self.large_print_materials or self.accessible_restrooms
+
+    def to_string(self):
+        stringy = ''
+        if self.wheelchair_accessible:
+            stringy += " AND wheelchair_accessible = true"
+        if self.service_animal_friendly:
+            stringy += " AND service_animal_friendly = true"
+        if self.multilingual_support:
+            stringy += " AND multilingual_support = true"
+        if self.braille_signage:
+            stringy += " AND braille_signage = true"
+        if self.hearing_assistance:
+            stringy += " AND hearing_assistance = true"
+        if self.large_print_materials:
+            stringy += " AND large_print_materials = true"
+        if self.accessible_restrooms:
+            stringy += " AND accessible_restrooms = true"
+        return stringy
+    
+    def update_string(self):
+        stringy = ' wheelchair_accessible = '+('true,' if self.wheelchair_accessible else 'false,')
+        stringy +=  ' service_animal_friendly = '+('true,' if self.service_animal_friendly else 'false,')
+        stringy +=  ' multilingual_support = '+('true,' if self.multilingual_support else 'false,')
+        stringy +=  ' braille_signage = '+('true,' if self.braille_signage else 'false,')
+        stringy +=  ' hearing_assistance = '+('true,' if self.hearing_assistance else 'false,')
+        stringy +=  ' large_print_materials = '+('true,' if self.large_print_materials else 'false,')
+        stringy +=  ' accessible_restrooms = '+('true,' if self.accessible_restrooms else 'false,')
+        
+        #remove the last comma
+        if (len(stringy) > 0):
+            stringy = stringy[0:-1]+' '
+
+        return stringy
+    
+    def values(self):
+        stringy += (' true,' if self.wheelchair_accessible else 'false,')
+        stringy += (' true,' if self.service_animal_friendly else 'false,')
+        stringy += (' true,' if self.multilingual_support else 'false,')
+        stringy += (' true,' if self.braille_signage else 'false,')
+        stringy += (' true,' if self.hearing_assistance else 'false,')
+        stringy += (' true,' if self.large_print_materials else 'false,')
+        stringy += (' true,' if self.accessible_restrooms else 'false,')

@@ -1,5 +1,5 @@
 from psycopg.rows import dict_row
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from datetime import datetime
 from typing import Any
 
@@ -48,7 +48,7 @@ def get_all_reviews_for_a_hidden_gem(gem_id:str) -> list[dict[str, Any]]:
                 ON u.user_id = r.user_id
                 WHERE gem_id = '{gem_id}'
                 ORDER BY date DESC;''')
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
     '''
@@ -71,6 +71,8 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
             'This hidden gem was amazing! I would definitely recommend it to others.'
             )
     '''
+    review = inflate_string(review, 511)
+    shrunk_rating = _shrink_rating(rating)
  
     #DAY
     day = _date_to_int()
@@ -82,7 +84,7 @@ def add_review_to_hidden_gem(gem_id:str, user_id:str, rating:int, review:str):
                 INSERT INTO review (user_id, gem_id, rating, review, date) VALUES (
                     '{user_id}',
                     '{gem_id}',
-                    '{rating}',
+                    '{shrunk_rating}',
                     '{review}',
                     '{day}'
                 );''')
@@ -221,21 +223,82 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute('''
                 SELECT
-                    hg.name AS gem_name,
-                    r.rating,
-                    r.review,
-                    r.review_id
+                    review_id,
+                    r.user_id,
+                    g.gem_id,
+                    rating,
+                    review,
+                    date,
+                    g.name AS gem_name
                 FROM
                     review r
                 INNER JOIN
-                    hidden_gem hg ON r.gem_id = hg.gem_id
+                    hidden_gem g ON r.gem_id = g.gem_id
                 WHERE r.user_id = %s
                 ORDER BY
                     r.date DESC;
             ''', (user_id,))
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
 
+def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
+    '''
+    Retrieve the most recent 10 reviews a user has made.
+    
+    Parameters:
+        user_id (str): The ID of the user.
+    
+    Returns:
+        list[dict[str, Any]]: A list of dictionaries representing the reviews.
 
+    Example:
+        >>> get_all_reviews_user_has_made(67e55044-10b1-426f-9247-bb680e5fe0c8)
+        [
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 4,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }, 
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 5,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }
+        
+        ]
+    '''
+    #for some reason user ids are stored as uuids and not strings
+    #i made the gems convert to strings for abstraction but oh well :p
+    if (user_id is not str):
+        user_id = str(user_id)
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    review_id,
+                    r.user_id,
+                    g.gem_id,
+                    rating,
+                    review,
+                    date,
+                    g.name AS gem_name
+                FROM
+                    review r
+                JOIN hidden_gem g
+                ON g.gem_id = r.gem_id
+                WHERE r.user_id = '{user_id}'
+                ORDER BY
+                    date DESC
+                LIMIT 10;''')
+            return _convert_reviews_to_proper_form(cursor.fetchall())
+
+def _shrink_rating(num:int) -> chr:
+    
+    num = max(0, min(5, num))
+    return chr(num+49)
+
+def _expand_rating(rating:chr) -> int:
+    return ord(rating)-49
 
 def _date_to_int() -> int:
     day = str(datetime.today().date())
@@ -247,7 +310,30 @@ def _date_int_to_string(date:int) -> str:
     day = day[4:6]+'/'+day[6:]+'/'+day[:4]
     return day
 
+def _convert_reviews_to_proper_form(the_reviews:list[dict[str,Any]]):
+    if (the_reviews != None):
+        for review in the_reviews:
+            if ('rating' in review):
+                review['rating'] = _expand_rating(review['rating'])
+            if ('user_id' in review):
+                review['user_id'] = str(review['user_id'])
+            if ('gem_id' in review):
+                review['gem_id'] = str(review['gem_id'])
+            if ('date' in review):
+                review['date'] = _date_int_to_string(review['date'])
+    return the_reviews
 
+def _convert_to_proper_form(review:dict[str,Any]):
+    if (review != None):
+        if ('rating' in review):
+            review['rating'] = _expand_rating(review['rating'])
+        if ('user_id' in review):
+            review['user_id'] = str(review['user_id'])
+        if ('gem_id' in review):
+            review['gem_id'] = str(review['gem_id'])
+        if ('date' in review):
+            review['date'] = _date_int_to_string(review['date'])
+    return review
 
 
 def get_review_by_review_id(review_id):
@@ -278,7 +364,7 @@ def get_review_by_review_id(review_id):
                 WHERE
                     r.review_id = %s
                 """, (review_id,))
-            return (cursor.fetchall())
+            return _convert_reviews_to_proper_form(cursor.fetchall())
         
 
 def change_rating_for_a_review(review_id,rating):
@@ -292,6 +378,7 @@ def change_rating_for_a_review(review_id,rating):
     Returns:
         None
     '''
+    rating = _shrink_rating(rating)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -335,6 +422,7 @@ def change_review_for_a_review(review_id,review):
     Returns:
         None
     '''
+    review = inflate_string(review, 511)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:

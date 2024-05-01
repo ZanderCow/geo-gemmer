@@ -23,161 +23,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
 
-<body id="page-top" data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
-    
-    <nav class="navbar navbar-expand-md d-flex justify-content-start navbar-shrink py-3 navbar-light" id="mainNav">
-        <div class="container"><img src="/static/img/geo-gemmer-logo.png" width="108" height="50"><a class="navbar-brand d-flex align-items-center" href="/"><span></span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-2"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-2">
-                <div class="row d-xxl-flex justify-content-xxl-start align-items-xxl-center">
-                    <div class="col-md-10 offset-md-1">
-                        <div class="card m-auto" style="max-width:850px">
-                            <div class="card-body" id="search-for-gem">
-                                <form class="d-flex align-items-center" action="/gem/search" method="get"><input class="form-control form-control-sm flex-shrink-1 form-control-borderless" type="search" data-bss-hover-animate="pulse" placeholder="Search topics or keywords" name="searchbar"><button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Search</span></button></form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                    <div class="w-100"></div>
-                </div>
-                <script>
-                    function getUsernameCookie() {
-                        const cookies = document.cookie; // Get all cookies as a single string
-                        const cookiesArray = cookies.split('; '); // Split the cookies string into an array of "key=value" strings
-                    
-                        // Loop through the array to find the "username" cookie
-                        for (let i = 0; i < cookiesArray.length; i++) {
-                            const cookiePair = cookiesArray[i].split('='); // Split each "key=value" string into [key, value]
-                            if (cookiePair[0] === 'username') {
-                                return cookiePair[1]; // Return the value of the "username" cookie
-                            }
-                        }
-                    
-                        return null; // Return null if the "username" cookie is not found
-                    }
-                </script>
-                <ul class="navbar-nav d-flex d-sm-flex justify-content-center align-items-center flex-nowrap ms-auto align-items-sm-center">
-                    <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                            <form class="me-auto navbar-search w-100" action="/gem/search" method="get">
-                                <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                    <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                </div>
-                            </form>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown no-arrow mx-1"></li>
-                    <li class="nav-item dropdown no-arrow mx-1">
-                        <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
-                    </li>
-                    <div class="d-none d-sm-block topbar-divider"></div>
-                    <li class="nav-item dropdown no-arrow">
-                        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span id="username" class="d-none d-lg-inline me-2 text-gray-600 small">username</span>
-                        </a>
-                            <button class="dropdown-menu shadow dropdown-menu-end animated--grow-in" style="border: none; background: none; padding: 0; margin: 0;">
-                                <a class="dropdown-item" href="/user"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Home</a>
-                                <a class="dropdown-item" href="/user/settings"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/" onclick="logout()"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
-                            </button>
-                            
-                            </div>
-                        </li></ul></div>
-                    
-                
-            </div>
-        
-        <script>
-            var username = getUsernameCookie();  // Retrieve the username from cookies
-            var usernameElement = document.getElementById('username');
-            usernameElement.innerText = username;  // Set the text of the element
-        </script>
-        <script>
-            function logout() {
-                fetch('/user/logout', {
-                    method: 'POST',
-                    credentials: 'include'  // Necessary to include cookies with requests
-                })
-            
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } 
-                    else {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
-                })
-    
-                .then(data => {
-                    // Redirect to the login page
-                    window.location.href = '/';
-                })
-    
-                .catch((error) => {
-                    const errorMessage = JSON.parse(error.message);
-                    console.log(errorMessage);
-            
-                });
-            }
-        </script>
-        
-    </nav>
-    
-    
-        <script type="text/javascript">
-            var gemId = "0b29ef62-af3a-4c1d-baf7-2293fffcd4b9";
-        </script>
-        <header data-aos="fade" class="bg-primary-gradient pt-5 aos-init aos-animate" style="background: #ffffff;">
-            <div class="text-center">
-                <p class="fw-bold text-success mb-2">Hidden Easter Egg</p>
-                <h1 class="fw-bold">DOOM</h1>
-            </div>
-        </header>
+<body id="page-top">
+    {{ signed_in_navbar() }}
+    <header data-aos="fade" class="bg-primary-gradient pt-5 aos-init aos-animate" style="background: #ffffff;">
+        <div class="text-center">
+            <p class="fw-bold text-success mb-2">Hidden Easter Egg</p>
+            <h1 class="fw-bold">DOOM</h1>
+        </div>
+    </header>
     <div class="container text-center pb-5 mb-5"><iframe src="https://msdos-games.com/game/?prn=doom" width="864" height="541"></iframe></div>
-        
-        
-        
-        
-        
-        
-        
     {{ footer() }}
-    
-    
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-        <script src="/static/js/script.min.js"></script>
-        <script src="/static/js/pin-gem.js"></script>
-    
-    
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="/static/js/script.min.js"></script>
+    <script src="/static/js/pin-gem.js"></script>
     </body>
-
 </html>

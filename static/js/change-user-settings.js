@@ -8,6 +8,7 @@ function submitChangeSettingsForm() {
     const user_name = document.getElementById('user-name').value;
     const first_name = document.getElementById('first-name').value;
     const last_name = document.getElementById('last-name').value;
+    const bio = document.getElementById('bio').value;
     const pfp = document.getElementById('fileInput').files[0];
 
 
@@ -16,6 +17,7 @@ function submitChangeSettingsForm() {
     formData.append('username', user_name);
     formData.append('first_name', first_name);
     formData.append('last_name', last_name);
+    formData.append('bio',bio)
 
     // Get the CSRF token from the cookie
     let csrf_token = document.cookie.split('; ')  

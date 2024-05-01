@@ -53,3 +53,38 @@
     border: var(--bs-border-width) solid var(--bs-border-color);
     border-radius:20px;
 }
+
+@keyframes gradient {
+    0% {
+        background-position: 0% -140%;
+    }
+    100% {
+        background-position: 0% -40%;
+    }
+}
+
+.skeleton-loader {
+    background: linear-gradient(0deg, #cccccc 30%, #aaaaaa 40%, #aaaaaa 60%, #cccccc 70%);
+    background-size: 400% 400%;
+    animation: gradient 2s linear infinite;
+}
+
+.teeny-skeleton-loader {
+    background: linear-gradient(0deg, #cccccc 30%, #aaaaaa 40%, #aaaaaa 60%, #cccccc 70%);
+    background-size: 800% 800%;
+    animation: gradient 2s linear infinite;
+}
+
+
+/*links are annoying*/
+.hidden-link:link {
+    color: var(--bs-body-color) !important;
+    background-color: transparent;
+    text-decoration: none !important;
+}
+
+/*the ui hurts my eyes on my low contrast screen so im forcing this in*/
+.ablock {
+    background-color:hsl(103, 80%, 95%);
+    border-radius:25px;
+}

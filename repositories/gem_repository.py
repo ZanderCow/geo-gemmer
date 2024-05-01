@@ -1,4 +1,4 @@
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from psycopg.rows import dict_row
 from typing import Any
 from uuid import UUID
@@ -218,7 +218,7 @@ def get_gem_distance_from_user(gem_id:str, latitude:float=0.0, longitude:float=0
         WHERE
             g.gem_id='{gem_id}';''', (latitude, longitude))
             return _format_gem(cursor.fetchall())
-    pass
+
 
 def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> str:
     
@@ -231,9 +231,6 @@ def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> 
         longitude (float): The location (E/W) of the gem.
         latitude (float): The location (N/S) of the gem.
         user_created (bool): Whether a user created the gem or not
-        image1 (str): Link to image 1 (max length: 255)
-        image2 (str): Link to image 2 (max length: 255)
-        image3 (str): Link to image 3 (max length: 255)
         user_id (str): The ID of the user who created the gem.
 
     Returns:
@@ -243,7 +240,9 @@ def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> 
         - when a gem is created it should have a default value for times_visited (0)
     '''
     #FAILSAFE IN CASE OF APOSTROPHES
-    
+    name = inflate_string(name, 127)
+    gem_type = inflate_string(gem_type, 63)
+    user_id = inflate_string(user_id)
 
     pool = get_pool()
     with pool.connection() as conn:
@@ -257,16 +256,19 @@ def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> 
                     '{user_id}')
                 RETURNING
                     gem_id;''')
+            
             #failsafe
-
-
-
             fetched_stuff = cursor.fetchone()
-            gem_id = str(fetched_stuff['gem_id'])     
+            if (fetched_stuff is not None and 'gem_id' in fetched_stuff):
+                gem_id = str(fetched_stuff['gem_id'])
+                cursor.execute(f"""
+                    INSERT INTO accessibility (gem_id) VALUES (
+                        '{gem_id}');""")
             return gem_id
 
 
 def change_gem_name(gem_id:str, name:str):
+    name = inflate_string(name, 127)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -278,6 +280,7 @@ def change_gem_name(gem_id:str, name:str):
 
 
 def change_gem_type(gem_id:str, type:str):
+    gem_type = inflate_string(gem_type, 63)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:

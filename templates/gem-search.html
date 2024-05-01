@@ -275,9 +275,7 @@
                 <div class="card " style="height: 600px;">
                     <div id="google-maps-container" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="height: 500px;">
                         <div id="map" class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center d-none" style="height: 500px;">
-                            <div class="card-body d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center"><span class="spinner-grow" role="status" style="color: var(--bs-primary);"></span></div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -510,6 +508,55 @@
 
     
     <script src="/static/js/script.min.js"></script>
+    <script>
+        let i = 0;
+        let eee = 0; let ecceler = 1;
+        var end=false;
+        let img = document.getElementById("loader");
+        let currAngle = 0;
+        function rotate() {
+            console.log(end)
+            if (end) {
+                currAngle += eee;
+                eee+=1*ecceler;
+                ecceler+=0.001;
+                img.style.transform = `rotate(${currAngle}deg)`;
+                img.style.scale=0.8+currAngle*0.0002;
+                img.style.opacity=1-currAngle*0.0005;
+                if (currAngle < 2000) {
+                    requestAnimationFrame(rotate);
+                } else {
+                    img.parentNode.removeChild(img);
+                }
+            } else {
+                // Get the image element
+                currAngle = 25 * Math.sin(i / 180);
+                img.style.transform = `rotate(${currAngle}deg)`;
+                i = (i+15)%1120;
+                // Call the rotate function again on the next frame
+                requestAnimationFrame(rotate);
+            }
+        }
+        // Start the rotation
+        rotate();
+        //delett skeleton loader
+        function mapLoaded() {
+            var map = document.getElementById('google-maps-container')
+            if (map != null)
+                console.log("has map");
+            else
+                console.log("no has map");
+            
+            // Add a listener for the 'tilesloaded' event to remove the skeleton loader
+            google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+                map.classList.remove('skeleton-loader');
+                end = true;
+            });
+        }
+        
+        // Load the map
+        mapLoaded();
+    </script>
 </body>
 
 </html>

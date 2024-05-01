@@ -3,6 +3,7 @@ import repositories.review_repository as review_repo
 import repositories.gems_pinned_repository as gem_pinned_repo
 import repositories.images_repository as images_repository
 from repositories.gem_accessibility_repository import get_accesibility_for_hidden_gem
+import repositories.gems_visited_repository as visited_repo
 import sys
 from flask import Blueprint, render_template, redirect, request, jsonify
 from math import ceil
@@ -262,3 +263,11 @@ def get_distance_from_user(gem_id):
     data = request.get_json()
     distance = gem_repo.get_distance_from_user(gem_id, latitude, longitude)
     return jsonify(distance), 200
+
+
+@gem.post('/<gem_id>/visit')
+@jwt_required()
+def visiting(gem_id):
+    user_id = get_jwt_identity()
+    current_date = datetime.date.today()
+    visited_repo.add_gem_to_visited_list(user_id, gem_id, current_date)

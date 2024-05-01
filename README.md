@@ -10,11 +10,13 @@ Introduction<br>
 
 Setup<br>
 &emsp;[Setting Up the PostGIS Extension](#setting-up-the-postgis-extension)<br>
+&emsp;[Setting up the S3 Database](#setting-up-the-s3-database)<br>
 &emsp;[Setting Up a Development Environment](#setting-up-a-development-environment)
 
 Usage<br>
 &emsp;[Running the Application](#running-the-application)<br>
 &emsp;[Exiting the Virtual Environment](#exiting-the-virtual-environment)
+
 
 ## Getting Started
 
