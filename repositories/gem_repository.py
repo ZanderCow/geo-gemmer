@@ -212,7 +212,7 @@ def get_gem_distance_from_user(gem_id:str, latitude:float=0.0, longitude:float=0
             g.gem_id,
             ST_X(g.location::geometry) AS longitude,
             ST_Y(g.location::geometry) AS latitude,
-            ST_Distance(ST_MakePoint(%s, %s)::geography, location::geography) AS distance,    
+            ST_Distance(ST_MakePoint(%s, %s)::geography, location::geography) AS distance
         FROM
             hidden_gem g   
         WHERE
@@ -340,10 +340,12 @@ def get_gem_creator(gem_id):
             cursor.execute(f'''
         SELECT
             gem_id,
-            user_id
+            user_id                   
         FROM
             hidden_gem 
         WHERE
             gem_id='{gem_id}';''')
-            return _format_gem(cursor.fetchall())
+            result = cursor.fetchall()
+          
+            return str(result[0]['user_id'])
         

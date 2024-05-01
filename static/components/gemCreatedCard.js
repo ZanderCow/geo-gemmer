@@ -57,7 +57,7 @@ const gemCreated = (gem) => {
     </div>
     
     `;
-    /*
+    
     fetch(`/gem/${gem.gem_id}/get-primary-gem-image`, {
         method: 'GET',
         credentials: 'include'  // Necessary to include cookies with requests
@@ -78,7 +78,7 @@ const gemCreated = (gem) => {
     })
     
 
-    */
+    
 
     // Add hover event listeners to buttons for continuous animation
     card.querySelectorAll('button').forEach(button => {

@@ -108,12 +108,6 @@ def create_gem():
     if longitude == '':
         errors['longitude'] = 'Longitude is required'
     
-    #if the user doesnt provide any images, we will force them too
-    #wtf why
-    #if image_1 and image_2 and image_3:
-    #    pass
-    #else:
-    #    errors['images'] = 'Please provide 3 images'
 
     print(acc.update_string())
     print('newy\nnewy\nnewy')
@@ -122,11 +116,10 @@ def create_gem():
         gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, user_id)
         gem_accessibility_repository.set_accesibility_for_hidden_gem(gem_url, acc)
 
-        '''
         #uncomment the line below to make s3 work
-        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
-        '''
-       
+        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
+
+        user_repository.increment_gems_created(user_id)
         
         return jsonify(
     {
@@ -318,6 +311,8 @@ def gem_visited():
     gem_id = request.form.get('gem_id')
     date_visited = datetime.datetime.now().strftime('%Y-%m-%d')
     gems_visited_repository.add_gem_to_visited_list(user_id, gem_id, date_visited)
+    user_repository.increment_gems_explored(user_id)
+    gem_repo.increment_gem_times_visited(gem_id)
     return jsonify({'message': 'Gem added to visited list'}), 200
 
 

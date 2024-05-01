@@ -106,6 +106,33 @@ def set_accesibility_for_hidden_gem(gem_id, accessibility_info):
                            SET {strin}
                            WHERE gem_id = '{gem_id}';''')
 
+
+def set_accesibility_for_gem(gem_id, 
+        wheelchair_accessible: bool=False,
+        service_animal_friendly : bool=False, 
+        multilingual_support : bool=False, 
+        braille_signage : bool=False, 
+        hearing_assistance : bool=False, 
+        large_print_materials : bool=False, 
+        accessible_restrooms : bool=False
+        ):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(f'''
+            UPDATE accessibility 
+                           
+            SET 
+            wheelchair_accessible = {wheelchair_accessible},
+            service_animal_friendly = {service_animal_friendly},
+            multilingual_support = {multilingual_support},
+            braille_signage = {braille_signage},
+            hearing_assistance = {hearing_assistance},
+            large_print_materials = {large_print_materials},
+            accessible_restrooms = {accessible_restrooms}
+            WHERE gem_id = '{gem_id}';'''
+            )
+        return True
     
 class accessibility_class:
     def __init__(self, wheelchair:bool=False, service_animal:bool=False, multilingual:bool=False, braille:bool=False, hearing_assistance:bool=False, large_print:bool=False, restrooms:bool=False):

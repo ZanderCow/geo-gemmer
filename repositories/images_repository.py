@@ -210,4 +210,40 @@ def get_primary_image_for_hidden_gem(gem_id):
                 image_data = response['Body'].read()
                 return image_data
 
-            
+
+def update_gem_images(gem_id, image_1, image_2, image_3):
+    '''
+    Update the images of a hidden gem.
+
+    Parameters:
+        gem_id (int): The ID of the hidden gem.
+        image_1 (FileStorage): The first image file to upload.
+        image_2 (FileStorage): The second image file to upload.
+        image_3 (FileStorage): The third image file to upload.
+    '''
+    file_key_1 = None
+    file_key_2 = None
+    file_key_3 = None
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                SELECT
+                    image_1, image_2, image_3
+                FROM
+                    image_group
+                WHERE
+                    gem_id = %s;
+            ''', (gem_id,))
+            result = cursor.fetchone()
+            file_key_1 = result['image_1']
+            file_key_2 = result['image_2']
+            file_key_3 = result['image_3']
+
+
+    with get_s3_client() as s3:
+        s3.upload_fileobj(Fileobj=image_1.stream, Bucket='geo-gemmer-images', Key=file_key_1)
+        s3.upload_fileobj(Fileobj=image_2.stream, Bucket='geo-gemmer-images', Key=file_key_2)
+        s3.upload_fileobj(Fileobj=image_3.stream, Bucket='geo-gemmer-images', Key=file_key_3)
+
+    return True

@@ -56,7 +56,7 @@ const searchGem = (gem) => {
     
     
     `;
-    /*
+    
     
     // get primary image from s3 database
     fetch(`/gem/${gem.gem_id}/get-primary-gem-image`, {
@@ -81,7 +81,7 @@ const searchGem = (gem) => {
         
         card.querySelector("#gem-image").src = `data:image/png;base64,${data}`;
     });
-    */
+    
     // Add hover event listeners to buttons for continuous animation
     card.querySelectorAll('button').forEach(button => {
         button.addEventListener('mouseover', () => {
