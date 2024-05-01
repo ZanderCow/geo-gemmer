@@ -53,6 +53,20 @@
                 
                     return null; // Return null if the "username" cookie is not found
                 }
+                function getUIDCookie() {
+                    const cookies = document.cookie; // Get all cookies as a single string
+                    const cookiesArray = cookies.split('; '); // Split the cookies string into an array of "key=value" strings
+                    console.log(cookies);
+                    // Loop through the array to find the "username" cookie
+                    for (let i = 0; i < cookiesArray.length; i++) {
+                        const cookiePair = cookiesArray[i].split('='); // Split each "key=value" string into [key, value]
+                        if (cookiePair[0] === 'user_id') {
+                            return cookiePair[1]; // Return the value of the "username" cookie
+                        }
+                    }
+                
+                    return null; // Return null if the "username" cookie is not found
+                }
             </script>
             <ul class="navbar-nav d-flex d-sm-flex justify-content-center align-items-center flex-nowrap ms-auto align-items-sm-center">
                 <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
@@ -73,8 +87,9 @@
                     <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span id="username" class="d-none d-lg-inline me-2 text-gray-600 small">{{username}}</span>
                        </a>
                         <button class="dropdown-menu shadow dropdown-menu-end animated--grow-in" style="border: none; background: none; padding: 0; margin: 0;">
-                            <a class="dropdown-item" href="/user"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Home</a>
+                            <a class="dropdown-item" href="/user"><i class="fas fa-home fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Home</a>
                             <a class="dropdown-item" href="/user/settings"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a>
+                            <a class="dropdown-item" id="profile_link" href=""><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;View Profile</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/" onclick="logout()"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                         </button>
@@ -89,6 +104,7 @@
         var username = getUsernameCookie();  // Retrieve the username from cookies
         var usernameElement = document.getElementById('username');
         usernameElement.innerText = username;  // Set the text of the element
+        console.log(username);
     </script>
     <script>
         function logout() {

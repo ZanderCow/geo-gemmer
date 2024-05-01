@@ -1,4 +1,4 @@
-from repositories.db import get_pool
+from repositories.db import get_pool, inflate_string
 from typing import Any
 from psycopg.rows import dict_row
 import bcrypt
@@ -39,6 +39,11 @@ def create_new_user(username, password):
                 RETURNING user_id;
             ''', (username, hashed_password, None, None, None, 0, 0, 0, 0))
             user_id = cursor.fetchone()['user_id']
+            #make the bio
+            cursor.execute('''
+                INSERT INTO geo_user_bio (user_id, text)
+                VALUES (%s, %s);''', user_id, "");
+
             return user_id
 
 def get_password(username):
@@ -352,3 +357,70 @@ def change_last_name(user_id, last_name):
                     user_id = %s;
             ''', (last_name, user_id))
             return True
+
+
+def get_user_bio(user_id) -> str:
+    """
+    Get a user's biography from the database by their user_id.
+
+    This would be used when a user logs in and they are at the dashboard 
+
+    Args:
+        user_id (str): The user_id of the user to get.
+
+    Returns:
+        str: the bio as a str
+
+    Example: 
+        >>> get_user_by_id('67e55044-10b1-426f-9247-bb680e5fe0c8')
+        "I'd just like to interject for a moment. What you're refering to as Linux, is in fact, GNU/Linux, or as I've
+        recently taken to calling it, GNU plus Linux. Linux is not an operating system unto itself, but rather another
+        free component of a fully functioning GNU system made useful by the GNU corelibs, shell utilities and vital system
+        components comprising a full OS as defined by POSIX. Many computer users run a modified version of the GNU system
+        every day, without realizing it. Through a peculiar turn of events, the version of GNU which is widely used today
+        is often called Linux, and many of its users are not aware that it is basically the GNU system, developed by the
+        GNU Project. There really is a Linux, and these people are using it, but it is just a part of the system they use.
+        Linux is the kernel: the program in the system that allocates the machine's resources to the other programs that you
+        run. The kernel is an essential part of an operating system, but useless by itself; it can only function in the co"
+    '''
+    """
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT text
+                FROM geo_user_bio
+                WHERE
+                    user_id = '{user_id}';
+            ''')
+            result = cursor.fetchall()
+            if (len(result) > 0):
+                if ('text' in result[0]):
+                    result = result[0]['text']
+            return result
+
+def change_user_bio(user_id, input:str) -> str:
+    """
+    Change a user's biography from the database by their user_id.
+
+    This would be used when a user updates their bio
+
+    Args:
+        user_id (str): The user_id of the user to get.
+
+    Returns:
+        str: the bio as a str
+
+    Example: 
+        >>> change_user_bio('67e55044-10b1-426f-9247-bb680e5fe0c8', "this is me now")
+    '''
+    """
+    input = inflate_string(input, 1024)
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                UPDATE geo_user_bio
+                SET text='{input}'
+                WHERE user_id = '{user_id}';
+            ''')

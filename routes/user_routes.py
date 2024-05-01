@@ -87,6 +87,7 @@ def change_settings_page():
     user_name = request.form.get('username')
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
+    bio = request.form.get('bio')
 
     errors = {}
     
@@ -98,7 +99,7 @@ def change_settings_page():
         else:
             user_repository.change_username(user_id, user_name)
 
-
+    user_repository.change_user_bio(user_id, bio)
     #user filled out the first name field
     '''
     if first_name != '':
@@ -238,7 +239,7 @@ def create_gem():
     
     if errors == {}:
         
-        gem_url = gem_repo.create_new_gem(gem_name, gem_type, latitude, longitude, True)
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, True)
         gem_repo.change_accessibility(gem_url, acc)
 
         '''
@@ -268,18 +269,27 @@ def logout():
 @user.get('/<user_id>')
 @jwt_required()
 def profile(user_id):
-    user_id = get_jwt_identity()  # Retrieves the identity from the JWT
+    ur_user_id = get_jwt_identity()  # Retrieves the identity from the JWT
+    if ur_user_id is None:
+        return redirect('/')
+
     # get user data from database
+    if (gem_repo.is_not_uuid(user_id)):
+        return redirect('/user')
     user_info = user_repository.get_user_by_id(user_id)
-    
+    if (user_info is None or len(user_info) == 0):
+        return redirect('/user')
+
     gem_visted_frequency = gems_visited_repository.get_hidden_gems_visited_by_month(user_id)
     gem_distribution = gems_visited_repository.get_distribution_of_hidden_gems_visited_by_a_user(user_id)
     gems_pinned = gems_pinned_repository.get_gems_pinned_by_user(user_id)
-    reviews_made = review_repository.get_all_reviews_user_has_made(user_id)
+    reviews_made = review_repository.get_recent_reviews_user_has_made(user_id)
+    bio = user_repository.get_user_bio(user_id)
     
     return render_template('user-profile.html', 
         user_info=user_info,
         username="username",
+        bio=bio,
         gem_visted_frequency=gem_visted_frequency,
         gem_distribution=gem_distribution,
         gems_pinned=gems_pinned,

@@ -341,13 +341,13 @@
             <div class="col" style="background: #ffffff;">
                 <div class="card mb-3" data-aos="fade" style="background: rgb(255,255,255);">
                     <div class="card-body" style="overflow: auto;background: #ffffff;">
-                        <section class="text-truncate" style="color: rgb(255,255,255);background-color: #ffffff;padding: 30px;height: 700px;overflow-y: scroll;border-color: rgb(255,255,255);">
+                        <section class="text-truncate" style="color: rgb(255,255,255);background-color: #ffffff;padding: 30px;max-height: 700px;overflow-y: scroll;border-color: rgb(255,255,255);">
                             <div class="container scstyle-1 sc-overflow" style="max-height: 675px;background: #ffffff;">
                                 {% for review in gem_reviews %}
                                 <div class="card mb-3">
                                     <div class="card-body listedreview">
                                         <div class="row">
-                                            <div class="col" style="height:82px;"><img class="border rounded-circle img-profile" src="{{review.pfp if review.pfp is not none else '/static/img/pfp-placeholder.png'}}" width="65" height="61" style="position:absolute">
+                                            <div class="col" style="height:82px;"><a class="hidden-link" href="/user/{{review.user_id}}"><img class="border rounded-circle img-profile" src="{{review.pfp if review.pfp is not none else '/static/img/pfp-placeholder.png'}}" width="65" height="61" style="position:absolute">
                                                 <div style="margin-left:30px;position:absolute;margin-top:-10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;"></svg>
                                                     {% for i in range(5) %}
                                                         {% if i < review.rating %}
@@ -365,7 +365,7 @@
                                                     <h5 class="fw-bold" style="margin-bottom:0px;">{{review.user_name}}</h5>
                                                     <p>{{review.date}}</p>
                                                 </div>
-                                            </div>
+                                            </a></div>
                                         </div>
                                         <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
                                     </div>

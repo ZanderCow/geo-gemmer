@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS geo_user (
     gems_saved INT
 );
 
+CREATE TABLE IF NOT EXISTS geo_user_bio (
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
+    text VARCHAR(1024)
+);
+
 CREATE TABLE IF NOT EXISTS hidden_gem (
     gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,

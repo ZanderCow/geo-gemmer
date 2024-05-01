@@ -210,16 +210,71 @@ def get_all_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
             cursor.execute(f'''
                 SELECT
                     review_id,
-                    user_id,
-                    gem_id,
+                    r.user_id,
+                    g.gem_id,
                     rating,
                     review,
-                    date
+                    date,
+                    g.name AS gem_name
                 FROM
                     review r
-                WHERE user_id = '{user_id}'
+                JOIN hidden_gem g
+                ON g.gem_id = r.gem_id
+                WHERE r.user_id = '{user_id}'
                 ORDER BY
                     date DESC;''')
+            return _convert_reviews_to_proper_form(cursor.fetchall())
+
+def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
+    '''
+    Retrieve the most recent 10 reviews a user has made.
+    
+    Parameters:
+        user_id (str): The ID of the user.
+    
+    Returns:
+        list[dict[str, Any]]: A list of dictionaries representing the reviews.
+
+    Example:
+        >>> get_all_reviews_user_has_made(67e55044-10b1-426f-9247-bb680e5fe0c8)
+        [
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 4,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }, 
+            {
+                'gem_name': 'Rocky Mountian',
+                'rating': 5,
+                'review': 'This hidden gem was amazing! I would definitely recommend it to others.',
+            }
+        
+        ]
+    '''
+    #for some reason user ids are stored as uuids and not strings
+    #i made the gems convert to strings for abstraction but oh well :p
+    if (user_id is not str):
+        user_id = str(user_id)
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                SELECT
+                    review_id,
+                    r.user_id,
+                    g.gem_id,
+                    rating,
+                    review,
+                    date,
+                    g.name AS gem_name
+                FROM
+                    review r
+                JOIN hidden_gem g
+                ON g.gem_id = r.gem_id
+                WHERE r.user_id = '{user_id}'
+                ORDER BY
+                    date DESC
+                LIMIT 10;''')
             return _convert_reviews_to_proper_form(cursor.fetchall())
 
 def _shrink_rating(num:int) -> chr:
