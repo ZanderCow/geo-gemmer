@@ -1,6 +1,15 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
-
+<script>
+    const url = window.location.pathname;
+    
+    // Regular expression to match a UUID in the URL path
+    const regex = /gem\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
+    
+    // Using the regex to extract the UUID
+    const match = url.match(regex);
+    const gem_id = match ? match[1] : null;
+</script>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -9,14 +18,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Create Hidden Gem</title>
     <link rel="icon" href="/static/img/geo-icon.png">
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alexandria&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Didact+Gothic&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans&amp;display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
-    <link rel="stylesheet" href="../static/css/styles.min.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
@@ -26,7 +35,7 @@
     <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Hidden Gem</p>
-            <h1 class="fw-bold">Create A Hidden Gem</h1>
+            <h1 id="gem-name" class="fw-bold">Edit review for PLACEHOLDER</h1>
         </div>
     </header>
     <div class="container" data-aos="fade">
@@ -37,11 +46,12 @@
                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"></path>
                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"></path>
                     </svg></div>
-                <h5 class="fw-bold card-title">Name</h5><input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name" placeholder="A cool place!">
+                <h5 class="fw-bold card-title">Name</h5>
+                <input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name-input" placeholder="A cool place!">
                 <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> gem name  is not filled out please fill it out. </span></p>
             </div>
         </div>
-        <div class="card shadow-sm" id="type-card">
+        <div class="card" id="type-card">
             <div class="card-body px-4 py-5 px-md-5">
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                         <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
@@ -166,6 +176,92 @@
         </div>
     </div>
     {{ footer() }}
+    <script>
+        // this script updates the EDIT review for PLACEHOLDER with the gem name
+        fetch(`/gem/${gem_id}/get-header-info`, {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+        .then(data => {   
+            document.getElementById('gem-name').innerHTML = ` Edit review for ${data[0]["name"]}`;
+            document.getElementById('gem-name-input').placeholder = data[0]["name"];
+        })
+    </script>
+    <script>
+        // gets the gem details
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                let lat = position.coords.latitude;
+                let long =  position.coords.longitude;
+                var formData = new FormData();
+    
+                formData.append('latitude', lat);
+    
+                formData.append('longitude', long);
+    
+                // Get the CSRF token from the cookie
+                let csrf_token = document.cookie.split('; ')  
+                .find(row => row.startsWith("csrf_access_token" + '=')) 
+                ?.split('=')[1];
+    
+    
+                fetch(`/gem/${gem_id}/get-gem-description`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrf_token
+                    },
+                    credentials: 'include'  // Necessary to include cookies with requests
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } 
+                    else {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                })
+            
+                .then(data => { 
+                    console.log(data);
+                    document.getElementById('gem-type').placeholder = `${data[0]["gem_type"]}`;
+                    latitude = data[0]["latitude"];
+                    longitude = data[0]["longitude"];
+                    print("latitude: " + latitude + " longitude: " + longitude);
+                    document.getElementById('latitude').placeholder = latitude;
+                    
+            
+                })
+                .catch(error => {
+                    console.log(error);
+            
+                });
+            });
+        } else {
+            console.log("Not Available");
+        }
+    
+    
+    </script>
+    <script>
+        //this script gets the accesiblity options and checks off the ones that are already checked
+    </script>
+    <script>
+        // this script gets the location and puts the current location in the placeholders
+    </script>
+       
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const getCoordinatesButton = document.getElementById('get-location-button');
@@ -340,7 +436,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="../static/js/script.min.js"></script>
+    <script src="/static/js/script.min.js"></script>
     
 </body>
 

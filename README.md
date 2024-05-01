@@ -1,21 +1,22 @@
-
 # Geo Gemmer
 
 Geo Gemmer is a social media-based web application that allows users to discover hidden gems in their vicinity. It provides a platform for users to share and explore unique and lesser-known places, such as local attractions, restaurants, parks, and more. By leveraging geolocation data, Geo Gemmer helps users uncover hidden gems that may not be widely known or easily discoverable through traditional means. With Geo Gemmer, users can connect with like-minded individuals, discover new places, and contribute to a vibrant community of explorers.
 
 
 ### Table of Contents
-Introduction
-  [Getting Started](#getting-started)
-  [Prerequisites](#prerequisites)
+Introduction<br>
+&emsp;[Getting Started](#getting-started)<br>
+&emsp;[Prerequisites](#prerequisites)
 
-Setup
-  [Setting Up the PostGIS Extension](#setting-up-the-postgis-extension)
-  [Setting Up a Development Environment](#setting-up-a-development-environment)
+Setup<br>
+&emsp;[Setting Up the PostGIS Extension](#setting-up-the-postgis-extension)<br>
+&emsp;[Setting up the S3 Database](#setting-up-the-s3-database)<br>
+&emsp;[Setting Up a Development Environment](#setting-up-a-development-environment)
 
-Usage
-  [Running the Application](#running-the-application)
-  [Exiting the Virtual Environment](#exiting-the-virtual-environment)
+Usage<br>
+&emsp;[Running the Application](#running-the-application)<br>
+&emsp;[Exiting the Virtual Environment](#exiting-the-virtual-environment)
+
 
 ## Getting Started
 
@@ -28,7 +29,6 @@ Before you begin, ensure you have met the following requirements:
 - You have installed the latest version of Python (at the time of writing, Python 3.8 or newer is recommended).
 - You have a Windows/Linux/Mac machine capable of running Python.
 - Make sure PostgreSQL is installed on your system, as psycopg2 requires PostgreSQL client libraries to run. 
-
 
 ### Setting Up the PostGIS Extension
    The database uses the PostGIS extension for PostgreSQL. If you don't have it already, here is how you install it.
@@ -45,7 +45,49 @@ Before you begin, ensure you have met the following requirements:
    Under Categories -> Spatial Extensions, you will find the option for the PostGIS extension. Click that and click "Next ->" and continue to finish the installation
    ![shortcut found in my computer under C:\ProgramData\Microsoft\Windows\Start Menu\Programs\PostgreSQL 16](https://github.com/ZanderCow/geo-gemmer/blob/main/readme_instruction_images/stack_builder3.png)
 
-### Setting Up a Development Environment
+
+### Setting up the S3 Database
+
+Because this is a developer environment, we aren't actually connected to an S3 server right now. Instead, you will be using a mock database that is stored locally. This is to prevent usage of the actual one.
+
+#### Install MinIO
+
+MinIO provides an open-source alternative to AWS S3 and can be used to simulate S3 storage locally. Follow the steps below to install and configure MinIO on your system:
+
+- **On Windows**
+  
+  1. Download the MinIO server executable from the [MinIO Download Page](https://min.io/download#/windows).
+  2. Create a folder where you wish to store MinIO files, e.g., `C:\MinIO`.
+  3. Move the downloaded `minio.exe` into the created folder.
+  4. Open Command Prompt as Administrator, navigate to the folder, and start the server with the command:
+     ```bash
+     minio.exe server ./data
+     ```
+
+- **On Mac**
+  
+  1. Install MinIO using Homebrew by running:
+     ```bash
+     brew install minio/stable/minio
+     ```
+  2. To start the MinIO server, use the command:
+     ```bash
+     minio server /data
+     ```
+  3. For your convenience, you can add MinIO to your PATH using:
+     ```bash
+     export PATH=$PATH:/opt/homebrew/bin
+     ```
+
+#### Access Keys
+
+Upon starting MinIO for the first time, it will automatically generate an access key and a secret key. You can find these in the terminal output. Make a note of both keys, as they will be required to configure the S3 client in your application.
+
+Additionally, you can customize these keys by setting the `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` environment variables before starting the server.
+
+### Setting
+
+ Up a Development Environment
 
 1. **Clone the Repository**
 
@@ -55,20 +97,18 @@ Before you begin, ensure you have met the following requirements:
    git clone https://github.com/ZanderCow/Geo-Gemmer.git
    ```
 
-
 2. **Create a Virtual Environment**
 
    It's recommended to create a virtual environment to isolate project dependencies. Run the following command in the root of your project directory:
 
-   Windows
-   
-   ```bash
-   python -m venv venv
-   ```
-   Mac
-   ```bash
-   python3 -m venv venv
-    ```
+   - **Windows**
+     ```bash
+     python -m venv venv
+     ```
+   - **Mac**
+     ```bash
+     python3 -m venv venv
+     ```
    This will create a virtual environment named `venv`.
 
 3. **Activate the Virtual Environment**
@@ -128,4 +168,3 @@ When you're done working in the virtual environment, you can deactivate it by ru
 ```bash
 deactivate
 ```
-

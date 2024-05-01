@@ -1,6 +1,74 @@
 {% from "components/footer.html" import footer %}
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
 
+<script>
+    let latitude = 0;
+    let longitude = 0;
+</script>
+<script>
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+            
+
+            
+            
+        }, function(error) {  // Error callback correctly positioned
+            document.getElementById('page-top').innerHTML = `
+            <section class="card py-4 py-xl-5">
+                <div class="container h-100">
+                    <div class="row h-100">
+                        <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top:100px; padding-bottom: 100px;">
+                            <div>
+                                <img src="/static/img/geo-gemmer-logo.png" width="157" height="72" />
+                                <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
+                                <p class="mb-4">We need your geolocation so we can provide hidden gems<br />nearby you!</p>
+                                <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
+                                    <span style="color: rgb(255, 255, 255);">Enable Location</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            `;  
+            var viewButton = document.querySelector(`#enableLocationBtn`);
+            viewButton.addEventListener('click', () => {
+                const geoStatusElement = document.getElementById('geoStatus');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                    // Handle position here
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    window.location.href = '/gem/search';
+                    }, function(error) {
+                    // Handle errors here
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                        geoStatusElement.innerHTML = "User denied the request for Geolocation.";
+                        break;
+                        case error.POSITION_UNAVAILABLE:
+                        geoStatusElement.innerHTML = "Location information is unavailable.";
+                        break;
+                        case error.TIMEOUT:
+                        geoStatusElement.innerHTML = "The request to get user location timed out.";
+                        break;
+                        default:
+                        geoStatusElement.innerHTML = "An unknown error occurred.";
+                        break;
+                    }
+                    });
+                } else {
+                    geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
+                } 
+            });
+        });
+    } else {
+        console.log('Geolocation is not available');
+    }
+
+</script>
 
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -8,7 +76,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Gem Details - {{gem_basic_info.name}}</title>
+    <title>Gem Details</title>
     <link rel="icon" href="/static/img/geo-icon.png">
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
@@ -21,22 +89,64 @@
     <link rel="stylesheet" href="/static/css/styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
 </head>
-
+<script>
+    const url = window.location.pathname;
+    const gem_id = url.split('/').pop();
+</script>
 <body id="page-top">
     {{ signed_in_navbar() }}
-
-    <script type="text/javascript">
-        var gemId = {{ gem_basic_info.gem_id | tojson }};
-    </script>
-   
-    <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
+    <header class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Hidden Gem</p>
-            <h1 class="fw-bold">{{gem_basic_info.name}}</h1>
-            <button id="pinGemButton" class="btn btn-success btn-sm" type="submit">
-                <span style="color: rgb(255, 255, 255);">Pin Gem</span>
-            </button>
+            <h1 id="gem-name" class="fw-bold"></h1>
+            <p id="created-by" class="fw-bold text-success mb-2" style="padding-bottom: 20px;"></p>
+            <div id="pin-gem-button-contrainer">
+                <button class="btn btn-success btn-sm" type="submit">
+                    <span id="pinGemButton" style="color: rgb(255, 255, 255);">Pin Gem</span>
+                </button>
+                <script>
+                    document.getElementById('pinGemButton').addEventListener('click', function() {
+                        const data = {
+                            gem_id: gem_id,
+                            // user_id will be passed from auth
+                        };
+                        // Get the CSRF token from the cookie
+                        let csrf_token = document.cookie.split('; ')  
+                        .find(row => row.startsWith("csrf_access_token" + '=')) 
+                        ?.split('=')[1];     
+                    
+                        fetch(`/gem/${gem_id}/pin`, {
+                            method: 'POST',
+                            body: JSON.stringify(data), // Converting the JSON object to a JSON string
+                            headers: {
+                                 'Content-Type': 'application/json',
+                                 'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                                 }, // Setting the Content-Type as application/json
+                            credentials: 'include'  // Necessary to include cookies with requests
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json(); // or .text() if the response is plain text
+                            } else {
+                                throw new Error('Something went wrong on the server side.');
+                            }
+                        })
+                        .then(data => {
+                            const buttonContainer = document.getElementById('pin-gem-button-contrainer')
+                            buttonContainer.innerHTML = '<p class="fw-bold text-success mb-2">Gem Pinned</p>';
+                        })
+                        .catch(error => {
+                        
+                            const buttonContainer = document.getElementById('pin-gem-button-contrainer')
+                            buttonContainer.innerHTML = '<p class="fw-bold text-success mb-2">Gem Already Pinned</p>';
+                        });
+                    });
+                    
+                </script>
+            </div>
         </div>
     </header>
     <div class="container" id="Pictures">
@@ -44,19 +154,18 @@
             <div class="card mb-3">
                 <div class="card-body" style="padding-top: 30px;">
                     <div class="row nav-fill">
-                        <div class="col-md-6 col-xl-7 col-xxl-7 d-flex">
-                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img class="rounded d-md-flex flex-fill w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height: 300px;" src="{{gem_basic_info.image_1 if gem_basic_info.image_1 is not none else '/static/img/gem-image-placeholder.png'}}" width="727" height="646" style="max-height:646px;"></div>
+                        <div class="col-md-6 col-xl-7 col-xxl-7 d-flex justify-content-xxl-center align-items-xxl-center">
+                            <div class="d-md-flex d-xxl-flex justify-content-md-center mb-3"><img id="img-1" class="rounded d-md-flex flex-shrink-1 flex-fill fit-cover img-fluid" data-aos="zoom-in" style="height: 646px;width: 727px;" src="assets/img/IMG_9980.jpg" width="297" height="646"></div>
                         </div>
                         <div class="col-md-6 col-xl-4 col-xxl-4 d-xxl-flex flex-column flex-grow-1 justify-content-xxl-center flex-fill">
                             <div class="row">
-                                
                                 <div class="col-md-12">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" style="min-height:0px" src="{{gem_basic_info.image_2 if gem_basic_info.image_2 is not none else '/static/img/gem-image-placeholder.png'}}" width="513" height="272" style="max-height:272px;"></div>
+                                    <div class="mb-3"><img id="img-2" class="rounded fit-cover img-fluid" data-aos="zoom-in" style="width: 512px;height: 315px;" src="assets/img/nature-image.png" width="513" height="272"></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-xxl-flex justify-content-xxl-center align-items-xxl-start">
-                                    <div class="mb-3"><img class="rounded w-100 h-120 fit-cover img-fluid" data-aos="zoom-in" src="{{gem_basic_info.image_1 if gem_basic_info.image_1 is not none else '/static/img/gem-image-placeholder.png'}}" width="300" height="450" style="max-height:450px;"></div>
+                                    <div class="mb-3"><img id="img-3" class="rounded fit-cover img-fluid" data-aos="zoom-in" src="assets/img/nature-image.png" width="300" height="450" style="width: 512px;height: 315px;"></div>
                                 </div>
                             </div>
                         </div>
@@ -64,44 +173,154 @@
                 </div>
             </div>
         </div>
-        <div class="card shadow mb-5"><h5 class="fw-bold card-title"></div>
     </div>
+    
+    <script>
+        /*
+        fetch(`/gem/${gem_id}/get-all-gem-images`, {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            // get the images form the data
+            document.getElementById("img-1").src = `data:image/png;base64,${data[0]}`;
+            document.getElementById("img-2").src = `data:image/png;base64,${data[1]}`;
+            document.getElementById("img-3").src = `data:image/png;base64,${data[2]}`;
+            
+        })
+        .catch(error => {
+    
+            //update the images with placeholder
+            document.getElementById("img-1").src = "/static/img/gem-image-placeholder.png";
+            document.getElementById("img-2").src = "/static/img/gem-image-placeholder.png";
+            document.getElementById("img-3").src = "/static/img/gem-image-placeholder.png";
+        });
+        */
+    </script>
     <div class="container" id="description">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center justify-content-lg-center">
-            <div class="col-md-9 col-lg-10 flex-fill">
-                <div class="card shadow-sm flex-fill mb-4">
-                    <div class="card-body d-md-flex flex-fill justify-content-md-center align-items-md-center" data-aos="fade" style="height: 340px;">
+            <div class="col-md-9 col-lg-10 d-xl-flex d-xxl-flex flex-fill justify-content-xl-center align-items-xl-center align-items-xxl-center">
+                <div class="card flex-fill mb-4">
+                    <div class="card-body d-md-flex flex-fill justify-content-md-center align-items-md-center h-" data-aos="fade" style="height: 340px;">
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="row">
                                     <div class="col">
-                                        <div class="text-center mb-3" style="text-align: center;padding-top: 10px;"><label class="form-label fs-4" for="email"><strong>Average User Rating</strong></label></div>
+                                        <div class="text-center mb-3" style="text-align: center;padding-top: 10px;"><label class="form-label fs-4" for="email">
+                                            <strong>Average User Rating</strong></label></div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email"><strong>{{gem_basic_info.avg_rat|round(2) | string}}/ 5</strong></label></div>
+                                        <div class="text-center mb-3" style="text-align: center;"><label class="form-label fs-4" for="email">
+                                            <strong id="gem-average-rating" ></strong>
+                                        </label></div>
                                         <div class="row">
-                                            <div class="col text-center d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center">
-                                            {% for i in range(gem_basic_info.avg_rat|round(1, 'floor')|int)%}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                            </svg>
-                                            {% endfor %}
-                                            {% set filler = (gem_basic_info.avg_rat%1)*100|round(1)|int %}
-                                            {% if filler > 1 and gem_basic_info.avg_rat|round(1, 'floor') != gem_basic_info.avg_rat %}
-                                            <!--gem_basic_info.avg_rat*100|round(1)|int-->
-                                                <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                    <defs>
-                                                        <clipPath id="clippy">
-                                                            <rect x="0" y="0" width="{{filler}}%" height="100%"></rect>
-                                                        </clipPath>
-                                                    </defs>
-                                                    <path style="clip-path:url(#clippy);" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                </svg>
-                                            {% endif %}
+                                            <div id="rating-stars-container"class="col text-center d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center">
+                                                
                                             </div>
                                         </div>
+                                        <script>
+                                            function updateStars(rating) {
+                                                const fullStar = '<svg class="bi bi-star-fill fs-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path></svg>';
+                                                const halfStar = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half fs-2"><path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"></path></svg>';
+                                                const emptyStar = '<svg class="bi bi-star fs-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path></svg>';
+                                        
+                                                const fullStarsCount = Math.floor(rating);
+                                                const halfStarCount = Math.floor(rating) !== rating ? 1 : 0;
+                                                const emptyStarsCount = 5 - fullStarsCount - halfStarCount;
+                                        
+                                                let html = '';
+                                                for (let i = 0; i < fullStarsCount; i++) {
+                                                    html += fullStar;
+                                                }
+                                                for (let i = 0; i < halfStarCount; i++) {
+                                                    html += halfStar;
+                                                }
+                                                for (let i = 0; i < emptyStarsCount; i++) {
+                                                    html += emptyStar;
+                                                }
+                                        
+                                                document.getElementById('rating-stars-container').innerHTML = html;
+                                            }
+                                        </script>
+    
+                                      
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-12 d-flex justify-content-center" style="padding-top: 50px;">
+                                        <button id="get-directions-button" class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;">
+                                            <span style="color: rgb(255, 255, 255);">Get Directions</span>
+                                        </button>
+                                        <script>
+                                            document.getElementById('get-directions-button').addEventListener('click', () => {
+                                                
+                                                var formData = new FormData();
+                                        
+                                                formData.append('gem_id', gem_id);
+                                        
+                                                // Get the CSRF token from the cookie
+                                                let csrf_token = document.cookie.split('; ')  
+                                                .find(row => row.startsWith("csrf_access_token" + '=')) 
+                                                ?.split('=')[1];
+                                        
+                                        
+                                                fetch(`/user/add-visited-gem`, {
+                                                    method: 'POST',
+                                                    body: formData,
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': csrf_token
+                                                    },
+                                                    credentials: 'include'  // Necessary to include cookies with requests
+                                                })
+                                                .then((response) => {
+                                                    if (response.ok) {
+                                                        return response.json();
+                                                    } 
+                                                    else {
+                                                        return response.text().then(text => {
+                                                            throw new Error(text);
+                                                        });
+                                                    }
+                                                })
+                                            
+                                                .then(data => { 
+                                                    window.location.href = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+                                                })
+                                                .catch(error => {
+                                            
+                                                });
+                                                
+                                            });
+                                        </script>  
+                                        <script>
+
+                                            
+                                            fetch(`/gem/${gem_id}/get-distance-from-user/?lat=${latitude}&lng=${longitude}`)
+                                            .then(response => response.text())
+                                            .then(data => {
+                                                const scriptElement = document.createElement('script');
+                                                scriptElement.textContent = data;
+                                                document.body.appendChild(scriptElement);
+                                                
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                            });
+                                            
+                                        </script>
                                     </div>
                                 </div>
                             </div>
@@ -141,43 +360,40 @@
                 </div>
             </div>
             <div class="col-md-9 col-lg-10 flex-fill">
-                <div class="card shadow-sm" data-aos="fade">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-activity text-success">
                                 <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Type</h5>
-                        <p class="text-muted card-text mb-4">{{gem_basic_info.gem_type}}</p>
+                        <p id="gem-type" class="text-muted card-text mb-4"></p>
                     </div>
                 </div>
-                <div class="card shadow-sm" data-aos="fade">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-globe-americas text-success">
                                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484-.08.08-.162.158-.242.234-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"></path>
                             </svg></div>
-                            <h5 class="fw-bold card-title">Distance</h5>
-                            <p class="text-muted card-text mb-4">{{gem_basic_info.distance}} km away</p>
-                        <h5 class="fw-bold card-title">Location</h5>
-                        <p class="text-muted card-text mb-0">Longitude: {{gem_basic_info.longitude}}, Latitude: {{gem_basic_info.latitude}}</p>
+                        <h5 class="fw-bold card-title">Distance</h5>
+                        <p id="distance-away-from-user" class="text-muted card-text mb-4"></p>
                     </div>
                 </div>
-                <div class="card shadow-sm" data-aos="fade">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person text-success">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Times Visited</h5>
-                        <p class="text-muted card-text mb-4">{{gem_basic_info.times_visited}}</p>
+                        <p id="times-visited" class="text-muted card-text mb-4"></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container py-4 py-xl-5">
+    <div class="container">
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
-            <div class="col">
-                {% if gem_basic_info.wheelchair_accessible  %}
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-wheelchair text-success">
                                 <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.732 4.732 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.732 4.732 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79l1.903-2.854ZM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65l1.077 1.078Z"></path>
@@ -186,12 +402,9 @@
                         <p class="text-muted card-text mb-4">Wheelchairs are easy to use&nbsp;</p>
                     </div>
                 </div>
-                {% else %}
-                {% endif %}
             </div>
-            <div class="col">
-                {% if gem_basic_info.service_animal_friendly  %}
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-dog text-success">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -208,27 +421,20 @@
                         <p class="text-muted card-text mb-4">Service animals are allowed&nbsp;</p>
                     </div>
                 </div>
-                {% else %}
-                {% endif %}
             </div>
-            {% if gem_basic_info.multilingual_support  %}
-            <div class="col-md-12 col-lg-8">
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><i class="la la-language text-success"></i></div>
                         <h5 class="fw-bold card-title">Multilingual Support</h5>
                         <p class="text-muted card-text mb-4">Multiple languages are supported here</p>
                     </div>
-                </div>   
+                </div>
             </div>
-            {% else %}
-            {% endif %}
         </div>
         <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center" style="padding-top: 25px;">
-            <div class="col">
-                {% if gem_basic_info.braille_signage  %}
-
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 20 20" fill="none" class="text-success">
 
@@ -237,16 +443,12 @@
                                 <path d="M16 12C17.1046 12 18 11.1046 18 10C18 8.89543 17.1046 8 16 8C14.8954 8 14 8.89543 14 10C14 11.1046 14.8954 12 16 12Z" fill="currentColor"></path>
                             </svg></div>
                         <h5 class="fw-bold card-title">Braille Signage</h5>
-                        <p class="text-muted card-text mb-4">Those with impaired vision can have fun too!</p>
+                        <p class="text-muted card-text mb-4">3300</p>
                     </div>
                 </div>
-                {% else %}
-                {% endif %}
             </div>
-            <div class="col">
-                {% if gem_basic_info.hearing_assistance  %}
-
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-ear text-success">
                                 <path d="M8.5 1A4.5 4.5 0 0 0 4 5.5v7.047a2.453 2.453 0 0 0 4.75.861l.512-1.363a5.553 5.553 0 0 1 .816-1.46l2.008-2.581A4.34 4.34 0 0 0 8.66 1zM3 5.5A5.5 5.5 0 0 1 8.5 0h.16a5.34 5.34 0 0 1 4.215 8.618l-2.008 2.581a4.555 4.555 0 0 0-.67 1.197l-.51 1.363A3.453 3.453 0 0 1 3 12.547zM8.5 4A1.5 1.5 0 0 0 7 5.5v2.695c.112-.06.223-.123.332-.192.327-.208.577-.44.72-.727a.5.5 0 1 1 .895.448c-.256.513-.673.865-1.079 1.123A8.538 8.538 0 0 1 7 9.313V11.5a.5.5 0 0 1-1 0v-6a2.5 2.5 0 0 1 5 0V6a.5.5 0 0 1-1 0v-.5A1.5 1.5 0 0 0 8.5 4"></path>
@@ -255,12 +457,9 @@
                         <p class="text-muted card-text mb-4">Those troubled with hearing can request aid.</p>
                     </div>
                 </div>
-                {% else %}
-                {% endif %}
             </div>
-            <div class="col-md-12 col-lg-8">
-                {% if gem_basic_info.large_print_materials  %}
-                <div class="card shadow-sm" data-aos="fade">
+            <div class="col-md-12 col-lg-12">
+                <div class="card" data-aos="fade">
                     <div class="card-body px-4 py-5 px-md-5">
                         <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-newspaper text-success">
                                 <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5z"></path>
@@ -270,32 +469,30 @@
                         <p class="text-muted card-text mb-4">Can't see the map or a menu? Larger printed materials are provided</p>
                     </div>
                 </div>
-                {% else %}
-                {% endif %}
             </div>
         </div>
     </div>
-    <div class="container" id="GemDetails">
+    <div class="container" id="review-distro">
         <div class="row">
             <div class="col-xl-8 col-xxl-7 flex-fill">
-                <div class="card shadow-sm mb-3" data-aos="fade">
-                    <div class="card-body">
+                <div class="card" data-aos="fade">
+                    <div id="distro-container" class="card-body">
                         <h1 class="small fw-bold"></h1>
-                        <h4 class="small fw-bold"><span class="float-end">{{gem_review_distribution.one}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span id="one-star-bar-text" class="float-end">10%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="{{gem_review_distribution.1}}" aria-valuenow="40" style="width: {{normalized_review_distribution.one}}%;"><span class="visually-hidden">10%</span></div>
+                            <div id="one-star-bar" class="progress-bar bg-primary" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"><span class="visually-hidden">10%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">{{gem_review_distribution.two}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span id="two-star-bar-text" class="float-end">20%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuenow="20" style="width: {{normalized_review_distribution.two}}%;"><span class="visually-hidden">20%</span></div>
+                            <div id="two-star-bar"  class="progress-bar bg-primary" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">{{gem_review_distribution.three}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span id="three-star-bar-text" class="float-end">30%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -303,9 +500,9 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" style="width: {{normalized_review_distribution.three}}%;"><span class="visually-hidden">30%</span></div>
+                            <div id="three-star-bar"  class="progress-bar bg-primary" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"><span class="visually-hidden">30%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">{{gem_review_distribution.four}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span id="four-star-bar-text" class="float-end">40%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -315,9 +512,9 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" style="width: {{normalized_review_distribution.four}}%;"><span class="visually-hidden">40%</span></div>
+                            <div id="four-star-bar" class="progress-bar bg-primary" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span></div>
                         </div>
-                        <h4 class="small fw-bold"><span class="float-end">{{gem_review_distribution.five}}</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
+                        <h4 class="small fw-bold"><span id="five-star-bar-text" class="float-end">60%</span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-5">
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
@@ -329,48 +526,105 @@
                                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
                             </svg></h4>
                         <div class="progress progress-sm mb-3">
-                            <div class="progress-bar bg-primary" aria-valuemin="0" aria-valuemax="100" style="width: {{normalized_review_distribution.five}};"><span class="visually-hidden">60%</span></div>
+                            <div id="five-star-bar" class="progress-bar bg-primary" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="visually-hidden">60%</span></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="text-uppercase text-center text-primary fw-bold text-xs mb-1">
+            <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="padding-bottom: 20px;padding-top: 30px;">Reviews</h5>
+            <p class="text-muted"></p>
+        </div>
     </div>
-    <div class="container" id="reviews">
+    <script>
+        fetch(`/gem/${gem_id}/get-rating-distribution`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+        .then (data => {
+    
+            if (data.total == 0){
+                document.getElementById("distro-container").innerHTML = `
+                <div id="no-review-distro" class="card">
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                            <h5 class="text-capitalize fw-bold text-center d-xxl-flex justify-content-xxl-center" style="padding-bottom: 0px;padding-top: 40px;">gem Review Distrobution</h5>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                <h2 class="fw-bold">No Reviews</h2>
+                                <p class="text-muted">Wait for reviews to be posted or maybe make your own!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+    
+                `;
+    
+    
+            }
+            else{
+                if (data.one == 0) {
+                    document.getElementById('one-star-bar-text').innerText = '0%';
+                    document.getElementById('one-star-bar').style.width = '0%';
+                } else {
+                    document.getElementById('one-star-bar-text').innerText = `${(data.one / data.total) * 100}%`;
+                    document.getElementById('one-star-bar').style.width = `${(data.one / data.total) * 100}%`;
+                }
+                if (data.two == 0) {
+                    document.getElementById('two-star-bar-text').innerText = '0%';
+                    document.getElementById('two-star-bar').style.width = '0%';
+                } else {
+                    document.getElementById('two-star-bar-text').innerText = `${(data.two / data.total) * 100}%`;
+                    document.getElementById('two-star-bar').style.width = `${(data.two / data.total) * 100}%`;
+                }
+                if (data.three == 0) {
+                    document.getElementById('three-star-bar-text').innerText = '0%';
+                    document.getElementById('three-star-bar').style.width = '0%';
+                } else {
+                    document.getElementById('three-star-bar-text').innerText = `${(data.three / data.total) * 100}%`;
+                    document.getElementById('three-star-bar').style.width = `${(data.three / data.total) * 100}%`;
+                }
+                if (data.four == 0) {
+                    document.getElementById('four-star-bar-text').innerText = '0%';
+                    document.getElementById('four-star-bar').style.width = '0%';
+                } else {
+                    document.getElementById('four-star-bar-text').innerText = `${(data.four / data.total) * 100}%`;
+                    document.getElementById('four-star-bar').style.width = `${(data.four / data.total) * 100}%`;
+                }
+                if (data.five == 0) {
+                    document.getElementById('five-star-bar-text').innerText = '0%';
+                    document.getElementById('five-star-bar').style.width = '0%';
+                } else {
+                    document.getElementById('five-star-bar-text').innerText = `${(data.five / data.total) * 100}%`;
+                    document.getElementById('five-star-bar').style.width = `${(data.five / data.total) * 100}%`;
+                }
+    
+            }
+    
+           
+        })        
+    </script>
+    <div id="reviews" class="container">
         <div class="row">
             <div class="col" style="background: #ffffff;">
-                <div class="card mb-3" data-aos="fade" style="background: rgb(255,255,255);">
+                <div class="card" style="background: rgb(255,255,255);">
                     <div class="card-body" style="overflow: auto;background: #ffffff;">
-                        <section class="text-truncate" style="color: rgb(255,255,255);background-color: #ffffff;padding: 30px;max-height: 700px;overflow-y: scroll;border-color: rgb(255,255,255);">
-                            <div class="container scstyle-1 sc-overflow" style="max-height: 675px;background: #ffffff;">
-                                {% for review in gem_reviews %}
-                                <div class="card mb-3">
-                                    <div class="card-body listedreview">
-                                        <div class="row">
-                                            <div class="col" style="height:82px;"><a class="hidden-link" href="/user/{{review.user_id}}"><img class="border rounded-circle img-profile" src="{{review.pfp if review.pfp is not none else '/static/img/pfp-placeholder.png'}}" width="65" height="61" style="position:absolute">
-                                                <div style="margin-left:30px;position:absolute;margin-top:-10px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-half" style="font-size: 39px;"></svg>
-                                                    {% for i in range(5) %}
-                                                        {% if i < review.rating %}
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star-fill fs-1">
-                                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-                                                            </svg>
-                                                        {% else %}
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 16 16" class="bi bi-star" style="font-size: 39px;">
-                                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"></path>
-                                                            </svg>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
-                                                <div style="margin-left:75px;margin-top:24px;">
-                                                    <h5 class="fw-bold" style="margin-bottom:0px;">{{review.user_name}}</h5>
-                                                    <p>{{review.date}}</p>
-                                                </div>
-                                            </a></div>
-                                        </div>
-                                        <p class="text-muted mb-4 text-wrap text-break">{{review.review}}</p>
-                                    </div>
-                                </div>
-                                {% endfor %}
+                        <section class="text-truncate" style="color: rgb(255,255,255);background-color: #ffffff;padding: 30px;height: 700px;overflow: scroll;border-color: rgb(255,255,255);">
+                            <div id="review-container"class="container scstyle-1 sc-overflow" style="max-height: 675px;background: #ffffff;">
+                            
                             </div>
                         </section>
                     </div>
@@ -378,13 +632,74 @@
             </div>
         </div>
     </div>
+    <script type="module">
+        import { gemReview } from '/static/components/gemReviewCard.js';
+        fetch(`/gem/${gem_id}/get-reviews`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+        .then (data => {
+    
+            
+            if (data.length === 0){
+                document.getElementById("review-container").innerHTML = `
+                <div id="no-review-distro" class="card">
+                    <div class="card-body px-4 py-5 px-md-5">
+                        <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-8 col-xl-6 text-center mx-auto">
+                                <h2 class="fw-bold">No Reviews</h2>
+                                <p class="text-muted">Wait for reviews to be posted or maybe make your own!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+    
+                `;
+    
+    
+            }
+            else{
+                var container = document.getElementById("review-container");
+                data.forEach(review => {
+                    const card = gemReview(review);
+                    container.appendChild(card);
+                });
+               
+    
+            }
+    
+           
+        })        
+    </script>
     <div class="container py-5">
-        <div class="row mb-5" data-aos="fade">
+        <div class="row mb-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <h2 class="fw-bold">Create A Review</h2>
                 <p class="text-muted">Been here before? Make a review</p>
                 <div class="card flex-grow-1 flex-fill">
-                    <div class="card-body d-xxl-flex justify-content-xxl-center align-items-xxl-center"><a class="btn btn-success btn-lg d-lg-flex align-items-lg-center" role="button" data-bss-hover-animate="pulse" href="/gem/{{gem_basic_info.gem_id}}/create-review"><span style="color: rgb(255, 255, 255);">Make A Review</span></a></div>
+                    <div class="card-body text-center d-lg-flex d-xxl-flex justify-content-lg-center justify-content-xxl-center align-items-xxl-center">
+                        <button class="btn btn-success btn-lg d-lg-flex align-items-lg-center" onclick="goToReviewPage()"type="submit">
+                            <span style="color: rgb(255, 255, 255);">Make A Review</span>
+                        </button>
+                        <script>
+                            function goToReviewPage() {
+                                window.location.href = `/gem/${gem_id}/create-review`;
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
@@ -394,7 +709,101 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="/static/js/script.min.js"></script>
-    <script src="/static/js/pin-gem.js"></script>
+    <script>
+        // this script fetches the header info of the gem
+        fetch(`/gem/${gem_id}/get-basic-gem-info`, {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+        .then(data => { 
+    
+            if (data[0]["user_id"] == null) { document.getElementById('created-by').innerHTML = '';}
+            else { document.getElementById('created-by').innerHTML = `Created by ${data[0]["username"]}`;}
+            document.getElementById('gem-name').innerHTML = `${data[0]["name"]}`;
+            document.getElementById("gem-type").innerHTML = `${data[0]["gem_type"]}`;
+            document.getElementById("times-visited").innerHTML = `${data[0]["times_visited"]}`;
+            if (data[0]["avg_rat"] == null) { document.getElementById('gem-average-rating').innerHTML = 'No ratings yet';}
+            else { document.getElementById('gem-average-rating').innerHTML = `${data[0]["avg_rat"]}`;}
+            updateStars(data[0]["avg_rat"]);
+        })
+    </script>
+    <script>
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                
+    
+                
+               
+            }, function(error) {  // Error callback correctly positioned
+                document.getElementById('description').innerHTML = `
+                <section class="card py-4 py-xl-5">
+                    <div class="container h-100">
+                        <div class="row h-100">
+                            <div class="col-md-10 col-xl-8 text-center d-flex d-sm-flex d-md-flex justify-content-center align-items-center mx-auto justify-content-md-start align-items-md-center justify-content-xl-center" style="padding-top:100px; padding-bottom: 100px;">
+                                <div>
+                                    <img src="/static/img/geo-gemmer-logo.png" width="157" height="72" />
+                                    <h1 id="geoStatus" class="display-6 fs-1 fw-bold mb-3" style="padding-top: 30px;">Geolocation needed</h1>
+                                    <p class="mb-4">We need your geolocation so we can provide you statistics for this gem!</p>
+                                    <button id="enableLocationBtn" class="btn btn-primary fs-5 me-2 py-2 px-4" type="button">
+                                        <span style="color: rgb(255, 255, 255);">Enable Location</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                `;  
+                var viewButton = document.querySelector(`#enableLocationBtn`);
+                viewButton.addEventListener('click', () => {
+                    const geoStatusElement = document.getElementById('geoStatus');
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(function(position) {
+                        // Handle position here
+                            var latitude = position.coords.latitude;
+                            var longitude = position.coords.longitude;
+                        window.location.href = '/gem/search';
+                      }, function(error) {
+                        // Handle errors here
+                        switch(error.code) {
+                          case error.PERMISSION_DENIED:
+                            geoStatusElement.innerHTML = "User denied the request for Geolocation.";
+                            break;
+                          case error.POSITION_UNAVAILABLE:
+                            geoStatusElement.innerHTML = "Location information is unavailable.";
+                            break;
+                          case error.TIMEOUT:
+                            geoStatusElement.innerHTML = "The request to get user location timed out.";
+                            break;
+                          default:
+                            geoStatusElement.innerHTML = "An unknown error occurred.";
+                            break;
+                        }
+                      });
+                    } else {
+                      geoStatusElement.innerHTML = 'Geolocation is not supported by this browser.';
+                    } 
+                });
+            });
+        } else {
+            console.log('Geolocation is not available');
+        }
+    </script>
+    
+   
+   
+  
+
+
 
 </body>
 

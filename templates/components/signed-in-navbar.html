@@ -6,7 +6,12 @@
                 <div class="col-md-10 offset-md-1">
                     <div class="card m-auto" style="max-width:850px">
                         <div class="card-body" id="search-for-gem">
-                            <form class="d-flex align-items-center" action="/gem/search" method="get"><input class="form-control form-control-sm flex-shrink-1 form-control-borderless" type="search" data-bss-hover-animate="pulse" placeholder="Search topics or keywords" name="searchbar"><button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Search</span></button></form>
+                            <form class="d-flex align-items-center" action="/gem/search" method="get">
+                                <input class="form-control form-control-sm flex-shrink-1 form-control-borderless" type="search" data-bss-hover-animate="pulse" placeholder="Search topics or keywords" name="searchbar">
+                                <button class="btn btn-success btn-sm" data-bss-hover-animate="pulse" type="submit">
+                                    <span style="color: rgb(255, 255, 255);">Search</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -38,36 +43,7 @@
                 <div class="w-100"></div>
                 <div class="w-100"></div>
             </div>
-            <script>
-                function getUsernameCookie() {
-                    const cookies = document.cookie; // Get all cookies as a single string
-                    const cookiesArray = cookies.split('; '); // Split the cookies string into an array of "key=value" strings
-                
-                    // Loop through the array to find the "username" cookie
-                    for (let i = 0; i < cookiesArray.length; i++) {
-                        const cookiePair = cookiesArray[i].split('='); // Split each "key=value" string into [key, value]
-                        if (cookiePair[0] === 'username') {
-                            return cookiePair[1]; // Return the value of the "username" cookie
-                        }
-                    }
-                
-                    return null; // Return null if the "username" cookie is not found
-                }
-                function getUIDCookie() {
-                    const cookies = document.cookie; // Get all cookies as a single string
-                    const cookiesArray = cookies.split('; '); // Split the cookies string into an array of "key=value" strings
-                    console.log(cookies);
-                    // Loop through the array to find the "username" cookie
-                    for (let i = 0; i < cookiesArray.length; i++) {
-                        const cookiePair = cookiesArray[i].split('='); // Split each "key=value" string into [key, value]
-                        if (cookiePair[0] === 'user_id') {
-                            return cookiePair[1]; // Return the value of the "username" cookie
-                        }
-                    }
-                
-                    return null; // Return null if the "username" cookie is not found
-                }
-            </script>
+           
             <ul class="navbar-nav d-flex d-sm-flex justify-content-center align-items-center flex-nowrap ms-auto align-items-sm-center">
                 <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
                     <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
@@ -84,7 +60,7 @@
                 </li>
                 <div class="d-none d-sm-block topbar-divider"></div>
                 <li class="nav-item dropdown no-arrow">
-                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span id="username" class="d-none d-lg-inline me-2 text-gray-600 small">{{username}}</span>
+                    <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span id="username" class="d-none d-lg-inline me-2 text-gray-600 small"></span>
                        </a>
                         <button class="dropdown-menu shadow dropdown-menu-end animated--grow-in" style="border: none; background: none; padding: 0; margin: 0;">
                             <a class="dropdown-item" href="/user"><i class="fas fa-home fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Home</a>
@@ -101,11 +77,31 @@
         </div>
     </div>
     <script>
-        var username = getUsernameCookie();  // Retrieve the username from cookies
-        var usernameElement = document.getElementById('username');
-        usernameElement.innerText = username;  // Set the text of the element
-        console.log(username);
+        fetch('/user/navbar-get-username', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            const username = data.username;
+            document.getElementById('username').innerText = username;
+
+            }
+        )
     </script>
+   
+    
     <script>
         function logout() {
             fetch('/user/logout', {

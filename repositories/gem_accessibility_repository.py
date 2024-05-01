@@ -2,6 +2,41 @@ from repositories.db import get_pool
 from typing import Any
 from psycopg.rows import dict_row
 
+def create_accesibility_for_hidden_gem(gem_id, 
+        wheelchair_accessible: bool=False,
+        service_animal_friendly : bool=False, 
+        multilingual_support : bool=False, 
+        braille_signage : bool=False, 
+        hearing_assistance : bool=False, 
+        large_print_materials : bool=False, 
+        accessible_restrooms : bool=False
+        ):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute('''INSERT INTO accessibility 
+                (gem_id, 
+                wheelchair_accessible, 
+                service_animal_friendly, 
+                multilingual_support, 
+                braille_signage,
+                hearing_assistance, 
+                large_print_materials, accessible_restrooms
+                ) 
+
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s);'''
+            , (gem_id,
+               wheelchair_accessible, 
+               service_animal_friendly, 
+               multilingual_support, 
+               braille_signage, 
+               hearing_assistance, 
+               large_print_materials, 
+               accessible_restrooms
+               )
+            )
+        return True
+    
 
 def get_accesibility_for_hidden_gem(gem_id):
     """
@@ -29,13 +64,8 @@ def get_accesibility_for_hidden_gem(gem_id):
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute('''SELECT 
-                           wheelchair_accessible, 
-                           service_animal_friendly,
-                            multilingual_support, 
-                            braille_signage, 
-                           hearing_assistance, 
-                           large_print_materials, 
-                           accessible_restrooms 
+                           
+                           *
                             
                            FROM accessibility 
                            

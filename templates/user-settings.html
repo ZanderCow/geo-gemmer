@@ -30,13 +30,14 @@
             <h3 class="fw-bold">Settings</h3>
         </div>
     </header>
+
     <section id="pfp-pic-settings" class="position-relative py-4 py-xl-5">
         <div class="container">
             <div class="row d-flex justify-content-center" data-aos="fade">
                 <div class="col-md-6 col-xl-4">
                     <div class="card mb-5">
                         <div class="card-body d-flex flex-column align-items-center">
-                            <img id="uploadedimage" class="rounded-circle mb-3 mt-4" src="data:image/png;base64,{{ image_data }}" width="132" height="133">
+                            <img id="uploadedimage" class="rounded-circle mb-3 mt-4" src="/static/img/gem-image-placeholder.png" width="132" height="133">
                             <input type="file" id="fileInput" accept="image/*" style="display: none;" name="pfp">
                             <div class="mb-3"></div>
                             <div class="mb-3"></div>
@@ -49,9 +50,65 @@
             </div>
         </div>
     </section>
+
+    <script>
+        /*
+        // grab image from s3 database
+        fetch('/user/get-pfp', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+            console.log(data);
+          document.getElementById("uploadedimage").src = `data:image/png;base64,${data}`;
+            
+        })
+        .catch(error => {
+            document.getElementById("uploadedimage").src = "/static/img/pfp-placeholder.png";
+        });
+        */
+        
+    </script>
+    
+
+  
+    <script>
+        //user change pfp
+
+        
+        document.getElementById("upload-button").addEventListener("click", function() {
+            document.getElementById("fileInput").click();
+        });
+
+        document.getElementById("fileInput").addEventListener("change", function() {
+            var file = document.getElementById("fileInput").files[0];
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                document.getElementById("uploadedimage").src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById("uploadedimage").src = "";
+            }
+        });
+    
+    </script>
     <div class="container" id="user-settings">
         <form>
-            <div class="card shadow-sm" data-aos="fade" id="username-card">
+            <div class="card " data-aos="fade" id="username-card">
                 <div class="card-body px-4 py-5 px-md-5">
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-journal-medical text-success">
                             <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v.634l.549-.317a.5.5 0 1 1 .5.866L9 6l.549.317a.5.5 0 1 1-.5.866L8.5 6.866V7.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L7 6l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V4.5A.5.5 0 0 1 8 4M5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"></path>
@@ -63,7 +120,7 @@
                 </div>
             </div>
             
-            <div class="card shadow-sm" id="first-name-card">
+            <div class="card " id="first-name-card">
                 <div class="card-body px-4 py-5 px-md-5">
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                             <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
@@ -71,7 +128,7 @@
                     <h5 class="fw-bold card-title">First Name</h5><input id="first-name"class="form-control" type="text" data-bss-hover-animate="pulse" placeholder="{{user_settings.first_name}}" name="first_name" maxlength="255">
                 </div>
             </div>
-            <div class="card shadow-sm" id="last-name-card">
+            <div class="card " id="last-name-card">
                 <div class="card-body px-4 py-5 px-md-5">
                     <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-tree text-success">
                             <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777l-3-4.5zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507z"></path>
@@ -87,7 +144,7 @@
                     <h5 class="fw-bold card-title">User Bio</h5><textarea class="form-control" type="text" data-bss-hover-animate="pulse" placeholder="None" id="bio" name="bio" maxlength="1023" style="height: 217px;"></textarea>
                 </div>
             </div>
-            <div class="card shadow-sm" id="save-settings-button">
+            <div class="card " id="save-settings-button">
                 <div class="card-body px-4 py-5 px-md-5">
                     <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;">
                         <button id="save-settings-button" class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;"><span style="color: rgb(255, 255, 255);">Save Settings</span></button>
@@ -95,12 +152,107 @@
             </div>
         </form>
     </div>
+    <script>
+        fetch('/user/get-user-settings-info', {
+            method: 'GET',
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+    
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+    
+        .then(data => { 
+
+            console.log(data);
+            // replace 
+
+            if (data.username === null){
+                document.getElementById("user-name").placeholder = "Username";
+            }   
+            if (data.first_name === null){
+                document.getElementById("first-name").placeholder = "First Name";
+            }
+            if (data.last_name === null){
+                document.getElementById("last-name").placeholder = "Last Name";
+            }
+
+            document.getElementById("user-name").value = data.username;
+            document.getElementById("first-name").value = data.first_name;
+            document.getElementById("last-name").value = data.last_name;
+
+            
+            
+        })
+        
+    </script>
+    <script>
+
+        document.getElementById("save-settings-button").addEventListener("click", () => {
+            var user_name = document.getElementById("user-name").value;
+            var first_name = document.getElementById("first-name").value;
+            var last_name = document.getElementById("last-name").value;
+            var pfp = document.getElementById('fileInput').files[0];
+
+            var formData = new FormData();
+            formData.append('file', pfp);
+            formData.append('username', user_name);
+            formData.append('first_name', first_name);
+            formData.append('last_name', last_name);
+
+            // Get the CSRF token from the cookie
+            let csrf_token = document.cookie.split('; ')  
+            .find(row => row.startsWith("csrf_access_token" + '=')) 
+            ?.split('=')[1]; 
+
+            fetch('/user/update-user-settings', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                     'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                     }, // Setting the Content-Type as application/json
+                credentials: 'include'  // Necessary to include cookies with requests
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } 
+                else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(data => { 
+                console.log(data);
+                    window.location.href = '/user/settings'; // Redirect to the settings page 
+            })
+            .catch((error) => {
+                const errorMessage = JSON.parse(error.message);
+                if (errorMessage.username === 'Username already exists'){
+                    document.getElementById('username-alr-exists').classList.remove('d-none');
+                }
+            });
+            
+        });
+
+
+
+      
+
+        // submit user info and change settings
+    </script>
     {{ footer() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="/static/js/script.min.js"></script>
-    <script src="/static/js/upload-user-pfp.js"></script>
-    <script src="/static/js/change-user-settings.js"></script>
 </body>
 
 </html>

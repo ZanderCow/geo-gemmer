@@ -1,10 +1,11 @@
-    create DATABASE geogemmer;
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    CREATE EXTENSION IF NOT EXISTS postgis;
-    CREATE EXTENSION IF NOT EXISTS pg_trgm;
+from psycopg.rows import dict_row
+from repositories.db import get_pool
 
-
-    CREATE TABLE IF NOT EXISTS geo_user (
+pool = get_pool()
+with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+   CREATE TABLE IF NOT EXISTS geo_user (
         user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         username VARCHAR(255),
         password BYTEA,
@@ -17,21 +18,16 @@
         gems_saved INT
     );
 
-CREATE TABLE IF NOT EXISTS geo_user_bio (
-    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
-    text VARCHAR(1024)
-);
-
-CREATE TABLE IF NOT EXISTS hidden_gem (
-    gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(128) NOT NULL,
-    gem_type VARCHAR(50),
-    location GEOGRAPHY(POINT,4326),
-    times_visited INT,
-    user_created BOOLEAN,
-    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
-    avg_rat FLOAT DEFAULT 1
-);
+    CREATE TABLE IF NOT EXISTS hidden_gem (
+        gem_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name VARCHAR(128) NOT NULL,
+        gem_type VARCHAR(50),
+        location GEOGRAPHY(POINT,4326),
+        times_visited INT,
+        user_created BOOLEAN,
+        avg_rat FLOAT DEFAULT 2.5,
+        user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE
+    );
 
     CREATE TABLE IF NOT EXISTS review (
         review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -74,7 +70,9 @@ CREATE TABLE IF NOT EXISTS hidden_gem (
         image_2 VARCHAR(255),
         image_3 VARCHAR(255)
     );
+                
+
+            ''')
 
 
-
-
+print("Dropped table hidden_gem")
