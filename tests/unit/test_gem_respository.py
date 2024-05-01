@@ -5,7 +5,7 @@ import pytest
 from repositories import gem_repository as repo
 from repositories import gem_accessibility_repository as accessirepo
 from repositories.db import get_pool, inflate_string
-from repositories.gem_repository import accessibility_class
+from repositories.gem_accessibility_repository import accessibility_class
 from repositories import review_repository as reviewpo
 from repositories import user_repository as userrepo
 from datetime import datetime
@@ -205,12 +205,12 @@ def test_inflater():
 
 def test_reviews():
     shrunk = reviewpo._shrink_rating(6)
-    assert reviewpo._expand_rating(shrunk) is 5
+    assert reviewpo._expand_rating(shrunk) == 5
     for i in range(5):
         shrunk = reviewpo._shrink_rating(i)
-        assert reviewpo._expand_rating(shrunk) is i
+        assert reviewpo._expand_rating(shrunk) == i
     shrunk = reviewpo._shrink_rating(-1)
-    assert reviewpo._expand_rating(shrunk) is 0
+    assert reviewpo._expand_rating(shrunk) == 0
 
     newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, False)
     user_id = userrepo.create_new_user('nameo', 'nameom')

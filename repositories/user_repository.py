@@ -244,11 +244,16 @@ def get_user_settings_details(user_id) -> dict[str, Any]:
                 SELECT
                     username,
                     first_name,
-                    last_name
+                    last_name,
+                    b.text
                 FROM
-                    geo_user
+                    geo_user g
+                JOIN
+                    geo_user_bio b
+                ON
+                    g.user_id = b.user_id
                 WHERE
-                    user_id = %s;
+                    g.user_id = %s;
             ''', (user_id,))
             return cursor.fetchone()
 
