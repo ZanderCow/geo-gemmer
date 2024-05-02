@@ -5,7 +5,7 @@ const gemReview = (review) => {
     <div class="card mb-3">
         <div class="card-body listedreview">
             <div class="row">
-                <div class="col" style="height:82px;"><a class="hidden-link" href="/user/${review.user_id}"><img class="border rounded-circle img-profile" src="${(review.pfp != null) ? review.pfp : '/static/img/pfp-placeholder.png'}" width="65" height="61" style="position:absolute">
+                <div class="col" style="height:82px;"><a class="hidden-link" href="/user/${review.user_id}"><img class="border rounded-circle img-profile" src="/static/img/pfp-placeholder.png'" width="65" height="61" style="position:absolute">
                     <div id="review-stars" style="margin-left:70px;position:absolute;margin-top:0px;">
                     </div>
                     <div style="margin-left:75px;margin-top:24px;">
