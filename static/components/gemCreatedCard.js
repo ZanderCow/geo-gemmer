@@ -128,7 +128,7 @@ const gemCreated = (gem) => {
         })
 
         .then(data => { 
-            window.href `/`;
+            card.remove();
         })
         .catch(error => {
             console.error('Error:', error);
