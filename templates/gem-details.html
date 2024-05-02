@@ -730,7 +730,6 @@
         .then(data => { 
     
             if (data[0]["user_id"] == null) { document.getElementById('created-by').innerHTML = '';}
-            else { document.getElementById('created-by').innerHTML = `Created by ${data[0]["username"]}`;}
             document.getElementById('gem-name').innerHTML = `${data[0]["name"]}`;
             document.getElementById("gem-type").innerHTML = `${data[0]["gem_type"]}`;
             document.getElementById("times-visited").innerHTML = `${data[0]["times_visited"]}`;

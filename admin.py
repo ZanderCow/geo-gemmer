@@ -223,3 +223,4 @@ def print_everything():
 dotenv_path = os.path.join(os.getcwd(), '.env')
 load_dotenv(dotenv_path)
 print(os.getenv('DATABASE_URL', ''))
+    
