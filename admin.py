@@ -219,11 +219,7 @@ def print_everything():
     return
 # Call the function to test
 
-'''
+
 dotenv_path = os.path.join(os.getcwd(), '.env')
 load_dotenv(dotenv_path)
-
-'''
-
-
-delete_all_folder_contents()
+print(os.getenv('DATABASE_URL', ''))
