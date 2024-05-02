@@ -226,4 +226,4 @@ load_dotenv(dotenv_path)
 '''
 
 
-print_everything()
+delete_all_folder_contents()

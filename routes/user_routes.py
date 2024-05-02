@@ -113,7 +113,7 @@ def create_gem():
     print('newy\nnewy\nnewy')
     if errors == {}:
         
-        gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, user_id)
+        gem_url = gem_repo.create_new_gem(gem_name, gem_type, latitude=latitude, longitude=longitude, user_id=user_id)
         gem_accessibility_repository.set_accesibility_for_hidden_gem(gem_url, acc)
 
         #uncomment the line below to make s3 work
