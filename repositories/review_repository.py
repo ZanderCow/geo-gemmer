@@ -295,10 +295,10 @@ def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
 def _shrink_rating(num:int) -> chr:
     
     num = max(0, min(5, num))
-    return chr(num+49)
+    return chr(num+48)
 
 def _expand_rating(rating:chr) -> int:
-    return ord(rating)-49
+    return ord(rating)-48
 
 def _date_to_int() -> int:
     day = str(datetime.today().date())

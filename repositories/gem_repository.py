@@ -242,7 +242,7 @@ def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> 
     #FAILSAFE IN CASE OF APOSTROPHES
     name = inflate_string(name, 127)
     gem_type = inflate_string(gem_type, 63)
-    user_id = inflate_string(user_id)
+    user_id = inflate_string(str(user_id))
 
     pool = get_pool()
     with pool.connection() as conn:

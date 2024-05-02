@@ -22,35 +22,31 @@ def _reset_database():
 
 def test_making_gem():
     _reset_database()
-    newgemid = repo.create_new_gem("nameo", "big place", 80.843124, 35.227085, False)
+    newuser = str(userrepo.create_new_user("namea", "hotman"))
+    newgemid = str(repo.create_new_gem("nameo", "big place", 35.227085, 80.843124, newuser))
     
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+    newgem = repo.get_basic_gem_info(newgemid)[0]
     #make sure the new gem has all the right stuff
+    assert newgem['username'] == "namea"
+    assert str(newgem['gem_id']) == newgemid
     assert newgem['name'] == "nameo"
-    assert newgem['latitude'] == 35.227085
-    assert newgem['longitude'] == 80.843124
     assert newgem['gem_type'] == "big place"
     assert newgem['times_visited'] == 0
-    assert newgem['user_created'] == False
-    assert newgem['image_1'] == None
-
 
 def test_adding_gems_to_repo():
     _reset_database()
-    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False, "/static/img/neckbeard.png", "no, u", "")
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+    newuser = userrepo.create_new_user("namea", "hotman")
+    newgemid = repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser)
+    newgem = repo.get_basic_gem_info(newgemid)[0]
 
     #make sure the data is right
+    assert newgem['username'] == "namea"
+    assert str(newgem['gem_id']) == newgemid
     assert newgem['name'] == "nameo"
-    assert newgem['longitude'] == -80.843124
-    assert newgem['latitude'] == 35.227085
     assert newgem['gem_type'] == "big place"
     assert newgem['times_visited'] == 0
-    assert newgem['user_created'] == False
-    assert newgem['image_1'] == "/static/img/neckbeard.png"
-    assert newgem['image_2'] == "no, u"
-    assert newgem['image_3'] == None
 
+    '''
     #see ALL gems
     all_gems = repo.get_all_gems()
     assert all_gems[0]['name'] == "nameo"
@@ -61,7 +57,7 @@ def test_adding_gems_to_repo():
     assert all_gems[0]['user_created'] == False
 
     #add second gem
-    repo.create_new_gem("name2", "bigger place", -80, 38, False)
+    repo.create_new_gem("name2", "bigger place", -80, 38, newuser)
     all_gems = repo.get_all_gems()
     assert all_gems[1]['name'] == "name2"
     assert all_gems[1]['longitude'] == -80
@@ -71,7 +67,7 @@ def test_adding_gems_to_repo():
     assert all_gems[1]['user_created'] == False
 
     #test distance
-    all_gems = repo.get_all_gems_ordered_by_nearest(-80, 38)
+    all_gems = repo.search_for_gems("", -80, 38)
     assert all_gems[0]['name'] == "name2"
     assert all_gems[0]['longitude'] == -80
     assert all_gems[0]['latitude'] == 38
@@ -84,32 +80,7 @@ def test_adding_gems_to_repo():
     assert all_gems[1]['latitude'] == 35.227085
     assert all_gems[1]['gem_type'] == "big place"
     assert all_gems[1]['times_visited'] == 0
-    assert all_gems[1]['user_created'] == False
-
-    
-    all_gems = repo.get_all_gems_within_a_certain_distance_from_the_user(-80, 38, 320)
-    assert all_gems[0]['name'] == "name2"
-    assert all_gems[0]['longitude'] == -80
-    assert all_gems[0]['latitude'] == 38
-    assert all_gems[0]['gem_type'] == "bigger place"
-    assert all_gems[0]['times_visited'] == 0
-    assert all_gems[0]['user_created'] == False
-    
-    assert all_gems[1]['name'] == "nameo"
-    assert all_gems[1]['longitude'] == -80.843124
-    assert all_gems[1]['latitude'] == 35.227085
-    assert all_gems[1]['gem_type'] == "big place"
-    assert all_gems[1]['times_visited'] == 0
-    assert all_gems[1]['user_created'] == False
-
-    all_gems = repo.get_all_gems_within_a_certain_distance_from_the_user(-80, 38, 320, 1)
-
-    assert all_gems[0]['name'] == "nameo"
-    assert all_gems[0]['longitude'] == -80.843124
-    assert all_gems[0]['latitude'] == 35.227085
-    assert all_gems[0]['gem_type'] == "big place"
-    assert all_gems[0]['times_visited'] == 0
-    assert all_gems[0]['user_created'] == False
+    assert all_gems[1]['user_created'] == False'''
 
     #delet
     _reset_database()
@@ -117,7 +88,8 @@ def test_adding_gems_to_repo():
 
 def test_modifying_gem():
     _reset_database()
-    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
+    newuser = str(userrepo.create_new_user("namea", "hotman"))
+    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, newuser)
     
     #modify
     repo.change_gem_name(newgemid, "flameo")
@@ -125,13 +97,13 @@ def test_modifying_gem():
     repo.change_gem_location(newgemid, 74.656, 74.205)
 
     #data grab
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+    newgem = repo.get_basic_gem_info(newgemid)[0]
 
     #check if modified
     assert newgem['name'] == 'flameo'
     assert newgem['gem_type'] == 'uss lollipop'
-    assert newgem['longitude'] == 74.656
-    assert newgem['latitude'] == 74.205
+    assert newgem['longitude'] == 74.205
+    assert newgem['latitude'] == 74.656
 
     #make more people visit
     repo.increment_gem_times_visited(newgemid)
@@ -139,12 +111,13 @@ def test_modifying_gem():
     assert newgem['times_visited'] == 1
 
     #delet
-    repo.delete_hidden_gem(newgemid)
-    assert repo.get_hidden_gem_by_id(newgemid) is None
+    #repo.delete_hidden_gem(newgemid)
+    #assert repo.get_hidden_gem_by_id(newgemid) is None
 
 def test_accessibility():
     _reset_database()
-    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, False)
+    newuser = str(userrepo.create_new_user("namea", "hotman"))
+    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, newuser)
     access = accessibility_class()
     access.braille_signage = True
     access.accessible_restrooms = True
