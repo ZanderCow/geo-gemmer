@@ -4,6 +4,9 @@ import repositories.gems_pinned_repository as gem_pinned_repo
 import repositories.images_repository as images_repository
 from repositories.gem_accessibility_repository import get_accesibility_for_hidden_gem
 import repositories.gems_visited_repository as visited_repo
+import repositories.gem_accessibility_repository as gem_accessibility_repository
+from repositories import user_repository
+from repositories.user_repository import increment_reviews_made
 import sys
 from flask import Blueprint, render_template, redirect, request, jsonify
 from math import ceil
@@ -86,9 +89,6 @@ def render_create_gem_review(gem_id):
 @jwt_required()
 def create_create_gem_review(gem_id):
     user_id = get_jwt_identity()
-    #TODO:
-   
-
     data = request.get_json()  # get the incoming JSON data
 
     required_fields = ['rating', 'review']
@@ -101,6 +101,7 @@ def create_create_gem_review(gem_id):
 
     # make the gem review and go back to the gem page
     review_repo.add_review_to_hidden_gem(gem_id, user_id, int(data['rating']), data['review'])
+    increment_reviews_made(user_id)
     return jsonify({'message': 'Gem created successfully',
     })
 
@@ -117,7 +118,7 @@ def success(gemid:str):
 def pin_gem(gem_id):
     user_id = get_jwt_identity()
     current_date = datetime.date.today()
-
+    user_repository.increment_gems_saved(user_id)
     gem_pinned = gem_pinned_repo.add_pinned_gem(user_id, gem_id, current_date)
 
     if gem_pinned == "gem already pinned":
@@ -235,33 +236,147 @@ def edit_gem(gem_id):
     return render_template("edit-hidden-gem.html")
 
 
-@gem.post("/<gem_id>/edit-gem")
+#TODO make this a patch request
+@gem.post('/<gem_id>/edit-gem')
 @jwt_required()
-def update_edit_gem(gem_id):
-    pass
+def confirm_edit_gem(gem_id):
+    """
+    Create a new gem in the database based on the incoming JSON data.
 
-
-@gem.post("/<gem_id>/delete-gem")
-@jwt_required()
-def delete_gem(gem_id):
+    Returns:
+        A JSON response containing a success message and the URL of the created gem.
+    """
     user_id = get_jwt_identity()
     gem_creator = gem_repo.get_gem_creator(gem_id)
-    if gem_creator == user_id:
-        gem_repo.delete_hidden_gem(gem_id)
-        return jsonify({'message': 'Gem deleted successfully'}), 200
-    return jsonify({'error': 'You are not the creator of this gem'}), 403
+
+    if gem_creator != user_id:
+        return jsonify({'error': 'You are not the creator of this gem'}), 403
 
 
+    gem_name = request.form.get('gem_name')
+    gem_type = request.form.get('gem_type')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
 
-@gem.route("/<gem_id>/get-distance-from-user")
+    wheelchair_accessible = request.form.get('wheelchair_accessible')
+    service_animal_friendly = request.form.get('service_animal_friendly')
+    multilingual_support = request.form.get('multilingual_support')
+    braille_signage = request.form.get('braille_signage')
+    large_print_materials = request.form.get('large_print_materials')
+    accessible_restrooms = request.form.get('accessible_restrooms')
+    hearing_assistance = request.form.get('hearing_assistance')
+
+    image_1 = request.files.get('image_1')
+    image_2 = request.files.get('image_2')
+    image_3 = request.files.get('image_3')
+    print(image_1)
+    print(image_2)
+    print(image_3)
+    
+    current_accessibility = gem_accessibility_repository.get_accesibility_for_hidden_gem(gem_id)
+    
+
+    acc = gem_accessibility_repository.accessibility_class()
+
+    if wheelchair_accessible == 'true':
+        acc.wheelchair_accessible = True
+    if service_animal_friendly == 'true':
+        acc.service_animal_friendly = True
+    if multilingual_support == 'true':
+        acc.multilingual_support = True
+    if braille_signage == 'true':
+        acc.braille_signage = True
+    if large_print_materials == 'true':
+        acc.large_print_materials = True
+    if accessible_restrooms == 'true':
+        acc.accessible_restrooms = True
+    if hearing_assistance == 'true':
+        acc.hearing_assistance = True
+    
+    errors = {}
+    update_image = False
+    if latitude == '':
+        errors['latitude'] = 'Latitude is required'
+
+    if longitude == '':
+        errors['longitude'] = 'Longitude is required'
+    if gem_name == '':
+        errors['gem_name'] = 'Gem name is required'
+    if gem_type == '':
+        errors['gem_type'] = 'Gem type is required'
+    if image_1 == None:
+        errors['image_1'] = 'Image 1 is required'
+    if image_2 == None:
+        errors['image_2'] = 'Image 2 is required'
+    if image_3 == None:
+        errors['image_3'] = 'Image 3 is required'
+
+    if errors == {}:
+
+        #grab current gem info, compare it what the user has
+        # if any of them are the same, dont change that value
+
+        current_gem_info = gem_repo.get_basic_gem_info(gem_id)
+    
+        print(current_gem_info[0]['name'])
+        print(current_gem_info[0]['gem_type'])
+
+        if current_gem_info[0]['name'] != gem_name:
+            gem_repo.change_gem_name(gem_id, gem_name)
+        if current_gem_info[0]['gem_type'] != gem_type:
+            gem_repo.change_gem_type(gem_id, gem_type)
+        
+
+        gem_repo.change_gem_location(gem_id, longitude, latitude)
+
+
+        gem_accessibility_repository.set_accesibility_for_gem(
+            gem_id, 
+            wheelchair_accessible,
+            service_animal_friendly,
+            multilingual_support,
+            braille_signage,
+            hearing_assistance,
+            large_print_materials,
+            accessible_restrooms
+        )
+
+        #uncomment the line below to make s3 work
+        images_repository.update_gem_images(gem_id, image_1, image_2, image_3) 
+
+        
+        return jsonify(
+    {
+        'message': 'Gem edited successfully',
+        'gem_id': gem_id 
+    })
+    else:
+        return jsonify(errors), 400
+    
+
+
+@gem.delete("/delete-gem")
+@jwt_required()
+def delete_gem():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    gem_id = data['gem_id']
+    gem_creator = gem_repo.get_gem_creator(gem_id)
+    if gem_creator != user_id:
+        return jsonify({'error': 'You are not the creator of this gem'}), 403
+    images_repository.delete_gem_images(gem_id)
+    gem_repo.delete_gem(gem_id)
+    return jsonify({'message': 'Gem deleted successfully'}), 200
+    
+
+
+@gem.route("/<gem_id>/get-distance-from-user/")
 @jwt_required()
 def get_distance_from_user(gem_id):
     latitude = request.args.get('lat', default='-34.397')
     longitude = request.args.get('lng', default='150.644')
-
     user_id = get_jwt_identity()
-    data = request.get_json()
-    distance = gem_repo.get_distance_from_user(gem_id, latitude, longitude)
+    distance = gem_repo.get_gem_distance_from_user(gem_id, latitude, longitude)
     return jsonify(distance), 200
 
 

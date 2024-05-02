@@ -108,12 +108,6 @@ def create_gem():
     if longitude == '':
         errors['longitude'] = 'Longitude is required'
     
-    #if the user doesnt provide any images, we will force them too
-    #wtf why
-    #if image_1 and image_2 and image_3:
-    #    pass
-    #else:
-    #    errors['images'] = 'Please provide 3 images'
 
     print(acc.update_string())
     print('newy\nnewy\nnewy')
@@ -122,11 +116,10 @@ def create_gem():
         gem_url = gem_repo.create_new_gem(gem_name, gem_type, longitude, latitude, user_id)
         gem_accessibility_repository.set_accesibility_for_hidden_gem(gem_url, acc)
 
-        '''
         #uncomment the line below to make s3 work
-        #images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
-        '''
-       
+        images_repository.create_hidden_gem_images(gem_url, image_1, image_2, image_3) 
+
+        user_repository.increment_gems_created(user_id)
         
         return jsonify(
     {
@@ -264,7 +257,9 @@ def update_user_settings():
     bio = request.form.get('bio')
 
     errors = {}
+    user = user_repository.get_user_by_id(user_id)
     
+
     #user filled out the username field
     if user_name != '':
         #check if the username is already taken
@@ -318,7 +313,16 @@ def gem_visited():
     gem_id = request.form.get('gem_id')
     date_visited = datetime.datetime.now().strftime('%Y-%m-%d')
     gems_visited_repository.add_gem_to_visited_list(user_id, gem_id, date_visited)
-    return jsonify({'message': 'Gem added to visited list'}), 200
+    user_repository.increment_gems_explored(user_id)
+    gem_repo.increment_gem_times_visited(gem_id)
+    cordinates = gem_repo.get_cordinates(gem_id)
+    print(cordinates)
+    return jsonify(
+        {'message': 'Gem added to visited list',
+         "latitude": cordinates[0]["latitude"],
+         "longitude": cordinates[0]["longitude"]
+         }
+         ), 200
 
 
 @user.get('/<user_id>')
@@ -350,3 +354,13 @@ def profile(user_id):
         gems_pinned=gems_pinned,
         reviews_made=reviews_made
     )
+
+@user.delete('/delete-account')
+@jwt_required()
+def delete_account():
+    user_id = get_jwt_identity()
+    images_repository.delete_pfp(user_id)
+    user_repository.delete_user_by_id(user_id)
+    response = jsonify({"msg": "deletion successful"})
+    unset_jwt_cookies(response)
+    return response, 200

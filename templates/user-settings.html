@@ -44,6 +44,7 @@
                             <div class="mb-3"><button id="upload-button" class="btn btn-primary d-block w-100" data-bss-hover-animate="pulse" type="submit"><span style="color: rgb(255, 255, 255);">Change Photo</span></button>
                                 <p class="text-center text-muted d-none" id="image-error" style="padding-top: 10px;padding-left: 10px;"><span style="color: rgb(186, 49, 0);">Image Uploaded </span><br><span style="color: rgb(186, 49, 0);">is not supported</span></p>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -52,7 +53,7 @@
     </section>
 
     <script>
-        /*
+        
         // grab image from s3 database
         fetch('/user/get-pfp', {
             method: 'GET',
@@ -78,7 +79,7 @@
         .catch(error => {
             document.getElementById("uploadedimage").src = "/static/img/pfp-placeholder.png";
         });
-        */
+        
         
     </script>
     
@@ -196,62 +197,107 @@
     </script>
     <script>
 
-        document.getElementById("save-settings-button").addEventListener("click", () => {
-            var user_name = document.getElementById("user-name").value;
-            var first_name = document.getElementById("first-name").value;
-            var last_name = document.getElementById("last-name").value;
-            var pfp = document.getElementById('fileInput').files[0];
-            var bio = document.getElementById('bio').value;
+                        document.getElementById("save-settings-button").addEventListener("click", () => {
+                            var user_name = document.getElementById("user-name").value;
+                            var first_name = document.getElementById("first-name").value;
+                            var last_name = document.getElementById("last-name").value;
+                            var pfp = document.getElementById('fileInput').files[0];
+                            var bio = document.getElementById('bio').value;
+                
+                            var formData = new FormData();
+                            formData.append('file', pfp);
+                            formData.append('username', user_name);
+                            formData.append('first_name', first_name);
+                            formData.append('last_name', last_name);
+                            formData.append('bio', bio);
+                
+                            // Get the CSRF token from the cookie
+                            let csrf_token = document.cookie.split('; ')  
+                            .find(row => row.startsWith("csrf_access_token" + '=')) 
+                            ?.split('=')[1]; 
+                
+                            fetch('/user/update-user-settings', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                     'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                                     }, // Setting the Content-Type as application/json
+                                credentials: 'include'  // Necessary to include cookies with requests
+                            })
+                            .then((response) => {
+                                if (response.ok) {
+                                    return response.json();
+                                } 
+                                else {
+                                    return response.text().then(text => {
+                                        throw new Error(text);
+                                    });
+                                }
+                            })
+                            .then(data => { 
+                                console.log(data);
+                            })
+                            .catch((error) => {
+                                const errorMessage = JSON.parse(error.message);
+                                if (errorMessage.username === 'Username already exists'){
+                                    document.getElementById('username-alr-exists').classList.remove('d-none');
+                                }
+                            });
+                            
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body px-4 py-5 px-md-5">
+                    <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;">
+                        <button id="delete-account-button" class="btn btn-success btn-lg d-lg-flex align-items-lg-center" data-bss-hover-animate="pulse" type="submit" style="background: rgb(242,93,83);"><span style="color: rgb(255, 255, 255);">Delete&nbsp;</span>
+                        </button>
+                    </div>
+                    <script>
+                        document.getElementById("delete-account-button").addEventListener("click", () => {
+                            event.preventDefault();
+                            // Get the CSRF token from the cookie
+                            let csrf_token = document.cookie.split('; ')  
+                            .find(row => row.startsWith("csrf_access_token" + '=')) 
+                            ?.split('=')[1];  
 
-            var formData = new FormData();
-            formData.append('file', pfp);
-            formData.append('username', user_name);
-            formData.append('first_name', first_name);
-            formData.append('last_name', last_name);
-            formData.append('bio', bio);
+                            fetch(`/user/delete-account`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-Token': csrf_token
+                                },
+                                credentials: 'include'
+                            })
+                            .then((response) => {
+                                console.log("Response received", response);
+                                if (response.ok) {
+                                    console.log("Response is OK, proceeding to redirect...");
+                                    return response.json();
+                                } else {
+                                    return response.text().then(text => {
+                                        throw new Error(text);
+                                    });
+                                }
+                            })
+                            .then(data => {
+                                console.log("Redirecting to login page...");
+                                window.location.href = '/';
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Error: ' + error.message); // Alert or handle the error appropriately
+                            });
+                        });
 
-            // Get the CSRF token from the cookie
-            let csrf_token = document.cookie.split('; ')  
-            .find(row => row.startsWith("csrf_access_token" + '=')) 
-            ?.split('=')[1]; 
+                    </script>
+                </div>
+            </div>
+        </form>
+    </div>
+ 
 
-            fetch('/user/update-user-settings', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                     'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
-                     }, // Setting the Content-Type as application/json
-                credentials: 'include'  // Necessary to include cookies with requests
-            })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } 
-                else {
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-            })
-            .then(data => { 
-                console.log(data);
-                    window.location.href = '/user/settings'; // Redirect to the settings page 
-            })
-            .catch((error) => {
-                const errorMessage = JSON.parse(error.message);
-                if (errorMessage.username === 'Username already exists'){
-                    document.getElementById('username-alr-exists').classList.remove('d-none');
-                }
-            });
-            
-        });
-
-
-
-      
-
-        // submit user info and change settings
-    </script>
     {{ footer() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>

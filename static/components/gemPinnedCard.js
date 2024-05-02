@@ -63,7 +63,7 @@ const gemPinned = (gem) => {
     </div>
     
     `;
-    /*
+    
     fetch(`/gem/${gem.gem_id}/get-primary-gem-image`, {
         method: 'GET',
         credentials: 'include'  // Necessary to include cookies with requests
@@ -83,7 +83,7 @@ const gemPinned = (gem) => {
         card.querySelector("#gem-image").src = `data:image/png;base64,${data}`;
     })
     
-    */
+    
     // Add hover event listeners to buttons for continuous animation
     card.querySelectorAll('button').forEach(button => {
     button.addEventListener('mouseover', () => {

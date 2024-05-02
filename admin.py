@@ -176,7 +176,6 @@ def print_all_images_for_all_gems():
             print()
             return
 
-
 def wipe_database():
     '''
     Keeps the tables, but wipes all the data
@@ -206,7 +205,6 @@ def wipe_database():
             
             return
 
-
 def print_everything():
     '''
     Prints everything in the database
@@ -225,8 +223,7 @@ def print_everything():
 dotenv_path = os.path.join(os.getcwd(), '.env')
 load_dotenv(dotenv_path)
 
-print(os.getenv('AWS_ACCESS_KEY_ID'))
 '''
 
 
-
+print_everything()

@@ -4,7 +4,12 @@ import bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+
 main = Blueprint('main', __name__)
+
+@main.route('/home')
+def home_home():
+    return redirect('/')
 
 @main.route('/')
 def home():

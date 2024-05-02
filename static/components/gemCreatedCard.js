@@ -57,7 +57,7 @@ const gemCreated = (gem) => {
     </div>
     
     `;
-    /*
+    
     fetch(`/gem/${gem.gem_id}/get-primary-gem-image`, {
         method: 'GET',
         credentials: 'include'  // Necessary to include cookies with requests
@@ -78,7 +78,7 @@ const gemCreated = (gem) => {
     })
     
 
-    */
+    
 
     // Add hover event listeners to buttons for continuous animation
     card.querySelectorAll('button').forEach(button => {
@@ -100,7 +100,40 @@ const gemCreated = (gem) => {
     });
     var deleteReviewButton = card.querySelector('#delete-gem-button');
     deleteReviewButton.addEventListener('click', () => {
-        // Add code to delete review
+        
+        
+        // Get the CSRF token from the cookie
+        let csrf_token = document.cookie.split('; ')  
+        .find(row => row.startsWith("csrf_access_token" + '=')) 
+        ?.split('=')[1];  
+
+        fetch(`/gem/delete-gem`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',  // Correct way to set Content-Type for JSON
+                'X-CSRF-Token': csrf_token 
+            },
+            credentials: 'include'  // Necessary to include cookies with requests
+        })
+        
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } 
+            else {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+        })
+
+        .then(data => { 
+            window.href `/`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error: ' + error.message); // This can help you see the error when testing
+        });
     });
 
     return card;

@@ -2,13 +2,11 @@
 {% from "components/signed-in-navbar.html" import signed_in_navbar %}
 <script>
     const url = window.location.pathname;
-    
-    // Regular expression to match a UUID in the URL path
     const regex = /gem\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
-    
-    // Using the regex to extract the UUID
     const match = url.match(regex);
     const gem_id = match ? match[1] : null;
+    let latitude = 0;
+    let longitude = 0;
 </script>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -16,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Create Hidden Gem</title>
+    <title>Edit Hidden Gem</title>
     <link rel="icon" href="/static/img/geo-icon.png">
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
@@ -35,7 +33,7 @@
     <header data-aos="fade" class="bg-primary-gradient pt-5" style="background: #ffffff;">
         <div class="text-center">
             <p class="fw-bold text-success mb-2">Hidden Gem</p>
-            <h1 id="gem-name" class="fw-bold">Edit review for PLACEHOLDER</h1>
+            <h1 id="gem-name" class="fw-bold">Edit PLACEHOLDER</h1>
         </div>
     </header>
     <div class="container" data-aos="fade">
@@ -48,7 +46,7 @@
                     </svg></div>
                 <h5 class="fw-bold card-title">Name</h5>
                 <input class="form-control" type="text" data-bss-hover-animate="pulse" id="gem-name-input" placeholder="A cool place!">
-                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> gem name  is not filled out please fill it out. </span></p>
+                <p id="name-error" class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> gem name  is not filled out please fill it out. </span></p>
             </div>
         </div>
         <div class="card" id="type-card">
@@ -70,10 +68,31 @@
                     <option value="Zoo">Zoo</option>
                     <option value="Other">Other</option>
                 </select>
-                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> Gem type is not filled out. Please fill it out. </span></p>
+                <p id="type-error" class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> Gem type is not filled out. Please fill it out. </span></p>
             </div>
         </div>
-        <div id="type-card-1" class="card shadow-sm">
+        <script>
+            fetch(`/gem/${gem_id}/get-basic-gem-info`, {
+                method: 'GET',
+                credentials: 'include'  // Necessary to include cookies with requests
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } 
+                else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(data => {   
+                document.getElementById('gem-name').innerHTML = ` Edit ${data[0]["name"]}`;
+                document.getElementById('gem-name-input').value = data[0]["name"];
+                document.getElementById('gem-type').value = data[0]["gem_type"];
+            })
+        </script>
+        <div id="location-card" class="card shadow-sm">
             <div class="card-body px-4 py-5 px-md-5">
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg class="bi bi-globe text-success" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472M3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z"></path>
@@ -81,23 +100,78 @@
                 <h5 class="fw-bold card-title" style="padding-bottom: 15px;">Location</h5>
                 <div class="row">
                     <div class="col-md-6">
-                        <h6 class="fw-bold">Latitude (Degrees North, Negative for South)</h6><input id="latitude" class="form-control" type="number" min="-90" max="90" placeholder="35.3058012" name="latitude" oninput="(!validity.rangeOverflow||(value=90)) && (!validity.rangeUnderflow||(value=-90));"/>
-                        <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> latitude is not filled out. Please fill it out. </span></p>
+                        <h6 class="fw-bold">Latitude (Degrees North, Negative for South)</h6><input id="latitude" class="form-control" type="number" min="-90" max="90"name="latitude" oninput="(!validity.rangeOverflow||(value=90)) && (!validity.rangeUnderflow||(value=-90));"/>
+                        <p id="lat-error" class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error"> latitude is not filled out. Please fill it out. </span></p>
                     </div>
                     <div class="col-md-6">
                         <h6 class="fw-bold">Longitude (Degrees East, Negative for West)</h6>
-                        <input id="longitude" class="form-control" type="number" min="-180" max="180" placeholder="-80.7323799" name="longitude" oninput="(!validity.rangeOverflow||(value=180)) && (!validity.rangeUnderflow||(value=-180));"/>
-                        <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">longitude is not filled out please fill it out.</span></p>
+                        <input id="longitude" class="form-control" type="number" min="-180" max="180" name="longitude" oninput="(!validity.rangeOverflow||(value=180)) && (!validity.rangeUnderflow||(value=-180));"/>
+                        <p id="long-error" class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">longitude is not filled out please fill it out.</span></p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 d-xxl-flex justify-content-xxl-center" style="padding-top: 15px;">
                         <button id="get-location-button" class="btn btn-primary shadow d-block" type="submit" data-bss-hover-animate="pulse"><span style="color: rgb(255, 255, 255);">Get Coordinates</span>
                         </button>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const getCoordinatesButton = document.getElementById('get-location-button');
+                                
+                                getCoordinatesButton.addEventListener('click', function(event) {
+                                    event.preventDefault(); // Prevents the form from submitting
+                            
+                                    if (navigator.geolocation) {
+                                        navigator.geolocation.getCurrentPosition(function(position) {
+                                            const latitude = position.coords.latitude;
+                                            const longitude = position.coords.longitude;
+                            
+                                            document.getElementById('latitude').value = latitude;
+                                            document.getElementById('longitude').value = longitude;
+                                            document.getElementById('latitude').placeholder = latitude;
+                                            document.getElementById('longitude').placeholder = longitude;
+                            
+                                        }, function(error) {
+                                            console.error('Error Code = ' + error.code + ' - ' + error.message);
+                                            alert('Error obtaining location: ' + error.message);
+                                        });
+                                    } else {
+                                        alert("Geolocation is not supported by this browser.");
+                                    }
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    fetch(`/gem/${gem_id}/get-distance-from-user/?lat=${latitude}&lng=${longitude}`)
+                    .then(response => {
+                        if (!response.ok) {
+                          throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json(); // This should correctly parse JSON response
+                      })
+                    .then(data => {
+                        console.log(data);
+                        document.getElementById('latitude').value = data[0]["latitude"];
+                        document.getElementById('longitude').value = data[0]["longitude"];
+                        
+                        
+                    })
+                    .catch(error => {
+                        document.getElementById('distance-away-from-user').innerText = 'Error fetching distance';
+                    });
+                }, function(error) {  // Error callback correctly positioned
+                });
+            } else {
+                console.log('Geolocation is not available');
+            }
+        </script>
         <div class="card shadow-sm" id="accessibility-card">
             <div class="card-body px-4 py-5 px-md-5">
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-wheelchair text-success">
@@ -119,6 +193,42 @@
                 </div>
             </div>
         </div>
+        <script>
+            fetch(`/gem/${gem_id}/get-accessibility-features`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json(); // This should correctly parse JSON response
+                    })
+                .then(data => {
+                    
+                    var accessibility_features = []
+                    if (data['wheelchair_accessible'] == true) {
+                        document.getElementById('wheelchair_accessible').checked = true;
+                    }
+                    if (data['service_animal_friendly'] == true) {
+                        document.getElementById('service_animal_friendly').checked = true;
+                    }
+                    if (data['multilingual_support'] == true) {
+                        document.getElementById('multilingual_support').checked = true;
+                    }
+                    if (data['braille_signage'] == true) {
+                        document.getElementById('braille_signage').checked = true;
+                    }
+                    if (data['hearing_assistance'] == true) {
+                        document.getElementById('hearing_assistance').checked = true;
+                    }
+                    if (data['large_print_materials'] == true) {
+                        document.getElementById('large_print_materials').checked = true;
+                    }
+    
+                  
+                })
+                .catch(error => {
+                });
+    
+        </script>
         <div class="card shadow-sm" id="images-card">
             <div class="card-body px-4 py-5 px-md-5">
                 <div class="bs-icon-lg d-flex justify-content-center align-items-center mb-3 bs-icon" style="top: 1rem;right: 1rem;position: absolute;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-image text-success">
@@ -126,7 +236,7 @@
                         <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"></path>
                     </svg></div>
                 <h5 class="fw-bold card-title">Images</h5>
-                <p class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">Images are not supported.</span></p>
+                <p id="img-error" class="text-muted d-none" style="padding-top: 10px;padding-left: 10px;"><span class="error">Images are not supported.</span></p>
                 <div class="card mb-3">
                     <div class="card-body" style="padding-top: 30px;">
                         <div class="row nav-fill">
@@ -154,6 +264,56 @@
                                 <button id="add-images-button" class="btn btn-primary text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-center align-items-xxl-center" data-bss-hover-animate="pulse" type="button" style="width: auto;max-width: initial;min-width: auto;">
                                     <span style="color: rgb(255, 255, 255);">Add Images</span>
                                 </button>
+                                <script>
+                                    document.getElementById('add-images-button').addEventListener('click', function() {
+                                        document.getElementById('image-input').click();  // Trigger the file input
+                                    });
+                                    
+                                    document.getElementById('image-input').addEventListener('change', function() {
+                                        const files = this.files;  // Get all files selected by the user
+                                    
+                                        // Loop through the selected files, updating the corresponding image elements
+                                        for (let i = 0; i < files.length; i++) {
+                                            if (i >= 3) break;  // Stop after the first 3 images
+                                    
+                                            const file = files[i];
+                                            if (file) {
+                                                /**
+                                                 * The FileReader object used for reading files.
+                                                 * @type {FileReader}
+                                                 */
+                                                const reader = new FileReader();
+                                                reader.onload = (function(theImg) {
+                                                    return function(e) {
+                                                        theImg.src = e.target.result;  // Update the src of the img element
+                                                    };
+                                                })(document.getElementById('img-' + (i + 1)));  // Get the corresponding img element by id
+                                    
+                                                reader.readAsDataURL(file);  // Read the file as a Data URL
+                                            }
+                                        }
+                                    });
+                                    
+                                    //img2 swop with primary
+                                    document.getElementById('img-2').addEventListener('click', function() {
+                                        img2 = document.getElementById('img-2');
+                                        img1 = document.getElementById('img-1');
+                                        var src = img2.src;
+                                    
+                                        img2.src = img1.src;
+                                        img1.src = src;
+                                    });
+                                    
+                                    //img3 swop with primary
+                                    document.getElementById('img-3').addEventListener('click', function() {
+                                        img3 = document.getElementById('img-3');
+                                        img1 = document.getElementById('img-1');
+                                        var src = img3.src;
+                                    
+                                        img3.src = img1.src;
+                                        img1.src = src;
+                                    });
+                                </script>
                                
                             </div>
                         </div>
@@ -161,14 +321,182 @@
                 </div>
             </div>
         </div>
-        </form>
+        <script>
+            /**
+             * Converts a base64 string to a Blob URL.
+             * @param {string} base64 - The base64 encoded string.
+             * @param {string} mimeType - The MIME type of the image.
+             * @returns {string} - The created blob URL.
+             */
+            function convertBase64ToBlobURL(base64, mimeType) {
+                const byteCharacters = atob(base64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: mimeType });
+                return URL.createObjectURL(blob);
+            }
+        
+            // Fetching images from the server
+            fetch(`/gem/${gem_id}/get-all-gem-images`, {
+                method: 'GET',
+                credentials: 'include'  // Necessary to include cookies with requests
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+            })
+            .then(data => {
+                // Update the image sources using Blob URLs
+                document.getElementById("img-1").src = convertBase64ToBlobURL(data[0], 'image/png');
+                document.getElementById("img-2").src = convertBase64ToBlobURL(data[1], 'image/png');
+                document.getElementById("img-3").src = convertBase64ToBlobURL(data[2], 'image/png');
+            })
+            .catch(error => {
+                // Update the images with a placeholder on error
+                console.error('Failed to load images:', error);
+                document.getElementById("img-1").src = "/static/img/gem-image-placeholder.png";
+                document.getElementById("img-2").src = "/static/img/gem-image-placeholder.png";
+                document.getElementById("img-3").src = "/static/img/gem-image-placeholder.png";
+            });
+        
+        </script>
+        
     </div>
-    <div class="card shadow-sm" id="create-gem-button">
+    <div class="card " id="edit-gem-button">
         <div class="card-body px-4 py-5 px-md-5">
             <div class="d-flex d-xxl-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center mb-3" style="text-align: center;">
-                <button id="create-gem-submit-button" class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="submit" style="width: auto;max-width: initial;min-width: auto;">
-                    <span style="color: rgb(255, 255, 255);">Create Gem</span>
+                <button id="edit-gem-submit-button" class="btn btn-primary btn-lg text-center d-flex d-xxl-flex justify-content-center align-items-center justify-content-xxl-end align-items-xxl-center" data-bss-hover-animate="pulse" type="submit" style="width: auto;max-width: initial;min-width: auto;">
+                    <span style="color: rgb(255, 255, 255);">Save Changes</span>
                 </button>
+                <script>
+                    document.getElementById('edit-gem-submit-button').addEventListener('click', function() {
+                        const gemName = document.getElementById('gem-name-input').value;
+                        const gemType = document.getElementById('gem-type').value;
+                        const latitude = document.getElementById('latitude').value;
+                        const longitude = document.getElementById('longitude').value;
+                        const wheelchairAccessible = document.getElementById('wheelchair_accessible').checked;
+                        const serviceAnimalFriendly = document.getElementById('service_animal_friendly').checked;
+                        const multilingualSupport = document.getElementById('multilingual_support').checked;
+                        const brailleSignage = document.getElementById('braille_signage').checked;
+                        const largePrintMaterials = document.getElementById('large_print_materials').checked;
+                        const accessibleRestrooms = document.getElementById('accessible_restrooms').checked;
+                        const hearingAssistance = document.getElementById('hearing_assistance').checked;
+                        const img1 = document.getElementById('image-input').files[0];
+                        print(document.getElementById('image-input').files[0]);
+                        const img2 = document.getElementById('image-input').files[1];
+                        const img3 = document.getElementById('image-input').files[2];
+                    
+                    
+                        var formData = new FormData();
+                        formData.append('gem_name', gemName);
+                        formData.append('gem_type', gemType);
+                        formData.append('latitude', latitude);
+                        formData.append('longitude', longitude);
+                        formData.append('wheelchair_accessible', wheelchairAccessible);
+                        formData.append('service_animal_friendly', serviceAnimalFriendly);
+                        formData.append('multilingual_support', multilingualSupport);
+                        formData.append('braille_signage', brailleSignage);
+                        formData.append('large_print_materials', largePrintMaterials);
+                        formData.append('accessible_restrooms', accessibleRestrooms);
+                        formData.append('hearing_assistance', hearingAssistance);
+                        formData.append('image_1', img1);
+                        formData.append('image_2', img2);
+                        formData.append('image_3', img3);
+                    
+                        
+                        // Get the CSRF token from the cookie
+                        let csrf_token = document.cookie.split('; ')  
+                        .find(row => row.startsWith("csrf_access_token" + '=')) 
+                        ?.split('=')[1];  
+
+                        fetch(`/gem/${gem_id}/edit-gem`, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                 'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
+                                 }, // Setting the Content-Type as application/json
+                            credentials: 'include'  // Necessary to include cookies with requests
+                        })
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();
+                            } 
+                            else {
+                                return response.text().then(text => {
+                                    throw new Error(text);
+                                });
+                            }
+                        })
+                        .then(data => { 
+                            console.log(data.gem_id);
+                            
+                                
+                            window.location.href = `/gem/success/${data.gem_id}`; 
+                            
+                           
+                           
+                        })
+                        .catch((error) => {
+                            // Assuming 'error.message' contains the JSON string of errors from the backend
+                            try {
+                                const errors = JSON.parse(error.message);
+                        
+                                // Check if there's an error for 'latitude' and update the UI accordingly
+                                if (errors.latitude) {
+                                    const latitudeErrorElement = document.getElementById('lat-error');
+                                    latitudeErrorElement.classList.remove('d-none');
+                                    latitudeErrorElement.querySelector('.error').textContent = errors.latitude;
+                                }
+                        
+                                // Check if there's an error for 'longitude' and update the UI accordingly
+                                if (errors.longitude) {
+                                    const longitudeErrorElement = document.getElementById('long-error');
+                                    longitudeErrorElement.classList.remove('d-none');
+                                    longitudeErrorElement.querySelector('.error').textContent = errors.longitude;
+                                }
+                        
+                                // Check if there's an error for 'gem_name' and update the UI accordingly
+                                if (errors.gem_name) {
+                                    const nameErrorElement = document.getElementById('name-error');
+                                    nameErrorElement.classList.remove('d-none');
+                                    nameErrorElement.querySelector('.error').textContent = errors.gem_name;
+                                }
+                        
+                                // Check if there's an error for 'gem_type' and update the UI accordingly
+                                if (errors.gem_type) {
+                                    const typeErrorElement = document.getElementById('type-error');
+                                    typeErrorElement.classList.remove('d-none');
+                                    typeErrorElement.querySelector('.error').textContent = errors.gem_type;
+                                }
+                        
+                                // Check for image errors and update the UI accordingly
+                               
+                                if (errors.img_3) {
+                                    const imgErrorElement = document.getElementById(`img-error`);
+                                    imgErrorElement.classList.remove('d-none');
+                                    imgErrorElement.querySelector('.error').textContent = 'All images are required.';
+                                }
+                            
+                            } catch (e) {
+                                console.error('Error parsing error message:', e);
+                            }
+                        });
+                        
+                        
+
+
+                    });
+
+                </script>
+               
             </div>
             <div class="d-flex justify-content-sm-center justify-content-xxl-center align-items-xxl-center">
                 <p class="text-muted d-none" id="submit_error_msg" style="padding-top: 10px;padding-left: 10px;"><span class="error"> ERROR - Not all fields filled out </span></p>
@@ -176,264 +504,7 @@
         </div>
     </div>
     {{ footer() }}
-    <script>
-        // this script updates the EDIT review for PLACEHOLDER with the gem name
-        fetch(`/gem/${gem_id}/get-header-info`, {
-            method: 'GET',
-            credentials: 'include'  // Necessary to include cookies with requests
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } 
-            else {
-                return response.text().then(text => {
-                    throw new Error(text);
-                });
-            }
-        })
-        .then(data => {   
-            document.getElementById('gem-name').innerHTML = ` Edit review for ${data[0]["name"]}`;
-            document.getElementById('gem-name-input').placeholder = data[0]["name"];
-        })
-    </script>
-    <script>
-        // gets the gem details
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                let lat = position.coords.latitude;
-                let long =  position.coords.longitude;
-                var formData = new FormData();
     
-                formData.append('latitude', lat);
-    
-                formData.append('longitude', long);
-    
-                // Get the CSRF token from the cookie
-                let csrf_token = document.cookie.split('; ')  
-                .find(row => row.startsWith("csrf_access_token" + '=')) 
-                ?.split('=')[1];
-    
-    
-                fetch(`/gem/${gem_id}/get-gem-description`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': csrf_token
-                    },
-                    credentials: 'include'  // Necessary to include cookies with requests
-                })
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } 
-                    else {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
-                })
-            
-                .then(data => { 
-                    console.log(data);
-                    document.getElementById('gem-type').placeholder = `${data[0]["gem_type"]}`;
-                    latitude = data[0]["latitude"];
-                    longitude = data[0]["longitude"];
-                    print("latitude: " + latitude + " longitude: " + longitude);
-                    document.getElementById('latitude').placeholder = latitude;
-                    
-            
-                })
-                .catch(error => {
-                    console.log(error);
-            
-                });
-            });
-        } else {
-            console.log("Not Available");
-        }
-    
-    
-    </script>
-    <script>
-        //this script gets the accesiblity options and checks off the ones that are already checked
-    </script>
-    <script>
-        // this script gets the location and puts the current location in the placeholders
-    </script>
-       
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const getCoordinatesButton = document.getElementById('get-location-button');
-            
-            getCoordinatesButton.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevents the form from submitting
-        
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
-        
-                        document.getElementById('latitude').value = latitude;
-                        document.getElementById('longitude').value = longitude;
-                        document.getElementById('latitude').placeholder = latitude;
-                        document.getElementById('longitude').placeholder = longitude;
-        
-                    }, function(error) {
-                        console.error('Error Code = ' + error.code + ' - ' + error.message);
-                        alert('Error obtaining location: ' + error.message);
-                    });
-                } else {
-                    alert("Geolocation is not supported by this browser.");
-                }
-            });
-        });
-    </script>
-    <script>
-        document.getElementById('add-images-button').addEventListener('click', function() {
-            document.getElementById('image-input').click();  // Trigger the file input
-        });
-        
-        document.getElementById('image-input').addEventListener('change', function() {
-            const files = this.files;  // Get all files selected by the user
-        
-            // Loop through the selected files, updating the corresponding image elements
-            for (let i = 0; i < files.length; i++) {
-                if (i >= 3) break;  // Stop after the first 3 images
-        
-                const file = files[i];
-                if (file) {
-                    /**
-                     * The FileReader object used for reading files.
-                     * @type {FileReader}
-                     */
-                    const reader = new FileReader();
-                    reader.onload = (function(theImg) {
-                        return function(e) {
-                            theImg.src = e.target.result;  // Update the src of the img element
-                        };
-                    })(document.getElementById('img-' + (i + 1)));  // Get the corresponding img element by id
-        
-                    reader.readAsDataURL(file);  // Read the file as a Data URL
-                }
-            }
-        });
-        
-        //img2 swop with primary
-        document.getElementById('img-2').addEventListener('click', function() {
-            img2 = document.getElementById('img-2');
-            img1 = document.getElementById('img-1');
-            var src = img2.src;
-        
-            img2.src = img1.src;
-            img1.src = src;
-        });
-        
-        //img3 swop with primary
-        document.getElementById('img-3').addEventListener('click', function() {
-            img3 = document.getElementById('img-3');
-            img1 = document.getElementById('img-1');
-            var src = img3.src;
-        
-            img3.src = img1.src;
-            img1.src = src;
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('create-gem-submit-button').addEventListener('click', createHiddenGem);
-        });
-        
-        
-        function createHiddenGem() {
-            const gemName = document.getElementById('gem-name').value;
-            const gemType = document.getElementById('gem-type').value;
-            const latitude = document.getElementById('latitude').value;
-            const longitude = document.getElementById('longitude').value;
-            const wheelchairAccessible = document.getElementById('wheelchair_accessible').checked;
-            const serviceAnimalFriendly = document.getElementById('service_animal_friendly').checked;
-            const multilingualSupport = document.getElementById('multilingual_support').checked;
-            const brailleSignage = document.getElementById('braille_signage').checked;
-            const largePrintMaterials = document.getElementById('large_print_materials').checked;
-            const accessibleRestrooms = document.getElementById('accessible_restrooms').checked;
-            const hearingAssistance = document.getElementById('hearing_assistance').checked;
-            const img1 = document.getElementById('image-input').files[0];
-            const img2 = document.getElementById('image-input').files[1];
-            const img3 = document.getElementById('image-input').files[2];
-        
-        
-            var formData = new FormData();
-            formData.append('gem_name', gemName);
-            formData.append('gem_type', gemType);
-            formData.append('latitude', latitude);
-            formData.append('longitude', longitude);
-            formData.append('wheelchair_accessible', wheelchairAccessible);
-            formData.append('service_animal_friendly', serviceAnimalFriendly);
-            formData.append('multilingual_support', multilingualSupport);
-            formData.append('braille_signage', brailleSignage);
-            formData.append('large_print_materials', largePrintMaterials);
-            formData.append('accessible_restrooms', accessibleRestrooms);
-            formData.append('hearing_assistance', hearingAssistance);
-            formData.append('image_1', img1);
-            formData.append('image_2', img2);
-            formData.append('image_3', img3);
-        
-            
-            // Get the CSRF token from the cookie
-            let csrf_token = document.cookie.split('; ')  
-            .find(row => row.startsWith("csrf_access_token" + '=')) 
-            ?.split('=')[1];  
-        
-            
-        
-            fetch('/user/create-gem', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                     'X-CSRF-Token': csrf_token // The CSRF token you retrieved from your cookie or elsewhere
-                     }, // Setting the Content-Type as application/json
-                credentials: 'include'  // Necessary to include cookies with requests
-            })
-        
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } 
-                else {
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-            })
-           
-        
-            .then(data => { 
-                console.log(data.gem_id);
-                
-                    
-                window.location.href = `/gem/success/${data.gem_id}`; 
-                
-               
-               
-            })
-        
-            .catch((error) => {
-                const errorMessage = JSON.parse(error.message);
-                if (errorMessage.username === 'Username already exists'){
-                    document.getElementById('username-alr-exists').classList.remove('d-none');
-                }
-                
-                
-        
-               
-                
-            });
-            
-           
-        }
-        
-
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="/static/js/script.min.js"></script>

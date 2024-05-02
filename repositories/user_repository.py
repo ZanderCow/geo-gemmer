@@ -216,7 +216,7 @@ def delete_user_by_id(user_id):
                 WHERE
                     user_id = '{user_id}';
             ''')
-            return cursor.fetchall()
+            return True
 
 
 def get_user_settings_details(user_id) -> dict[str, Any]:
@@ -434,3 +434,50 @@ def change_user_bio(user_id, input:str) -> str:
                 SET text='{input}'
                 WHERE user_id = '{user_id}';
             ''')
+
+
+
+def increment_gems_created(user_id):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                UPDATE geo_user
+                SET gems_created = gems_created + 1
+                WHERE user_id = '{user_id}';
+            ''')
+    return True
+
+def increment_gems_explored(user_id):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                UPDATE geo_user
+                SET gems_explored = gems_explored + 1
+                WHERE user_id = '{user_id}';
+            ''')
+
+    return True
+
+def increment_gems_saved(user_id):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                UPDATE geo_user
+                SET gems_saved = gems_saved + 1
+                WHERE user_id = '{user_id}';
+            ''')
+    return True
+
+def increment_reviews_made(user_id):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                UPDATE geo_user
+                SET reviews_made = reviews_made + 1
+                WHERE user_id = '{user_id}';
+            ''')
+    return True
