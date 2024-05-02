@@ -74,7 +74,16 @@
     background-size: 800% 800%;
     animation: gradient 2s linear infinite;
 }
-
+.gray-skeleton-loader {
+    background: #aaa !important;
+    color: #aaa !important;
+    border:transparent;
+}
+.gray-skeleton-back {
+    background: #eee !important;
+    color: #eee !important;
+    border:transparent;
+}
 
 /*links are annoying*/
 .hidden-link:link {

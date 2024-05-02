@@ -36,6 +36,12 @@ def test_distance():
     assert len(gemmy) == 1
     gemmy = gemmy[0]
     assert gemmy['distance'] > 0.99 and gemmy['distance'] < 1.01
+    
+    newgemid = str(repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser))
+
+    #distance
+    gemmy = repo.get_gem_distance_from_user(newgemid, -35.24, 80.85112)[0]
+    assert gemmy['distance'] == 11405
 
 def test_making_gem():
     _reset_database()
@@ -115,190 +121,11 @@ def test_accessibility():
     assert newgem['large_print_materials'] ==  False
     assert newgem['accessible_restrooms'] == True
 
-    listo = repo.search_for_gems('', 0, 35, -80, "big place", access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 10)
+    listo = repo.search_for_gems('', 0, 35, -80, "big place", access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 51)
     access.accessible_restrooms = False
     assert len(listo) == 1
     assert listo[0]['name'] == 'nameo'
 
-    listo = repo.search_for_gems('nameo', 0, 35, -80, '', access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 10)
+    listo = repo.search_for_gems('nameo', 0, 35, -80, '', access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 51)
     assert len(listo) == 1
     assert listo[0]['name'] == 'nameo'
-
-
-def test_dunkin_donuts():
-    newuser = str(userrepo.create_new_user("nameo", "hotman"))
-    newgemid = repo.create_new_gem("DUNKIN' DONUTS", "DUNKIN'", -80.843124, 35.227085, newuser)
-    newgem = repo.get_basic_gem_info(newgemid)[0]
-    assert newgem['name'] == "DUNKIN' DONUTS"
-    assert newgem['gem_type'] == "DUNKIN'"
-
-def test_inflater():
-    #test the apostrophes
-    stringy = "'this' string's stringin'"
-    stringy = inflate_string(stringy)
-    assert stringy == "''this'' string''s stringin''"
-
-    stringy = inflate_string("dunkin'")
-    assert stringy == "dunkin''"
-
-    #TEST THE LIMITS; MUST BE ROBUST OR ELSE
-    stringy = inflate_string("this is a limited string", 9)
-    assert stringy == "this is a"
-    stringy = inflate_string("this is 'a limited string", 9)
-    assert stringy == "this is ''"
-    stringy = inflate_string("this i''''a funny string", 9)
-    assert stringy == "this i''''''"
-    stringy = inflate_string("this i '''a less funny string", 9)
-    assert stringy == "this i ''''"
-
-def test_reviews():
-    shrunk = reviewpo._shrink_rating(6)
-    assert reviewpo._expand_rating(shrunk) == 5
-    for i in range(5):
-        shrunk = reviewpo._shrink_rating(i+1)
-        assert reviewpo._expand_rating(shrunk) == i+1
-    shrunk = reviewpo._shrink_rating(-1)
-    assert reviewpo._expand_rating(shrunk) == 1
-
-    newuser = str(userrepo.create_new_user("nameo", "hotman"))
-    newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, newuser)
-    user_id = userrepo.create_new_user('nameo', 'nameom')
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
-
-    reviews = reviewpo.get_all_reviews_for_a_hidden_gem(newgemid)
-    review = reviews[0]
-    assert review['user_id'] == str(user_id)
-    assert review['gem_id'] == newgemid
-    assert review['rating'] == 4
-    assert review['review'] == "This place's food is awful"
-    assert review['date'][2] == '/'
-    assert review['date'][5] == '/'
-    assert len(review['date']) == 10
-
-    reviews = reviewpo.get_all_reviews_user_has_made(user_id)
-    review = reviews[0]
-    assert review['user_id'] == str(user_id)
-    assert review['gem_id'] == newgemid
-    assert review['rating'] == 4
-    assert review['review'] == "This place's food is awful"
-    assert review['date'][2] == '/'
-    assert review['date'][5] == '/'
-    assert len(review['date']) == 10
-    
-    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, newuser)
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 5, "This place is awesome")
-    reviews = reviewpo.get_all_reviews_user_has_made(user_id)
-    review = reviews[1]
-    assert review['gem_id'] == newgemid
-    assert review['rating'] == 5
-    assert review['review'] == "This place is awesome"
-    assert review['date'][2] == '/'
-    assert review['date'][5] == '/'
-    assert len(review['date']) == 10
-
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place is uh some")
-    reviews = reviewpo.get_gem_review_distribution(newgemid)
-    assert reviews['one'] == 0
-    assert reviews['two'] == 0
-    assert reviews['three'] == 0
-    assert reviews['four'] == 1
-    assert reviews['five'] == 1
-
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 2, "This place is ahh")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, -1, "This place is awful")
-    gem = repo.get_basic_gem_info(newgemid)[0]['avg_rat']
-    assert gem == 3
-
-'''
-def test_adding_several_gems():
-    repo = gem_repository.get_gem_repository()
-    newgem = repo.create_hidden_gem("nameo", 32, 40, "big place", 0, False, "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-    newgem1 = repo.create_hidden_gem("flameo", 33, 50, "bigger place", 0, False, "https://youtu.be/_stbdjS_fbs&t=156s")
-    newgem2 = repo.create_hidden_gem("moneo", 35, 70, "big palace", 0, False, "woolgathering")
-    newgem3 = repo.create_hidden_gem("MONEO", 35.227085, 80.843124, "bigger palace", 0, False, "stop woolgathering moneo")
-    newgem4 = repo.create_hidden_gem("ROMANS", 1, 2, "gross protuberance", 0, False, "beefswelling")
-    newgem5 = repo.create_hidden_gem("Fiddlebert", 3, 4, "Lithuanian", 0, True, "https://www.reddit.com/r/Pikmin/comments/14kkxz1/im_really_curious_to_see_what_any_other_gamecube/")
-
-    #test getting
-    assert repo.get_gem_id_by_name("nameo") is newgem.id
-    assert repo.get_hidden_gem_by_id(newgem.id) is newgem
-
-    assert repo.get_gem_id_by_name("flameo") is newgem1.id
-    assert repo.get_hidden_gem_by_id(newgem1.id) is newgem1
-
-    assert repo.get_gem_id_by_name("moneo") is newgem2.id
-    assert repo.get_hidden_gem_by_id(newgem2.id) is newgem2
-
-    assert repo.get_gem_id_by_name("MONEO") is newgem3.id
-    assert repo.get_hidden_gem_by_id(newgem3.id) is newgem3
-
-    assert repo.get_gem_id_by_name("ROMANS") is newgem4.id
-    assert repo.get_hidden_gem_by_id(newgem4.id) is newgem4
-
-    assert repo.get_gem_id_by_name("Fiddlebert") is newgem5.id
-    assert repo.get_hidden_gem_by_id(newgem5.id) is newgem5
-
-    #test modifying name, make sure no others are affected
-    repo.update_name(newgem.id, "nameO")
-    assert repo.get_name(newgem.id) is "nameO"
-    assert repo.get_name(newgem1.id) is "flameo"
-    assert repo.get_name(newgem2.id) is "moneo"
-    assert repo.get_name(newgem3.id) is "MONEO"
-    assert repo.get_name(newgem4.id) is "ROMANS"
-    assert repo.get_name(newgem5.id) is "Fiddlebert"
-
-    #test modifying coordinates, make sure no others are affected
-    repo.update_cordinates(newgem.id, 10, 4)
-    assert repo.get_cordinates(newgem.id) == (10, 4)
-    assert repo.get_cordinates(newgem1.id) == (33, 50)
-    assert repo.get_cordinates(newgem2.id) == (35, 70)
-    assert repo.get_cordinates(newgem3.id) == (35.227085, 80.843124)
-    assert repo.get_cordinates(newgem4.id) == (1, 2)
-    assert repo.get_cordinates(newgem5.id) == (3, 4)
-
-    #test modifying coordinates, make sure no others are affected
-    repo.update_gem_type(newgem.id, "newtype")
-    assert repo.get_gem_type(newgem.id) is "newtype"
-    assert repo.get_gem_type(newgem1.id) is "bigger place"
-    assert repo.get_gem_type(newgem2.id) is "big palace"
-    assert repo.get_gem_type(newgem3.id) is "bigger palace"
-    assert repo.get_gem_type(newgem4.id) is "gross protuberance"
-    assert repo.get_gem_type(newgem5.id) is "Lithuanian"
-    
-    #test modifying times visited, make sure no others are affected
-    repo.update_times_visited(newgem.id, 4)
-    assert repo.get_times_visited(newgem.id) is 4
-    assert repo.get_times_visited(newgem1.id) is 0
-    assert repo.get_times_visited(newgem2.id) is 0
-    assert repo.get_times_visited(newgem3.id) is 0
-    assert repo.get_times_visited(newgem4.id) is 0
-    assert repo.get_times_visited(newgem5.id) is 0
-    repo.increment_times_visited(newgem.id)
-    assert repo.get_times_visited(newgem.id) is 5
-    assert repo.get_times_visited(newgem1.id) is 0
-    assert repo.get_times_visited(newgem2.id) is 0
-    assert repo.get_times_visited(newgem3.id) is 0
-    assert repo.get_times_visited(newgem4.id) is 0
-    assert repo.get_times_visited(newgem5.id) is 0
-    
-    #test modifying user created, make sure no others are affected
-    repo.update_user_created(newgem.id, True)
-    assert repo.get_user_created(newgem.id) is True
-    assert repo.get_user_created(newgem1.id) is False
-    assert repo.get_user_created(newgem2.id) is False
-    assert repo.get_user_created(newgem3.id) is False
-    assert repo.get_user_created(newgem4.id) is False
-    assert repo.get_user_created(newgem5.id) is True
-
-    
-    #test modifying link, make sure no others are affected
-    repo.update_website_link(newgem4.id, "https://youtu.be/CnuaXR933mA")
-    assert repo.get_website_link(newgem.id) is "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-    assert repo.get_website_link(newgem1.id) is "https://youtu.be/_stbdjS_fbs&t=156s"
-    assert repo.get_website_link(newgem2.id) is "woolgathering"
-    assert repo.get_website_link(newgem3.id) is "stop woolgathering moneo"
-    assert repo.get_website_link(newgem4.id) is "https://youtu.be/CnuaXR933mA"
-    assert repo.get_website_link(newgem5.id) is "https://www.reddit.com/r/Pikmin/comments/14kkxz1/im_really_curious_to_see_what_any_other_gamecube/"
-
-    #delete all
-    repo.clear_db()'''

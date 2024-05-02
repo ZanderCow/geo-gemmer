@@ -40,12 +40,13 @@ def search_for_gems(search_bar: str = '',
     Returns:
         list[dict]: A list of gems matching the criteria.
     '''
+    search_string = inflate_string(search_bar)
     
     # Start building the query
-    query = """
+    query = f"""
     SELECT h.gem_id, h.name, h.gem_type,
            ST_Distance(h.location, ST_MakePoint(%s, %s)::geography) AS distance,
-           COALESCE(AVG(r.rating::int), 0)::float AS average_rating
+           h.avg_rat AS average_rating{f", word_similarity(h.name, '{search_string}') AS name_similarity" if search_bar != '' else ''}
     FROM hidden_gem h
     LEFT JOIN review r ON h.gem_id = r.gem_id
     LEFT JOIN accessibility a ON h.gem_id = a.gem_id
@@ -79,17 +80,19 @@ def search_for_gems(search_bar: str = '',
         query += " AND ST_DWithin(h.location, ST_MakePoint(%s, %s)::geography, %s)"
         query_params.extend([long, lat, distance * 1609.34])  # Convert miles to meters
 
+    # Filter by minimum rating
+    if minimum_rating is not None:
+        query += " AND avg_rat >= %s"
+        query_params.append(minimum_rating)
+
     # Group by and order the query
     query += " GROUP BY h.gem_id, h.name, h.gem_type, h.location"
 
-    # Filter by minimum rating
-    if minimum_rating is not None:
-        query += " HAVING COALESCE(AVG(r.rating::int), 0) >= %s"
-        query_params.append(minimum_rating)
-
-    query += " ORDER BY distance, average_rating DESC LIMIT 20 OFFSET %s;"
+    query += " ORDER BY distance, average_rating DESC"
+    if (search_bar != ''): query += ", name_similarity DESC"
+    query += " LIMIT 20 OFFSET %s;"
     query_params.append(off_set)
-    print(query)
+
     # Execute the query
     pool = get_pool()
     with pool.connection() as conn:
