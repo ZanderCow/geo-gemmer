@@ -107,7 +107,7 @@ const gemCreated = (gem) => {
         .find(row => row.startsWith("csrf_access_token" + '=')) 
         ?.split('=')[1];  
 
-        fetch(`/gem/delete-gem`, {
+        fetch(`/gem/delete-gem/${gem.gem_id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',  // Correct way to set Content-Type for JSON

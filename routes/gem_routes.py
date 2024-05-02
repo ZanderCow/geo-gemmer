@@ -357,12 +357,11 @@ def confirm_edit_gem(gem_id):
     
 
 
-@gem.post("/delete-gem")
+@gem.post("/delete-gem/<gem_id>")
 @jwt_required()
-def delete_gem():
+def delete_gem(gem_id):
     user_id = get_jwt_identity()
     data = request.get_json()
-    gem_id = data['gem_id']
     gem_creator = gem_repo.get_gem_creator(gem_id)
     if gem_creator != user_id:
         return jsonify({'error': 'You are not the creator of this gem'}), 403

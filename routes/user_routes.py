@@ -417,3 +417,6 @@ def setup_the_user():
             ), 200
     else:
         return jsonify(errors), 400
+    
+
+

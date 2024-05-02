@@ -265,6 +265,7 @@
                     <script>
                         document.getElementById("delete-account-button").addEventListener("click", () => {
                             event.preventDefault();
+                            
                             // Get the CSRF token from the cookie
                             let csrf_token = document.cookie.split('; ')  
                             .find(row => row.startsWith("csrf_access_token" + '=')) 
