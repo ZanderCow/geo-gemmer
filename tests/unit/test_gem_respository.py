@@ -41,7 +41,10 @@ def test_distance():
 
     #distance
     gemmy = repo.get_gem_distance_from_user(newgemid, -35.24, 80.85112)[0]
-    assert gemmy['distance'] == 11405
+    assert gemmy['distance'] == 11409.7602
+    
+    gemmy = repo.search_for_gems('', 0, -35.24, 80.85112, '', None, None, None, None, None, None, None, 100000000)[0]
+    assert gemmy['distance'] == 11409.7602
 
 def test_making_gem():
     _reset_database()

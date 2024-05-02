@@ -223,6 +223,7 @@ def delete_gem(gem_id):
 def get_username():
     user_id = get_jwt_identity()
     username = user_repository.get_username_by_id(user_id)
+    username['user_id'] = user_id
     return jsonify(username), 200
 
 @user.get("/get-pfp")

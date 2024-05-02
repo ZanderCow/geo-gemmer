@@ -107,45 +107,9 @@
     <div class="container scstyle-1 sc-overflow" data-aos="fade">
         <div class="row row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
             <div class="col-md-12 flex-fill scstyle-1 sc-overflow">
-                <div class="card-body shadow-sm px-4 py-3 px-md-5 ablock" style="max-height:500px;">
+                <div class="card-body shadow-sm px-4 py-3 px-md-5 mb-5 ablock" style="max-height:500px;">
                     <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title mb-4">User Biography</h5>
                     <p>{{bio}}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container py-4 py-xl-5" data-aos="fade" id="gemdetais-1">
-        <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3 d-md-flex d-lg-flex justify-content-md-center">
-            <div class="col-lg-8 col-xxl-3 flex-fill">
-                <div class="card border-start-primary py-2" id="gems-explored-card-1">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-xxl-12 me-2">
-                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
-                                    <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gems Overview</h5>
-                                </div>
-                                <div class="text-dark fw-bold h5 mb-0">
-                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas id="gem-chart"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-8 col-xxl-3 flex-fill">
-                <div class="card border-start-primary py-2" id="reviews-left-card-1">
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col-xxl-12 me-2">
-                                <div class="text-uppercase text-primary fw-bold text-xs mb-1">
-                                    <h5 class="text-capitalize fw-bold d-xxl-flex justify-content-xxl-center" style="padding-bottom: 10px;">Gem Details</h5>
-                                </div>
-                                <div class="text-dark fw-bold h5 mb-0">
-                                    <div style="color: var(--bs-primary);--bs-body-color: var(--bs-primary);--bs-body-bg: var(--bs-primary);"><canvas id="gem-pie-chart"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -155,7 +119,7 @@
             <div class="col-md-12 flex-fill scstyle-1 sc-overflow">
                 <div class="card-body px-4 py-2 px-md-5 mb-5 ablock">
                     <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title pb-2 pt-2">Gems Pinned</h5>
-                    <section class="overflow-auto" style="max-height: 300px;">
+                    <section class="overflow-auto p-3" style="max-height: 300px;background-color:#c0ffc0; border-radius:20px; background-image:linear-gradient(#fafffa, #efe);">
                         {% for pinned_gem in gems_pinned %}
                         <div class="card shadow-sm" id="gem-1">
                             <div class="card-body px-4 py-5 px-md-5">
@@ -220,7 +184,7 @@
                 <div class="card shadow-sm ablock" style="max-height: 500px;">
                     <div class="card-body px-4 py-2 px-md-5">
                         <h5 class="fw-bold d-xxl-flex justify-content-xxl-center card-title p-2">Recent Reviews Left</h5>
-                        <section class="overflow-auto p-3" style="max-height: 300px;background-color:#c0ffc0; border-radius:20px; background-image:linear-gradient(#c0ffc0, #aea);">
+                        <section class="overflow-auto p-3" style="max-height: 300px;background-color:#c0ffc0; border-radius:20px; background-image:linear-gradient(#fafffa, #efe);">
                             {% for review in reviews_made %}
                             <div id="gem-1" class="card shadow-sm mb-5">
                                 <div class="card-body px-2 pt-3 px-md-5">
