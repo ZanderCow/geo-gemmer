@@ -41,6 +41,8 @@
             <script>
                 const searchBarValue = new URLSearchParams(window.location.search).get('searchbar') || '';
                 document.getElementById('search-text').innerHTML = (searchBarValue === '') ? 'Searching For Nearest' : `Searching For ${searchBarValue}`;
+                if (searchBarValue.toLowerCase() == 'can it run doom?' || searchBarValue.toLowerCase() == 'can it run doom')
+                    window.location.href = '/gem/Doom';
             </script>
         </div>
     </div>

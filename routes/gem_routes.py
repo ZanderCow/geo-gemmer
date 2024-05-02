@@ -81,8 +81,9 @@ def gem_details(gem_id):
 @gem.get('/<gem_id>/create-review')
 @jwt_required()
 def render_create_gem_review(gem_id):
+    gem_name = gem_repo.get_gem_header(gem_id)[0]['name']
     user_id = get_jwt_identity()
-    return render_template('add-hidden-gem-review.html', gem_id=gem_id)
+    return render_template('add-hidden-gem-review.html', gem_id=gem_id, gem_name=gem_name)
 
 
 @gem.post('/<gem_id>/create-review')
@@ -343,7 +344,7 @@ def confirm_edit_gem(gem_id):
         )
 
         #uncomment the line below to make s3 work
-        images_repository.update_gem_images(gem_id, image_1, image_2, image_3) 
+        #images_repository.update_gem_images(gem_id, image_1, image_2, image_3) 
 
         
         return jsonify(

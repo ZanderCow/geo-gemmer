@@ -232,8 +232,17 @@
                                     });
                                 }
                             })
-                            .then(data => { 
-                                console.log(data);
+                            .then(data => {
+                                
+                                let usernameValue = data.username; // The value of the cookie
+                                if (usernameValue !== "") {
+                                    const daysToExpire = 7; // Duration in days for the cookie to expire
+                                    const date = new Date(); // Current date
+                                    date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000)); // Calculate expiration date
+                                    const expires = "expires=" + date.toUTCString(); // Format expiration as a UTC string
+                                    document.cookie = "username=" + usernameValue + ";" + expires + ";path=/"; // Set the cookie
+                                }
+                                window.location.href = '/user/'; // Redirect to the settings page
                             })
                             .catch((error) => {
                                 const errorMessage = JSON.parse(error.message);

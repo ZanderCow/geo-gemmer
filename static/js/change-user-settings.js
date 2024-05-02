@@ -53,20 +53,25 @@ function submitChangeSettingsForm() {
     })
 
     .then(data => { 
-        console.log(data);
+        console.log("checkpoint-1")
+        //console.log(data);
         
-        const usernameValue = data.username; // The value of the cookie
+        console.log("checkpoint0")
+        let usernameValue = data.username; // The value of the cookie
         if (usernameValue !== ""){
+            console.log("checkpoint1")
             const daysToExpire = 7; // Duration in days for the cookie to expire
             const date = new Date(); // Current date
+            console.log("checkpoint2")
             date.setTime(date.getTime() + (daysToExpire * 24 * 60 * 60 * 1000)); // Calculate expiration date
             const expires = "expires=" + date.toUTCString(); // Format expiration as a UTC string
+            console.log("checkpoint3")
             document.cookie = "username=" + usernameValue + ";" + expires + ";path=/"; // Set the cookie
 
         }
 
      
-            window.location.href = '/user/settings'; // Redirect to the settings page
+        window.location.href = '/user/'; // Redirect to the settings page
        
        
     })
