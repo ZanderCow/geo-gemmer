@@ -357,7 +357,7 @@ def confirm_edit_gem(gem_id):
     
 
 
-@gem.delete("/delete-gem")
+@gem.post("/delete-gem")
 @jwt_required()
 def delete_gem():
     user_id = get_jwt_identity()

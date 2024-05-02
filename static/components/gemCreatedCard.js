@@ -108,7 +108,7 @@ const gemCreated = (gem) => {
         ?.split('=')[1];  
 
         fetch(`/gem/delete-gem`, {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',  // Correct way to set Content-Type for JSON
                 'X-CSRF-Token': csrf_token 
