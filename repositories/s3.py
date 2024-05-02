@@ -12,8 +12,6 @@ def get_s3_client():
         's3',
         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), 
-        endpoint_url='http://127.0.0.1:9000',  # Replace with your MinIO server URL
-        config=Config(signature_version='s3v4')  # Use S3v4 signature version
         )
     
     try:
