@@ -326,7 +326,8 @@ def confirm_edit_gem(gem_id):
         if current_gem_info[0]['gem_type'] != gem_type:
             gem_repo.change_gem_type(gem_id, gem_type)
         
-
+        #one of the old ones. the artefacts of the original version of this project
+        #before the Great Rewrite the week it is due. That is why longitude comes before latitude
         gem_repo.change_gem_location(gem_id, longitude, latitude)
 
 

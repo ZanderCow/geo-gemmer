@@ -51,13 +51,13 @@ def search_for_gems(search_bar: str = '',
     LEFT JOIN accessibility a ON h.gem_id = a.gem_id
     WHERE 1=1
     """
-    query_params = [lat, long]
+    query_params = [long, lat]
 
     # Filter by search bar and gem type
     if search_bar:
         query += " AND h.name ILIKE %s"
         query_params.append(f'%{search_bar}%')
-    if gem_type:
+    if gem_type != '' and gem_type is not None:
         query += " AND h.gem_type = %s"
         query_params.append(gem_type)
 
@@ -70,7 +70,7 @@ def search_for_gems(search_bar: str = '',
         ('hearing_assistance', hearing_assistance),
         ('large_print_materials', large_print_materials),
         ('accessible_restrooms', accessible_restrooms)]:
-        if value is not False:
+        if value is not False and value is not None:
             query += f" AND a.{key} = %s"
             query_params.append(value)
 
@@ -89,7 +89,7 @@ def search_for_gems(search_bar: str = '',
 
     query += " ORDER BY distance, average_rating DESC LIMIT 20 OFFSET %s;"
     query_params.append(off_set)
-
+    print(query)
     # Execute the query
     pool = get_pool()
     with pool.connection() as conn:
@@ -212,7 +212,7 @@ def get_gem_distance_from_user(gem_id:str, latitude:float=0.0, longitude:float=0
         FROM
             hidden_gem g   
         WHERE
-            g.gem_id='{gem_id}';''', (latitude, longitude))
+            g.gem_id='{gem_id}';''', (longitude, latitude))
             return _format_gem(cursor.fetchall())
 
 
@@ -316,7 +316,7 @@ def change_gem_name(gem_id:str, name:str):
 
 
 def change_gem_type(gem_id:str, type:str):
-    gem_type = inflate_string(gem_type, 63)
+    type = inflate_string(type, 63)
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cursor:
@@ -364,7 +364,8 @@ def _change_gem_times_visited(gem_id:str, times_visited:int=-1):
 def _format_gem(gems:dict[str:Any]):
     if gems != None:
         for gem in gems:
-            if ('distance' in gem): gem['distance'] = round(gem['distance']/1000, 4)
+            if ('distance' in gem): gem['distance'] = round(gem['distance']*0.001*0.621371192, 4)
+            if ('user_id' in gem): gem['user_id'] = str(gem['user_id'])
             gem['gem_id'] = str(gem['gem_id'])
     return gems
 

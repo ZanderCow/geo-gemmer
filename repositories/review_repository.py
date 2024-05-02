@@ -294,7 +294,7 @@ def get_recent_reviews_user_has_made(user_id:str) -> list[dict[str, Any]]:
 
 def _shrink_rating(num:int) -> chr:
     
-    num = max(0, min(5, num))
+    num = max(1, min(5, num))
     return chr(num+48)
 
 def _expand_rating(rating:chr) -> int:

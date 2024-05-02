@@ -20,14 +20,32 @@ def _reset_database():
                                 DELETE FROM geo_user;''')
 
 
-def test_making_gem():
+def test_distance():
     _reset_database()
     newuser = str(userrepo.create_new_user("namea", "hotman"))
+    newgemid = str(repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser))
+
+    #distance
+    gemmy = repo.get_gem_distance_from_user(newgemid, 35.24, -80.85112)[0]
+    assert gemmy['distance'] > 0.99 and gemmy['distance'] < 1.01
+
+
+    #search
+    gemmy = repo.search_for_gems('', 0, 35.24, -80.85112, '', None, None, None, None, None, None, None, 1000)
+
+    assert len(gemmy) == 1
+    gemmy = gemmy[0]
+    assert gemmy['distance'] > 0.99 and gemmy['distance'] < 1.01
+
+def test_making_gem():
+    _reset_database()
+    newuser = str(userrepo.create_new_user("nameo", "hotman"))
     newgemid = str(repo.create_new_gem("nameo", "big place", 35.227085, 80.843124, newuser))
+    
     
     newgem = repo.get_basic_gem_info(newgemid)[0]
     #make sure the new gem has all the right stuff
-    assert newgem['username'] == "namea"
+    assert newgem['user_id'] == newuser
     assert str(newgem['gem_id']) == newgemid
     assert newgem['name'] == "nameo"
     assert newgem['gem_type'] == "big place"
@@ -35,52 +53,16 @@ def test_making_gem():
 
 def test_adding_gems_to_repo():
     _reset_database()
-    newuser = userrepo.create_new_user("namea", "hotman")
-    newgemid = repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser)
+    newuser = str(userrepo.create_new_user("nameo", "hotman"))
+    newgemid = str(repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser))
     newgem = repo.get_basic_gem_info(newgemid)[0]
 
     #make sure the data is right
-    assert newgem['username'] == "namea"
-    assert str(newgem['gem_id']) == newgemid
+    assert newgem['user_id'] == newuser
+    assert newgem['gem_id'] == newgemid
     assert newgem['name'] == "nameo"
     assert newgem['gem_type'] == "big place"
     assert newgem['times_visited'] == 0
-
-    '''
-    #see ALL gems
-    all_gems = repo.get_all_gems()
-    assert all_gems[0]['name'] == "nameo"
-    assert all_gems[0]['longitude'] == -80.843124
-    assert all_gems[0]['latitude'] == 35.227085
-    assert all_gems[0]['gem_type'] == "big place"
-    assert all_gems[0]['times_visited'] == 0
-    assert all_gems[0]['user_created'] == False
-
-    #add second gem
-    repo.create_new_gem("name2", "bigger place", -80, 38, newuser)
-    all_gems = repo.get_all_gems()
-    assert all_gems[1]['name'] == "name2"
-    assert all_gems[1]['longitude'] == -80
-    assert all_gems[1]['latitude'] == 38
-    assert all_gems[1]['gem_type'] == "bigger place"
-    assert all_gems[1]['times_visited'] == 0
-    assert all_gems[1]['user_created'] == False
-
-    #test distance
-    all_gems = repo.search_for_gems("", -80, 38)
-    assert all_gems[0]['name'] == "name2"
-    assert all_gems[0]['longitude'] == -80
-    assert all_gems[0]['latitude'] == 38
-    assert all_gems[0]['gem_type'] == "bigger place"
-    assert all_gems[0]['times_visited'] == 0
-    assert all_gems[0]['user_created'] == False
-    
-    assert all_gems[1]['name'] == "nameo"
-    assert all_gems[1]['longitude'] == -80.843124
-    assert all_gems[1]['latitude'] == 35.227085
-    assert all_gems[1]['gem_type'] == "big place"
-    assert all_gems[1]['times_visited'] == 0
-    assert all_gems[1]['user_created'] == False'''
 
     #delet
     _reset_database()
@@ -94,7 +76,7 @@ def test_modifying_gem():
     #modify
     repo.change_gem_name(newgemid, "flameo")
     repo.change_gem_type(newgemid, "uss lollipop")
-    repo.change_gem_location(newgemid, 74.656, 74.205)
+    repo.change_gem_location(newgemid, 74.205, 74.656)
 
     #data grab
     newgem = repo.get_basic_gem_info(newgemid)[0]
@@ -107,23 +89,23 @@ def test_modifying_gem():
 
     #make more people visit
     repo.increment_gem_times_visited(newgemid)
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+    newgem = repo.get_basic_gem_info(newgemid)[0] # dang zanders rewrite removed the [0] so i have to do it its so annoying
     assert newgem['times_visited'] == 1
 
     #delet
-    #repo.delete_hidden_gem(newgemid)
-    #assert repo.get_hidden_gem_by_id(newgemid) is None
+    repo.delete_gem(newgemid)
+    assert len(repo.get_basic_gem_info(newgemid)) == 0
 
 def test_accessibility():
     _reset_database()
     newuser = str(userrepo.create_new_user("namea", "hotman"))
-    newgemid = repo.create_new_gem("nameo", "big place", -80.843124, 35.227085, newuser)
+    newgemid = repo.create_new_gem("nameo", "big place", 35.227085, -80.843124, newuser)
     access = accessibility_class()
     access.braille_signage = True
     access.accessible_restrooms = True
 
     accessirepo.set_accesibility_for_hidden_gem(newgemid, access)
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+    newgem = accessirepo.get_accesibility_for_hidden_gem(newgemid)
 
     assert newgem['wheelchair_accessible'] == False
     assert newgem['service_animal_friendly'] ==  False
@@ -133,27 +115,20 @@ def test_accessibility():
     assert newgem['large_print_materials'] ==  False
     assert newgem['accessible_restrooms'] == True
 
+    listo = repo.search_for_gems('', 0, 35, -80, "big place", access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 10)
     access.accessible_restrooms = False
-    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, "big place", access)
     assert len(listo) == 1
     assert listo[0]['name'] == 'nameo'
 
-    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access)
+    listo = repo.search_for_gems('nameo', 0, 35, -80, '', access.wheelchair_accessible, access.service_animal_friendly, access.multilingual_support, access.braille_signage, access.hearing_assistance, access.large_print_materials, access.accessible_restrooms, 10)
     assert len(listo) == 1
+    assert listo[0]['name'] == 'nameo'
 
-    
-    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, None, access, 0)
-    assert len(listo) == 1
-    listo = repo.filtered_get_all_gems_within_a_certain_distance_from_the_user(-80, 35, 100, None, access, 0)
-    assert len(listo) == 1
 
-    access.service_animal_friendly = True
-    listo = repo.filtered_search_all_gems_within_a_certain_distance_from_the_user("name", -80, 35, 100, "big place", access, 0)
-    assert len(listo) == 0
-
-    
-    newgemid = repo.create_new_gem("DUNKIN' DONUTS", "DUNKIN'", -80.843124, 35.227085, False)
-    newgem = repo.get_hidden_gem_by_id(newgemid)
+def test_dunkin_donuts():
+    newuser = str(userrepo.create_new_user("nameo", "hotman"))
+    newgemid = repo.create_new_gem("DUNKIN' DONUTS", "DUNKIN'", -80.843124, 35.227085, newuser)
+    newgem = repo.get_basic_gem_info(newgemid)[0]
     assert newgem['name'] == "DUNKIN' DONUTS"
     assert newgem['gem_type'] == "DUNKIN'"
 
@@ -170,22 +145,23 @@ def test_inflater():
     stringy = inflate_string("this is a limited string", 9)
     assert stringy == "this is a"
     stringy = inflate_string("this is 'a limited string", 9)
-    assert stringy == "this is "
+    assert stringy == "this is ''"
     stringy = inflate_string("this i''''a funny string", 9)
-    assert stringy == "this i''"
+    assert stringy == "this i''''''"
     stringy = inflate_string("this i '''a less funny string", 9)
-    assert stringy == "this i ''"
+    assert stringy == "this i ''''"
 
 def test_reviews():
     shrunk = reviewpo._shrink_rating(6)
     assert reviewpo._expand_rating(shrunk) == 5
     for i in range(5):
-        shrunk = reviewpo._shrink_rating(i)
-        assert reviewpo._expand_rating(shrunk) == i
+        shrunk = reviewpo._shrink_rating(i+1)
+        assert reviewpo._expand_rating(shrunk) == i+1
     shrunk = reviewpo._shrink_rating(-1)
-    assert reviewpo._expand_rating(shrunk) == 0
+    assert reviewpo._expand_rating(shrunk) == 1
 
-    newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, False)
+    newuser = str(userrepo.create_new_user("nameo", "hotman"))
+    newgemid = repo.create_new_gem("THIS IS A PLACE", "no'u", -80.843124, 35.227085, newuser)
     user_id = userrepo.create_new_user('nameo', 'nameom')
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place's food is awful")
 
@@ -209,7 +185,7 @@ def test_reviews():
     assert review['date'][5] == '/'
     assert len(review['date']) == 10
     
-    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, False)
+    newgemid = repo.create_new_gem("THIS IS ANOTHER PALACE", "aaaaa", -50, 30, newuser)
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 5, "This place is awesome")
     reviews = reviewpo.get_all_reviews_user_has_made(user_id)
     review = reviews[1]
@@ -220,13 +196,18 @@ def test_reviews():
     assert review['date'][5] == '/'
     assert len(review['date']) == 10
 
-    reviews = reviewpo.get_review_distribution_of_a_hidden_gems_visited_by_a_user(user_id)
-    assert reviews == [0, 0, 0, 1, 1]
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place is uh some")
+    reviews = reviewpo.get_gem_review_distribution(newgemid)
+    assert reviews['one'] == 0
+    assert reviews['two'] == 0
+    assert reviews['three'] == 0
+    assert reviews['four'] == 1
+    assert reviews['five'] == 1
 
     reviewpo.add_review_to_hidden_gem(newgemid, user_id, 2, "This place is ahh")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 4, "This place is uh some")
-    reviewpo.add_review_to_hidden_gem(newgemid, user_id, 1, "This place is awful")
-    assert reviewpo.get_average_rating_for_a_hidden_gem(newgemid) == 3
+    reviewpo.add_review_to_hidden_gem(newgemid, user_id, -1, "This place is awful")
+    gem = repo.get_basic_gem_info(newgemid)[0]['avg_rat']
+    assert gem == 3
 
 '''
 def test_adding_several_gems():
