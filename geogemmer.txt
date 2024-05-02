@@ -150,3 +150,250 @@ Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Tower_Bridge_
 Image 2: https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Tower_Bridge_London_Feb_2006.jpg/1200px-Tower_Bridge_London_Feb_2006.jpg
 Image 3: https://a.cdn-hotels.com/gdcs/production0/d347/dc69d900-985f-432f-934c-6cbf968cb19d.jpg
 
+20. Name: Mount Kilimanjaro
+Type: Mountain
+Latitude: -3.0674
+Longitude: 37.3556
+Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Mt._Kilimanjaro_12.2006.JPG/800px-Mt._Kilimanjaro_12.2006.JPG
+Image 2: https://files.worldwildlife.org/wwfcmsprod/images/kilimanjaro_facts_travel_blog/story_full_width/7z41g35fwt_1203668448_73.jpg
+Image 3: https://explorerspassage.com/wp-content/uploads/2022/11/climbing-mount-kilimanjaro-scaled.jpg
+
+21. Name: Burj Khalifa
+Type: Skyscraper
+Latitude: 25.2769
+Longitude: 55.2963
+Image 1: https://upload.wikimedia.org/wikipedia/en/thumb/9/93/Burj_Khalifa.jpg/1200px-Burj_Khalifa.jpg
+Image 2: https://cdn1.matadornetwork.com/blogs/1/2023/04/Burj-Khalifa-looking-down.jpg
+Image 3: https://cms.boonedam.com/en/azure-blob/public/2021-03/Inspiration%20Project_Burj%20Khalifa_Main%20Pic_2880%20x%201620px.jpg
+
+22. Name: Taj Mahal
+Type: Mausoleum
+Latitude: 27.1750
+Longitude: 78.0422
+Image 1: https://cdn.britannica.com/86/170586-050-AB7FEFAE/Taj-Mahal-Agra-India.jpg
+Image 2: https://images.photowall.com/products/59510/taj-mahal-1.jpg?h=699&q=85
+Image 3: https://images.squarespace-cdn.com/content/v1/6298cb774cf3830bc9b342bf/1685531811469-PWDD7ZJIRO3Y3E5UTRDD/Taj+Mahal-23.jpg
+
+23. Name: Christ the Redeemer
+Type: Statue
+Latitude: -22.9519
+Longitude: -43.2105
+Image 1: https://upload.wikimedia.org/wikipedia/commons/4/4f/Christ_the_Redeemer_-_Cristo_Redentor.jpg
+Image 2: https://cdn.britannica.com/54/150754-050-5B93A950/statue-Christ-the-Redeemer-Rio-de-Janeiro.jpg
+Image 3: https://travel.usnews.com/images/Christ_the_Redeemer_Rio_Getty_Christian_Adams.jpg
+
+24. Name: Stonehenge
+Type: Monument
+Latitude: 51.1789
+Longitude: -1.8262
+Image 1: https://upload.wikimedia.org/wikipedia/commons/3/3c/Stonehenge2007_07_30.jpg
+Image 2: https://assets.editorial.aetnd.com/uploads/2015/08/stonehenge-gettyimages-599815110-1.jpg
+Image 3: https://media.cnn.com/api/v1/images/stellar/prod/220303081037-stonehenge-file-restricted.jpg?q=h_1688,w_3000,x_0,y_0
+
+25. Name: Amazon Rainforest
+Type: Rainforest
+Latitude: -3.4653
+Longitude: -62.2159
+Image 1: https://images.nationalgeographic.org/image/upload/v1638890315/EducationHub/photos/amazon-river-basin.jpg
+Image 2: https://cdn.britannica.com/31/130031-050-469B9571/stream-Amazon-Rainforest-Ecuador.jpg
+Image 3: https://images.nationalgeographic.org/image/upload/v1638892483/EducationHub/photos/rainy-rainforest.jpg
+
+26. Name: Forbidden City
+Type: Historical Site
+Latitude: 39.9163
+Longitude: 116.3972
+Image 1: https://cdn.britannica.com/03/198203-050-138BB1C3/entrance-Gate-of-Divine-Might-Beijing-Forbidden.jpg
+Image 2: https://cdn.britannica.com/32/117732-050-9261CFE0/Palace-of-Heavenly-Purity-Forbidden-City-Beijing.jpg
+Image 3: https://static.toiimg.com/thumb/104402941/Forbidden-City-in-Beijing.jpg?width=1200&height=900
+
+27. Name: Sydney Harbour Bridge
+Type: Bridge
+Latitude: -33.8523
+Longitude: 151.2108
+Image 1: https://upload.wikimedia.org/wikipedia/commons/d/de/Sydney_%28AU%29%2C_Harbour_Bridge_--_2019_--_2179.jpg
+Image 2: https://cdn.britannica.com/33/155133-050-962670B6/Sydney-Harbour-Bridge-Australia-Syndey.jpg
+Image 3: https://www.agoda.com/wp-content/uploads/2020/03/Featured-photo-Sydney-Harbour-Bridge-Australia-attractions-1-526x320.jpg
+
+28. Name: Mount Fuji
+Type: Volcano
+Latitude: 35.3606
+Longitude: 138.7274
+Image 1: https://upload.wikimedia.org/wikipedia/commons/6/63/Views_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg
+Image 2: https://media.cnn.com/api/v1/images/stellar/prod/230908155626-05-mount-fuji-overtourism.jpg?c=original
+Image 3: https://eol.jsc.nasa.gov/DatabaseImages/EO/highres/ISS046/ISS046-E-35820.JPG
+
+29. Name: University of North Carolina at Charlotte
+Type: Zoo
+Latitude: 35.3036
+Longitude: -80.7324
+Image 1: https://www.usnews.com/cmsmedia/12/4f/b2fa80984646ad82b71236800032/210913-submitted.jpg
+Image 2: https://www.usnews.com/dims4/USNEWS/48467f8/17177859217/resize/800x540%3E/quality/85/?url=https%3A%2F%2Fwww.usnews.com%2Fcmsmedia%2F36%2Fbd%2F06f163e14632822728f0b5e3e38e%2Fhero-image.png
+Image 3: https://www.appily.com/sites/default/files/styles/max_1200/public/images/hero/college/199139_hero.jpg?itok=UKHV5mcJ
+
+30. Name: Iguazu Falls
+Type: Waterfall
+Latitude: -25.6953
+Longitude: -54.4367
+Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Cataratas.jpg/1200px-Cataratas.jpg
+Image 2: https://media.tacdn.com/media/attractions-splice-spp-674x446/12/3f/5b/77.jpg
+Image 3: https://cdn.britannica.com/04/175204-050-7F319F06/view-border-Iguacu-Falls-Argentina-Brazil.jpg
+
+31. Name: Acropolis of Athens
+Type: Historical Site
+Latitude: 37.9715
+Longitude: 23.7263
+Image 1: https://upload.wikimedia.org/wikipedia/commons/a/a7/The_Acropolis_of_Athens_viewed_from_the_Hill_of_the_Muses_%2814220794964%29.jpg
+Image 2: https://cdn.britannica.com/22/99622-159-68A77F6C/Parthenon-Athens.jpg
+Image 3: https://media.timeout.com/images/105651960/image.jpg
+
+32. Name: Galápagos Islands
+Type: Island
+Latitude: -0.8271
+Longitude: -91.1389
+Image 1: https://www.travelandleisure.com/thmb/WzL019sDotA4SIo4bacRrE4j_N0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/galapagos-islands-ecuador-GALAPA1104-d013219debf14369ab5039a4eafb496e.jpg
+Image 2: https://www.worldatlas.com/r/w1200-q80/upload/43/eb/2a/shutterstock-263605307.jpg
+Image 3: https://travel.home.sndimg.com/content/dam/images/travel/fullset/2014/07/15/91/visiting-the-galapagos-when-to-go.rend.hgtvcom.1280.1280.suffix/1491584422518.jpeg
+
+33. Name: Hollywood Sign
+Type: Landmark
+Latitude: 34.1341
+Longitude: -118.3215
+Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Hollywood_Sign_%28Zuschnitt%29.jpg/1200px-Hollywood_Sign_%28Zuschnitt%29.jpg
+Image 2: https://assets-global.website-files.com/62311413466139dfed65b237/62e2db144eabd48598879963_Artboard%201%20copy%202-100.jpg
+Image 3: https://i.etsystatic.com/18883082/r/il/62dc09/3635213644/il_fullxfull.3635213644_7cqn.jpg
+
+34. Name: Louvre Museum
+Type: Museum
+Latitude: 48.8606
+Longitude: 2.3376
+Image 1: https://media.architecturaldigest.com/photos/5900cc370638dd3b70018b33/16:9/w_2560%2Cc_limit/Secrets%2520of%2520Louvre%25201.jpg
+Image 2: https://cdn.britannica.com/02/121002-050-92DB902F/Louvre-Museum-pyramid-Paris-Pei-IM.jpg
+Image 3: https://api-www.louvre.fr/sites/default/files/2021-01/cour-napoleon-et-pyramide_1.jpg
+
+35. Name: Chichen Itza
+Type: Historical Site
+Latitude: 20.6843
+Longitude: -88.5678
+Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Chichen_Itza_3.jpg/640px-Chichen_Itza_3.jpg
+Image 2: https://cdn.getyourguide.com/img/tour/6376caa0d3650.jpeg/97.jpg
+Image 3: https://www.chichenitza.com/public/assets/img/plane/1-chichen-itza-archaeological-site-air-view.jpg
+
+36. Name: Neuschwanstein Castle
+Type: Castle
+Latitude: 47.5576
+Longitude: 10.7498
+Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Schloss_Neuschwanstein_2013.jpg/800px-Schloss_Neuschwanstein_2013.jpg
+Image 2: https://neuschwansteincastle.net/wp-content/uploads/2023/01/neuschwanstein-germany.jpg
+Image 3: https://www.neuschwanstein.de/bilder/schloss/saengersaal575.jpg
+
+37. Name: Sahara Desert
+Type: Desert
+Latitude: 23.4162
+Longitude: 25.6628
+Image 1: https://www.worldatlas.com/r/w768/upload/2f/7d/17/shutterstock-549907891.jpg
+Image 2: https://www.worldatlas.com/r/w768/upload/39/25/14/shutterstock-71232997.jpg
+Image 3: https://hips.hearstapps.com/hmg-prod/images/dunes-in-the-sahara-desert-merzouga-morocco-royalty-free-image-1695321159.jpg
+
+38. Name: San Diego Zoo
+Type: Zoo
+Latitude: 32.7353
+Longitude: -117.1514
+Image 1: https://upload.wikimedia.org/wikipedia/commons/4/4c/San_Diego_Zoo_Entrance_.jpg
+Image 2: https://www.gosandiego.com/wp-content/uploads/2022/05/San-Diego-Attraction-San-Diego-Zoo-Penguins-DSC00512.jpg
+Image 3: https://i0.wp.com/aroundtheworldwithkids.net/wp-content/uploads/2021/05/sdz-entrance.jpg?ssl=1
+
+39. Name: Parthenon
+Type: Historical Site
+Latitude: 37.9715
+Longitude: 23.7263
+Image 1: https://cdn.britannica.com/54/150954-050-F8D14782/Night-view-Parthenon-Athens.jpg
+Image 2: https://cdn.britannica.com/81/79581-050-71DF2D72/Parthenon-Athens-Greece.jpg
+Image 3: https://www.trolleytours.com/wp-content/uploads/2016/06/nashville-the-parthenon.jpg
+
+40. Name: Victoria Falls
+Type: Waterfall
+Latitude: -17.9244
+Longitude: 25.8567
+Image 1: https://upload.wikimedia.org/wikipedia/commons/d/da/Cataratas_Victoria%2C_Zambia-Zimbabue%2C_2018-07-27%2C_DD_04.jpg
+Image 2: https://cdn.britannica.com/91/5391-050-78522514/Victoria-Falls-bridge-Zambezi-River-Zimbabwe-Zambia.jpg
+Image 3: https://lp-cms-production.imgix.net/image_browser/victoria-falls-aerial-shot.jpg
+
+41. Name: Buckingham Palace
+Type: Palace
+Latitude: 51.5014
+Longitude: -0.1419
+Image 1: https://cmsadmin.rct.uk/sites/default/files/residence_lead_images/bp%20hero%20morning%201600%20x%20625.jpg
+Image 2: https://cdn.britannica.com/94/148994-159-25B17024/Buckingham-Palace-Queen-Victoria-Memorial-London-statue.jpg
+Image 3: https://media.cnn.com/api/v1/images/stellar/prod/171120173238-buckingham-palace-ballroom-getty-images.jpg?q=w_1600,h_900,x_0,y_0,c_fill
+
+42. Name: Sagrada Familia
+Type: Church
+Latitude: 41.4036
+Longitude: 2.1744
+Image 1: https://images.adsttc.com/media/images/5254/4190/e8e4/4eff/0200/06cf/large_jpg/sfpassio.jpg?1381253501
+Image 2: https://cdn.getyourguide.com/img/tour/62bacf6a87bba.jpeg/70.jpg
+Image 3: https://res.cloudinary.com/dtljonz0f/image/upload/f_auto/q_auto/v1/gc-v1/barcelona/exterior.jpg
+
+43. Name: Zhangye Danxia Landform Geological Park
+Type: Park
+Latitude: 38.948533
+Longitude: 100.382181
+Image 1: https://imageio.forbes.com/blogs-images/trevornace/files/2016/03/rainbow-mountains-1-1200x800.jpg?height=474&width=711&fit=bounds
+Image 2: https://www.chinadiscovery.com/assets/images/gansu/zhangye/danxia/zhangye-danxia-788.jpg
+Image 3: https://s3.amazonaws.com/iexplore_web/images/assets/000/016/763/full/21401038620_52c90c85e3_o.jpg?1475863891
+
+44. Name: Blue Lagoon
+Type: Beach
+Latitude: 63.880361
+Longitude: -22.449277
+Image 1: https://a.cdn-hotels.com/gdcs/production56/d96/8a879e67-be95-4ac2-a26b-f1bb3b080922.jpg
+Image 2: https://a.cdn-hotels.com/gdcs/production116/d845/b0af75be-82b9-4310-b5a0-53a9da7f23cb.jpg?impolicy=fcrop&w=800&h=533&q=medium
+Image 3: https://tempo.cdn.tambourine.com/windsong/media/cache/natural-wonder-blue-lagoon-island-5fb3fd3c1f439-765x708.jpg
+
+45. Name: Banff National Park
+Type: Park
+Latitude: 51.4968
+Longitude: -115.9281
+Image 1: https://i.natgeofe.com/n/5e841814-7f17-4f65-bb87-ad96a2d69e3b/01-banff-national-park-canada_3x4.jpg
+Image 2: https://assets.vogue.com/photos/65c4c09bbb939fbbf042091c/4:3/w_4812,h_3609,c_limit/GettyImages-843431360.jpg
+Image 3: https://cdn.britannica.com/89/104889-050-A3D26337/Moraine-Lake-Banff-National-Park.jpg
+
+46. Name: Central Park
+Type: Park
+Latitude: 40.785091
+Longitude: -73.968285
+Image 1: https://a.cdn-hotels.com/gdcs/production116/d1103/0ffba831-3af6-4ec5-918b-edd67a21480e.jpg?impolicy=fcrop&w=800&h=533&q=medium
+Image 2: https://i.natgeofe.com/n/15ec8dec-df7c-45af-a0ae-08d4e906a134/belvedere-castle.jpg
+Image 3: https://olmsted.org/wp-content/uploads/2023/06/Park-Aerial_20190604_04-1-scaled.jpg
+
+47. Name: Grotta Palazzese
+Type: Restaurant
+Latitude: 40.8544
+Longitude: 17.3593
+Image 1: https://www.grottapalazzese.it/wp-content/uploads/2018/03/Grotta-Palazzese-tavolo-centrale.jpg
+Image 2: https://www.mywanderlustylife.com/wp-content/uploads/2023/05/Dining-at-Italy-cave-restaurant-grotta-palazzese-polignano-a-mare-front.jpg
+Image 3: https://media-cdn.tripadvisor.com/media/photo-s/17/36/53/d9/timeless-charm.jpg
+
+48. Name: Gold's Gym Venice Beach
+Type: Gym
+Latitude: 33.9919
+Longitude: -118.4714
+Image 1: https://images.venicepaparazzi.com/2021/01/14192705/138829567_10157296741711537_652621335944320729_o.jpg
+Image 2: https://www.bodybuilding.com/images/2019/february/6-life-lessons-from-working-at-golds-gym-venice-inset3-700xh.jpg
+Image 3: https://lamag.com/.image/t_share/MTk3NTU1ODcyMTcyNTQ5ODI0/golds-gym-venice-bankruptcy.jpg
+
+49. Name: Dubai Mall
+Type: Shopping Mall
+Latitude: 25.1972
+Longitude: 55.2744
+Image 1: https://www.visitdubai.com/-/media/gathercontent/poi/t/the-dubai-mall/fallback-image/the-dubai-mall-poi-shutterstock.jpg
+Image 2: https://media.cntravellerme.com/photos/64adaa3b8065f76731bd4b67/16:9/w_2560%2Cc_limit/Hero-Dubai-Mall-Fashion-Avenue-Dubai-Alamy-R9FRB7.jpg
+Image 3: https://i0.wp.com/www.backpackingwithmylens.com/wp-content/uploads/2020/07/Dubai-mall.jpg?fit=800%2C556&ssl=1
+
+50. Name: TCL Chinese Theatre
+Type: Movie Theater
+Latitude: 34.1014
+Longitude: -118.3404
+Image 1: https://www.discoverlosangeles.com/sites/default/files/styles/hero/public/images/2019-10/TCL-Chinese-Theatre-IMAX-Exterior.jpg.webp?itok=pP65u2kG
+Image 2: https://www.historictheatrephotos.com/Resources/Theatre-Photos/Chinese-Los-Angeles/Photos/Auditorium/Auditorium_from_TCL_Box.jpg
+Image 3: https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1200,h_630/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/kchroqhufhtcdianqrgp/TCL%20Chinese%20Theatres%20Guided%20Tour.jpg
