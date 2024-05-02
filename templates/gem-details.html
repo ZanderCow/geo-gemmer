@@ -241,6 +241,9 @@
                                                 })
                                             
                                                 .then(data => { 
+                                                    console.log(data)
+                                                    latitude = data['latitude'];
+                                                    longitude = data['longitude'];
                                                     window.location.href = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
                                                 })
                                                 .catch(error => {

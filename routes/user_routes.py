@@ -257,7 +257,9 @@ def update_user_settings():
     bio = request.form.get('bio')
 
     errors = {}
+    user = user_repository.get_user_by_id(user_id)
     
+
     #user filled out the username field
     if user_name != '':
         #check if the username is already taken
@@ -313,7 +315,14 @@ def gem_visited():
     gems_visited_repository.add_gem_to_visited_list(user_id, gem_id, date_visited)
     user_repository.increment_gems_explored(user_id)
     gem_repo.increment_gem_times_visited(gem_id)
-    return jsonify({'message': 'Gem added to visited list'}), 200
+    cordinates = gem_repo.get_cordinates(gem_id)
+    print(cordinates)
+    return jsonify(
+        {'message': 'Gem added to visited list',
+         "latitude": cordinates[0]["latitude"],
+         "longitude": cordinates[0]["longitude"]
+         }
+         ), 200
 
 
 @user.get('/<user_id>')
@@ -345,3 +354,13 @@ def profile(user_id):
         gems_pinned=gems_pinned,
         reviews_made=reviews_made
     )
+
+@user.delete('/delete-account')
+@jwt_required()
+def delete_account():
+    user_id = get_jwt_identity()
+    images_repository.delete_pfp(user_id)
+    user_repository.delete_user_by_id(user_id)
+    response = jsonify({"msg": "deletion successful"})
+    unset_jwt_cookies(response)
+    return response, 200

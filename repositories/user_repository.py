@@ -216,7 +216,7 @@ def delete_user_by_id(user_id):
                 WHERE
                     user_id = '{user_id}';
             ''')
-            return cursor.fetchall()
+            return True
 
 
 def get_user_settings_details(user_id) -> dict[str, Any]:

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS geo_user (
 );
 
 CREATE TABLE IF NOT EXISTS geo_user_bio (
-    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE,
+    user_id UUID REFERENCES geo_user(user_id) ON DELETE CASCADE NOT NULL,
     text VARCHAR(1024)
 );
 

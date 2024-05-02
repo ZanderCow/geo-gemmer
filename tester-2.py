@@ -201,7 +201,6 @@ def search_for_gems(search_bar: str = '',
 # Example usage
 if __name__ == "__main__":
     # This will return the first 20 gems with no filters.
-    gems = search_for_gems(long=-80.8020089, lat=35.0248724)
     print(gems)
 
     

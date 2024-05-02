@@ -183,25 +183,21 @@ def get_basic_gem_info(gem_id:str) -> dict[str, Any] | None:
         with conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(f'''
         SELECT
-            u.username,
             g.gem_id,
             g.name,
             g.gem_type,
             g.times_visited,
             g.user_created,
             g.avg_rat,
-            g.user_id
-            
+            g.user_id,
+             ST_X(g.location::geometry) AS longitude,
+            ST_Y(g.location::geometry) AS latitude
             
         FROM
             hidden_gem g
-        JOIN
-            geo_user u
-        ON
-            g.user_id = u.user_id
         WHERE
             g.gem_id='{gem_id}';''')
-            return cursor.fetchall()
+            return _format_gem(cursor.fetchall())
 
 def get_gem_distance_from_user(gem_id:str, latitude:float=0.0, longitude:float=0.0):
     pool = get_pool()
@@ -254,6 +250,46 @@ def create_new_gem(name, gem_type,latitude:float , longitude:float, user_id) -> 
                     ST_SetSRID(ST_MakePoint({longitude}, {latitude}), 4326),
                     0,
                     '{user_id}')
+                RETURNING
+                    gem_id;''')
+            
+            #failsafe
+            fetched_stuff = cursor.fetchone()
+            if (fetched_stuff is not None and 'gem_id' in fetched_stuff):
+                gem_id = str(fetched_stuff['gem_id'])
+                cursor.execute(f"""
+                    INSERT INTO accessibility (gem_id) VALUES (
+                        '{gem_id}');""")
+            return gem_id
+
+def create_new_gem_no_user(name, gem_type,latitude:float , longitude:float) -> str:
+    
+    '''
+    Creates a new hidden gem and adds it to the database.
+
+    Parameters:
+        name (str): The name of the gem. (max length: 127)
+        gem_type (str): The type of the gem. (max length: 63)
+        longitude (float): The location (E/W) of the gem.
+        latitude (float): The location (N/S) of the gem.
+        user_created (bool): Whether a user created the gem or not
+        user_id (str): The ID of the user who created the gem.
+
+    Returns:
+        id (str): The id of the newly created gem
+
+    NOTE: notice how not all the parameters for the hidden gem are present, this is on purpose.
+        - when a gem is created it should have a default value for times_visited (0)
+    '''
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+                INSERT INTO hidden_gem (name, gem_type, location, times_visited) VALUES (
+                    '{name}',
+                    '{gem_type}',
+                    ST_SetSRID(ST_MakePoint({longitude}, {latitude}), 4326),
+                    0)
                 RETURNING
                     gem_id;''')
             
@@ -348,4 +384,31 @@ def get_gem_creator(gem_id):
             result = cursor.fetchall()
           
             return str(result[0]['user_id'])
+    
+def delete_gem(gem_id):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+        DELETE FROM
+            hidden_gem
+        WHERE
+            gem_id='{gem_id}';''')
+        return True
         
+
+def get_cordinates(gem_id):
+    
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(f'''
+        SELECT
+            g.gem_id,
+            ST_X(g.location::geometry) AS longitude,
+            ST_Y(g.location::geometry) AS latitude
+        FROM
+            hidden_gem g   
+        WHERE
+            g.gem_id='{gem_id}';''',)
+            return _format_gem(cursor.fetchall())

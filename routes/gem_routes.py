@@ -236,7 +236,7 @@ def edit_gem(gem_id):
     return render_template("edit-hidden-gem.html")
 
 
-
+#TODO make this a patch request
 @gem.post('/<gem_id>/edit-gem')
 @jwt_required()
 def confirm_edit_gem(gem_id):
@@ -355,16 +355,19 @@ def confirm_edit_gem(gem_id):
     
 
 
-@gem.post("/<gem_id>/delete-gem")
+@gem.delete("/delete-gem")
 @jwt_required()
-def delete_gem(gem_id):
+def delete_gem():
     user_id = get_jwt_identity()
+    data = request.get_json()
+    gem_id = data['gem_id']
     gem_creator = gem_repo.get_gem_creator(gem_id)
-    if gem_creator == user_id:
-        gem_repo.delete_hidden_gem(gem_id)
-        return jsonify({'message': 'Gem deleted successfully'}), 200
-    return jsonify({'error': 'You are not the creator of this gem'}), 403
-
+    if gem_creator != user_id:
+        return jsonify({'error': 'You are not the creator of this gem'}), 403
+    images_repository.delete_gem_images(gem_id)
+    gem_repo.delete_gem(gem_id)
+    return jsonify({'message': 'Gem deleted successfully'}), 200
+    
 
 
 @gem.route("/<gem_id>/get-distance-from-user/")
