@@ -26,12 +26,13 @@ const reviewMade = (review) =>{
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-center">
-                                        <p class="fw-bold text-success mb-2">Review </p>
-                                        <h4 class="fw-bold">${review.gem_name}</h4>
-                                        <div id="stars">
-                                            ${generateStars(review.rating)}
-                                        </div>
-                                        
+                                        <a href="/gem/${review.gem_id}" class="hidden-link">
+                                            <p class="fw-bold text-success mb-2">Review </p>
+                                            <h4 class="fw-bold">${review.gem_name}</h4>
+                                            <div id="stars">
+                                                ${generateStars(review.rating)}
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

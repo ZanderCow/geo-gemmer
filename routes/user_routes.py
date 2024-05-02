@@ -365,3 +365,55 @@ def delete_account():
     response = jsonify({"msg": "deletion successful"})
     unset_jwt_cookies(response)
     return response, 200
+
+@user.get('/setup')
+@jwt_required()
+def user_setup():
+    user_id = get_jwt_identity()
+    return render_template('user-setup.html')
+
+@user.post('/setup')
+@jwt_required()
+def setup_the_user():
+    user_id = get_jwt_identity()
+    file = request.files.get('file')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    bio = request.form.get('bio')
+
+    errors = {}
+    user = user_repository.get_user_by_id(user_id)
+
+    if first_name != '':
+        user_repository.change_first_name(user_id, first_name)
+
+    if last_name != '':
+        user_repository.change_last_name(user_id, last_name)
+
+
+    # Check if the user uploaded a profile picture
+    if file:
+        current_pfp_url = images_repository.get_database_pfp(user_id)
+        
+        # Check if the user already has a profile picture
+        if current_pfp_url != None:
+            
+            #uncomment the line below to make s3 work 
+            images_repository.update_user_pfp(user_id, file)
+        
+        else:
+            #uncomment the line below to make s3 work 
+            images_repository.create_user_pfp(user_id, file)
+            pass
+
+    if (bio != None):
+        user_repository.change_user_bio(user_id, bio)
+   
+    if errors == {}:
+        return jsonify(
+            {
+            'message': 'Profile set successfully',
+             }
+            ), 200
+    else:
+        return jsonify(errors), 400

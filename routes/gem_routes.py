@@ -344,7 +344,7 @@ def confirm_edit_gem(gem_id):
         )
 
         #uncomment the line below to make s3 work
-        #images_repository.update_gem_images(gem_id, image_1, image_2, image_3) 
+        images_repository.update_gem_images(gem_id, image_1, image_2, image_3) 
 
         
         return jsonify(

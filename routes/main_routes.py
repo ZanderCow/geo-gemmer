@@ -99,8 +99,14 @@ def signup_user():
 
     # if there are no errors, create the user
     if errors == {}:
-         user_id = user_repository.create_new_user(created_username, created_password)
-         return jsonify({'message': 'user created successfully'}), 200
+        user_id = user_repository.create_new_user(created_username, created_password)
+        access_token = create_access_token(identity=str(user_id),expires_delta=timedelta(days=7))
+        response = jsonify(
+            {'login': True},
+            {'username': created_username}
+            )
+        set_access_cookies(response, access_token)
+        return response
     
     else:
         return jsonify(errors), 400

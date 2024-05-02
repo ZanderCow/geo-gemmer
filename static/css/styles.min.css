@@ -86,7 +86,7 @@
 }
 
 /*links are annoying*/
-.hidden-link:link {
+.hidden-link:link,.hidden-link:visited,.hidden-link:hover,.hidden-link:focus,.hidden-link:active {
     color: var(--bs-body-color) !important;
     background-color: transparent;
     text-decoration: none !important;
